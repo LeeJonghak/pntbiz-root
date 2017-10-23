@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="service.ServiceAttendanceDao">
+
+	<resultMap id="attendanceResult" type="core.wms.service.domain.Attendance">
+		<result property="logNum" column="logNum" />
+		<result property="UUID" column="UUID" />
+		<result property="sidNum" column="sidNum" />
+		<result property="sName" column="sName" />
+		<result property="subject" column="subject" />
+		<result property="sPhoneNumber" column="sPhoneNumber" />
+		<result property="attdDate" column="attdDate" />
+		<result property="regDate" column="regDate" />
+		<result property="modDate" column="modDate" />
+	</resultMap>
+
+	<sql id="selectAttendanceSearch">
+		WHERE UUID = #{UUID}
+		<if test="attdDate != '' and attdDate  != null">AND attdDate = #{attdDate}</if>
+		<if test="keyword != '' and keyword  != null">
+            <choose>
+                <when test="opt eq 'sPhoneNumber'">AND sPhoneNumber LIKE CONCAT('%',#{keyword},'%')</when>
+                <when test="opt eq 'sidNum'">AND sidNum LIKE CONCAT('%',#{keyword},'%')</when>
+                <when test="opt eq 'subject'">AND subject LIKE CONCAT('%',#{keyword},'%')</when>
+                <when test="opt eq 'sName'">AND sName LIKE CONCAT('%',#{keyword},'%')</when>
+                <otherwise></otherwise>
+            </choose>
+        </if>
+	</sql>
+	<select id="getAttendanceCount" parameterType="core.wms.service.domain.AttendanceSearchParam" resultType="Integer">
+		SELECT COUNT(logNum) CNT
+		FROM TB_ATTENDANCE
+		<include refid="selectAttendanceSearch"/>
+	</select>
+
+	<select id="getAttendanceList" parameterType="core.wms.service.domain.AttendanceSearchParam" resultMap="attendanceResult">
+		SELECT logNum, UUID, sidNum, sName, subject, sPhoneNumber, attdDate, regDate, modDate
+		FROM TB_ATTENDANCE
+		<include refid="selectAttendanceSearch"/>
+
+		ORDER BY logNum DESC
+		LIMIT #{firstItemNo}, #{pageSize}
+	</select>
+
+	<delete id="deleteAttendance" parameterType="core.wms.service.domain.AttendanceSearchParam">
+		DELETE
+		FROM TB_ATTENDANCE
+		WHERE attdDate = #{attdDate}
+	</delete>
+
+</mapper>

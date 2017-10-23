@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.beacon.dao.BeaconDao">
+
+	<resultMap id="beaconGroupResult" type="core.wms.beacon.domain.BeaconGroup">
+        <result property="comNum"           column="COM_NUM" />
+        <result property="beaconGroupNum"   column="BEACON_GROUP_NUM" />
+        <result property="beaconGroupName"  column="BEACON_GROUP_NAME" />
+        <result property="beaconCount"      column="BEACON_COUNT" />
+        <result property="modDate"          column="MOD_DATE" />
+        <result property="regDate"          column="REG_DATE" />
+	</resultMap>
+
+    <resultMap id="beaconResult" type="core.wms.beacon.domain.Beacon">
+        <result property="beaconNum"          column="BEACON_NUM"/>
+        <result property="comNum"             column="COM_NUM"/>
+        <result property="UUID"               column="UUID"/>
+        <result property="majorVer"           column="MAJOR_VER"/>
+        <result property="minorVer"           column="MINOR_VER"/>
+        <result property="macAddr"            column="MAC_ADDR"/>
+        <result property="txPower"            column="TX_POWER"/>
+        <result property="battery"            column="BATTERY"/>
+        <result property="beaconType"         column="BEACON_TYPE"/>
+        <result property="beaconTypeLangCode" column="BEACON_TYPE_LANG_CODE"/>
+        <result property="beaconName"         column="BEACON_NAME"/>
+        <result property="beaconDesc"         column="BEACON_DESC"/>
+        <result property="floor"              column="FLOOR"/>
+        <result property="lat"                column="LAT"/>
+        <result property="lng"                column="LNG"/>
+        <result property="state"              column="STATE"/>
+        <result property="stateReason"        column="STATE_REASON"/>
+        <result property="lastDate"           column="LAST_DATE"/>
+        <result property="modDate"            column="MOD_DATE"/>
+        <result property="regDate"            column="REG_DATE"/>
+        <result property="imgSrc"             column="IMG_SRC"/>
+        <result property="imgUrl"             column="IMG_URL"/>
+        <result property="field1"             column="FIELD1"/>
+        <result property="field2"             column="FIELD2"/>
+        <result property="field3"             column="FIELD3"/>
+        <result property="field4"             column="FIELD4"/>
+        <result property="field5"             column="FIELD5"/>
+        <result property="beaconGroupNum"     column="BEACON_GROUP_NUM"/>
+        <result property="beaconGroupName"    column="BEACON_GROUP_NAME"/>
+    </resultMap>
+
+    <sql id="sqlBeaconSearch">
+        <where>
+            <if test="comNum!=null">
+                TB.COM_NUM=#{comNum}
+            </if>
+            <if test="floor!=null">
+                AND TB.FLOOR=#{floor}
+            </if>
+            <if test="startMinor!=null and endMinor!=null">
+                AND TB.MINOR_VER BETWEEN #{startMinor} AND #{endMinor}
+            </if>
+            <if test="beaconType!=null">
+                AND TB.BEACON_TYPE=#{beaconType}
+            </if>
+            <if test="keyword != '' and keyword  != null">
+                <choose>
+                    <when test="opt eq 'beaconName'">
+                        AND TB.BEACON_NAME LIKE CONCAT(#{keyword}, '%')
+                    </when>
+                    <when test="opt eq 'floor'">
+                        AND TB.FLOOR LIKE CONCAT(#{keyword}, '%')
+                    </when>
+                    <when test="opt eq 'majorVer'">
+                        AND TB.MAJOR_VER LIKE CONCAT(#{keyword}, '%')
+                    </when>
+                    <when test="opt eq 'minorVer'">
+                        AND TB.MINOR_VER LIKE CONCAT(#{keyword}, '%')
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+            </if>
+        </where>
+    </sql>
+	<select id="getBeaconList" parameterType="core.wms.beacon.domain.BeaconSearchParam" resultMap="beaconResult">
+		SELECT *
+          FROM (
+			SELECT TB.BEACON_NUM, TB.COM_NUM, TB.UUID, TB.MAJOR_VER, TB.MINOR_VER
+			     , TB.TX_POWER, TB.BATTERY, TB.BEACON_TYPE, TB.MAC_ADDR, TB.BEACON_NAME, TB.BEACON_DESC
+			     , TB.LAT, TB.LNG, TB.STATE, TB.REG_DATE
+			     , TB.LAST_DATE, TB.FIELD1, TB.FIELD2, TB.FIELD3, TB.FIELD4
+			     , TB.FIELD5
+			     , TBG.BEACON_GROUP_NUM, TBG.BEACON_GROUP_NAME
+                 , TF.FLOOR_NAME AS FLOOR
+                 , ROWNUM RNUM
+	          FROM TB_BEACON TB
+	          LEFT OUTER JOIN TB_BEACON_GROUP_MAPPING TBGM ON TB.BEACON_NUM = TBGM.BEACON_NUM
+	          LEFT OUTER JOIN TB_BEACON_GROUP TBG ON TBGM.BEACON_GROUP_NUM = TBG.BEACON_GROUP_NUM
+	          LEFT OUTER JOIN ( SELECT TF.FLOOR, TFC.NODE_NAME AS FLOOR_NAME
+                                  FROM TB_FLOOR TF
+                                 INNER JOIN TB_FLOOR_CODE TFC
+                                    ON TF.FLOOR = TFC.NODE_ID
+                                   AND TFC.COM_NUM = #{comNum}
+                                 WHERE TF.COM_NUM = #{comNum} ) TF ON TB.FLOOR = TF.FLOOR
+             <include refid="sqlBeaconSearch"/>
+
+			ORDER BY TB.BEACON_NUM DESC
+          ) TB
+         <if test="firstItemNo!=null and pageSize!=null and pageSize!=0">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+	</select>
+
+	<select id="getBeaconCount" parameterType="core.wms.beacon.domain.BeaconSearchParam" resultType="java.lang.Integer">
+		SELECT count(1) as cnt
+		  FROM TB_BEACON TB
+         <include refid="sqlBeaconSearch"/>
+	</select>
+
+	<select id="getBeacon" parameterType="java.util.HashMap" resultMap="beaconResult">
+		SELECT TB.BEACON_NUM, TB.COM_NUM, TB.UUID, TB.MAJOR_VER, TB.MINOR_VER
+             , TB.TX_POWER, TB.BATTERY, TB.BEACON_TYPE, TB.MAC_ADDR, TB.BEACON_NAME, TB.BEACON_DESC
+             , TB.FLOOR, TB.LAT, TB.LNG, TB.STATE, TB.REG_DATE
+             , TB.LAST_DATE, TB.FIELD1, TB.FIELD2, TB.FIELD3, TB.FIELD4
+             , TB.FIELD5
+             , TBG.BEACON_GROUP_NUM, TBG.BEACON_GROUP_NAME
+          FROM TB_BEACON TB
+          LEFT OUTER JOIN TB_BEACON_GROUP_MAPPING TBGM ON TB.BEACON_NUM = TBGM.BEACON_NUM
+          LEFT OUTER JOIN TB_BEACON_GROUP TBG ON TBGM.BEACON_GROUP_NUM = TBG.BEACON_GROUP_NUM
+
+         WHERE TB.BEACON_NUM = #{beaconNum}
+		<if test="comNum!=null">
+            AND TB.COM_NUM = #{comNum}
+        </if>
+	</select>
+
+	<insert id="insertBeacon" parameterType="core.wms.beacon.domain.Beacon">
+		INSERT INTO TB_BEACON
+		( BEACON_NUM
+		, UUID
+		, COM_NUM
+		, MAJOR_VER
+		, MINOR_VER
+		, TX_POWER
+		, BEACON_TYPE
+		, MAC_ADDR
+		, BEACON_NAME
+		, BEACON_DESC
+		, FLOOR
+		, LAT
+		, LNG
+		, FIELD1
+		, FIELD2
+		, FIELD3
+		, FIELD4
+		, FIELD5
+		, LAST_DATE
+		, MOD_DATE
+		, REG_DATE
+		)VALUES
+		( SEQ_BEACON_BEACON_NUM.nextval
+		, #{UUID}
+		, #{comNum}
+		, #{majorVer}
+		, #{minorVer}
+		, #{txPower}
+		, #{beaconType}
+		, #{macAddr}
+		, #{beaconName}
+		, #{beaconDesc}
+		, #{floor}
+		, #{lat}
+		, #{lng}
+		, #{field1}
+		, #{field2}
+		, #{field3}
+		, #{field4}
+		, #{field5}
+		, FN_UNIX_TIMESTEMP(SYSDATE)
+		, FN_UNIX_TIMESTEMP(SYSDATE)
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+
+		<selectKey keyProperty="beaconNum" resultType="Long">
+            SELECT SEQ_BEACON_BEACON_NUM.currval FROM DUAL
+        </selectKey>
+	</insert>
+
+	<update id="modifyBeacon" parameterType="core.wms.beacon.domain.Beacon">
+		UPDATE TB_BEACON
+		   SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+		   <if test="UUID!=null">       , UUID        = #{UUID}</if>
+           <if test="majorVer!=null">   , MAJOR_VER   = #{majorVer}</if>
+           <if test="minorVer!=null">   , MINOR_VER   = #{minorVer}</if>
+           <if test="txPower!=null">    , TX_POWER    = #{txPower}</if>
+           <if test="beaconType!=null"> , BEACON_TYPE = #{beaconType}</if>
+           <if test="macAddr!=null">    , MAC_ADDR = #{macAddr}</if>
+           <if test="beaconName!=null"> , BEACON_NAME = #{beaconName}</if>
+           <if test="beaconDesc!=null"> , BEACON_DESC = #{beaconDesc}</if>
+           <if test="floor!=null">      , FLOOR       = #{floor}</if>
+           <if test="lat!=null">        , LAT         = #{lat}</if>
+           <if test="lng!=null">        , LNG         = #{lng}</if>
+           <if test="state!=null">      , STATE       = #{state}</if>
+           <if test="stateReason!=null">, STATE_REASON= #{stateReason}</if>
+           <if test="imgSrc!=null">     , IMG_SRC      = #{imgSrc}</if>
+           <if test="field1!=null">     , FIELD1      = #{field1}</if>
+           <if test="field2!=null">     , FIELD2      = #{field2}</if>
+           <if test="field3!=null">     , FIELD3      = #{field3}</if>
+           <if test="field4!=null">     , FIELD4      = #{field4}</if>
+           <if test="field5!=null">     , FIELD5      = #{field5}</if>
+
+		WHERE BEACON_NUM = #{beaconNum}
+		<if test="comNum!=null">
+            AND COM_NUM = #{comNum}
+        </if>
+	</update>
+
+	<update id="updateBeaconBlankFile" parameterType="core.wms.beacon.domain.Beacon">
+		UPDATE TB_BEACON
+		<set>
+			<if test="imgSrc == ''">IMG_SRC = '',</if>
+		</set>
+		 WHERE BEACON_NUM = #{beaconNum}
+        <if test="comNum!=null">
+            AND COM_NUM = #{comNum}
+        </if>
+	</update>
+
+	<delete id="deleteBeacon" parameterType="java.util.HashMap">
+		DELETE FROM TB_BEACON
+		 WHERE BEACON_NUM = #{beaconNum}
+        <if test="comNum!=null">
+            AND COM_NUM = #{comNum}
+        </if>
+	</delete>
+
+	<select id="getLogBeaconStateList" parameterType="java.util.HashMap" resultType="core.wms.beacon.domain.BeaconState">
+		SELECT SUUID, UUID, MAJOR_VER, MINOR_VER, BATTERY, REG_DATE
+		     , MAX(LOG_NUM) OVER(PARTITION BY A.SUUID, A.UUID, A.MAJOR_VER, A.MINOR_VER)
+		  FROM (
+			SELECT LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, BATTERY, REG_DATE
+			  FROM TB_LOG_BEACON_STATE
+			 WHERE REG_DATE BETWEEN FN_UNIX_TIMESTEMP(TO_DATE(#{sDate}, 'YYYYMMDDHH24MISS')) AND FN_UNIX_TIMESTEMP(TO_DATE(#{eDate}, 'YYYYMMDDHH24MISS'))
+			 ORDER BY REG_DATE DESC
+		  ) A
+		<!--  GROUP BY A.SUUID, A.UUID, A.MAJOR_VER, A.MINOR_VER -->
+	</select>
+
+	<update id="modifyBeaconState" parameterType="core.wms.beacon.domain.BeaconState">
+		UPDATE TB_BEACON
+		   SET battery = #{battery}
+		     , LAST_DATE = #{regDate}
+		 WHERE COM_NUM = (SELECT COM_NUM FROM TB_COMPANY WHERE UUID = #{SUUID})
+		   AND UUID = #{UUID}
+		   AND MAJOR_VER = #{majorVer}
+		   AND MINOR_VER = #{minorVer}
+	</update>
+
+	<!-- 대시보드, 망실 가능성이 높은 비콘 관제 현황 차트 -->
+	<!-- jhlee 160802 비콘 UUID는  사이트UUID 와 다를 수 있어 수정, 시간 주석 에러나서 삭제 함. -->
+	<select id="getChartLogLossBeaconStateList" parameterType="java.util.HashMap" resultType="core.wms.beacon.domain.BeaconState">
+		SELECT SUM(A.count1) chartCount1
+		  	 , SUM(A.count2) chartCount2
+		  	 , SUM(A.count3) chartCount3
+		  	 , SUM(A.count4) chartCount4
+		  	 , SUM(A.count5) chartCount5
+		  	 , SUM(A.count6) chartCount6
+		  	 , SUM(A.count7 + A.notLogCount) chartCount7
+		  FROM(
+		  	SELECT CASE WHEN regDate between (SYSDATE - interval '3' hour) and (SYSDATE - interval '1' hour) THEN 1 ELSE 0 END count1
+                 , CASE WHEN regDate between (SYSDATE - interval '6' hour) and (SYSDATE - interval '3' hour) THEN 1 ELSE 0 END count2
+                 , CASE WHEN regDate between (SYSDATE - interval '12' hour) and (SYSDATE - interval '6' hour) THEN 1 ELSE 0 END count3
+                 , CASE WHEN regDate between (SYSDATE - interval '1' day) and (SYSDATE - interval '12' hour) THEN 1 ELSE 0 END count4
+                 , CASE WHEN regDate between (SYSDATE - interval '3' day) and (SYSDATE - interval '1' day) THEN 1 ELSE 0 END count5
+                 , CASE WHEN regDate between (SYSDATE - interval '7' day) and (SYSDATE - interval '3' day) THEN 1 ELSE 0 END count6
+                 , CASE WHEN regDate <![CDATA[<=]]> (SYSDATE - interval '7' day) THEN 1 ELSE 0 END count7
+                 , DECODE(regDate, NULL, 1, 0) notLogCount
+		  	from (
+		  		SELECT BC.BEACON_NUM beaconNum, BC.BEACON_NAME beaconName, BC.LAST_DATE lastDate, TO_DATE('19700101','yyyymmdd') + (S.REG_DATE/86400) as regDate
+		  		  FROM (
+		  			SELECT A.BEACON_NUM, A.UUID, A.MAJOR_VER, A.MINOR_VER, A.BEACON_NAME, A.LAST_DATE
+		  			  FROM TB_BEACON A
+		  			 INNER JOIN (SELECT REF_NUM
+		  			               FROM TB_CONTENTS_MAPPING
+		  			              WHERE REF_TYPE = 'BC'
+		  			              GROUP BY REF_NUM) B
+		  			    ON B.REF_NUM = A.BEACON_NUM
+		  			  WHERE A.COM_NUM = #{comNum}
+		  			  <!-- GROUP BY A.UUID, A.MAJOR_VER, A.MINOR_VER -->
+		  			  ORDER BY A.BEACON_NUM
+		  		  ) BC
+		  		  LEFT JOIN (SELECT UUID, MAJOR_VER, MINOR_VER, MAX(REG_DATE) AS REG_DATE
+		  		               FROM TB_LOG_BEACON_STATE
+		  		              WHERE SUUID = #{SUUID}
+		  		              GROUP BY UUID, MAJOR_VER, MINOR_VER
+		  		             ) S
+		  		    ON BC.UUID = S.UUID
+		  		   AND BC.MAJOR_VER = S.MAJOR_VER
+		  		   AND BC.MINOR_VER = S.MINOR_VER
+		  		 ORDER BY REG_DATE DESC
+		  	)Z
+		  )A
+	</select>
+
+	<!-- 대시보드, 망실 가능성이 높은 비콘 -->
+	<select id="getLogLossBeaconStateList" parameterType="java.util.HashMap" resultMap="beaconResult">
+		SELECT BC.BEACON_NUM, BC.BEACON_NAME, BC.LAST_DATE, S.REG_DATE
+		  FROM (
+			SELECT A.BEACON_NUM, A.UUID, A.MAJOR_VER, A.MINOR_VER, A.BEACON_NAME
+			     , MAX(A.LAST_DATE) OVER(PARTITION BY A.UUID, A.MAJOR_VER, A.MINOR_VER) AS LAST_DATE
+			  FROM TB_BEACON A
+			 INNER JOIN (SELECT REF_NUM
+			               FROM TB_CONTENTS_MAPPING
+			              WHERE REF_TYPE = 'BC'
+			              GROUP BY REF_NUM
+			             ) B
+			     ON B.REF_NUM = A.BEACON_NUM
+			  WHERE A.COM_NUM = #{comNum}
+              ORDER BY A.BEACON_NUM
+		  ) BC
+		  LEFT JOIN (SELECT UUID, MAJOR_VER, MINOR_VER, REG_DATE
+		               FROM TB_LOG_BEACON_STATE
+		              WHERE SUUID = #{SUUID}
+		              GROUP BY SUUID, UUID, MAJOR_VER, MINOR_VER, REG_DATE) S
+		    ON BC.UUID = S.UUID
+           AND BC.MAJOR_VER = S.MAJOR_VER
+           AND BC.MINOR_VER = S.MINOR_VER
+		 ORDER BY REG_DATE DESC
+	</select>
+
+
+    <!--
+    =====================BEACON STATE=======================
+    -->
+    <sql id="sqlBeaconStateSearch">
+        <where>
+           <if test="comNum != null">
+               COM_NUM = #{comNum}
+           </if>
+           <if test="state != null">
+               AND STATE = #{state}
+           </if>
+           <if test="keyword != '' and keyword  != null">
+                <choose>
+                    <when test="opt eq 'beaconName'">AND BEACON_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt eq 'UUID'">AND UUID LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt eq 'majorVer'">AND MAJOR_VER LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt eq 'minorVer'">AND MINOR_VER LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt eq 'txPower'">AND TX_POWER LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt eq 'floor'">AND FLOOR LIKE CONCAT(#{keyword}, '%')</when>
+                    <otherwise></otherwise>
+                </choose>
+           </if>
+       </where>
+    </sql>
+    <select id="getBeaconStateList" parameterType="core.wms.beacon.domain.BeaconStateSearchParam" resultMap="beaconResult">
+        SELECT *
+          FROM (
+            SELECT BEACON_NUM, BEACON_TYPE, BEACON_NAME, UUID, MAJOR_VER
+                 , MINOR_VER, BATTERY, STATE, TX_POWER, LAST_DATE
+                 , ROWNUM AS RNUM
+              FROM TB_BEACON
+            <include refid="sqlBeaconStateSearch"/>
+
+            <if test="field != null and sort != null">
+                <choose>
+                   <when test="field eq 'lastDate'">ORDER BY LAST_DATE ${sort}</when>
+                   <when test="field eq 'battery'">ORDER BY BATTERY ${sort}</when>
+                   <otherwise></otherwise>
+                </choose>
+            </if>
+         ) TB
+        <if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+        </if>
+    </select>
+
+    <select id="getBeaconStateCount" parameterType="core.wms.beacon.domain.BeaconStateSearchParam" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+        FROM TB_BEACON
+        <include refid="sqlBeaconStateSearch"/>
+    </select>
+
+    <!--
+    =====================TB_BEACON_GROUP=======================
+    -->
+    <sql id="sqlBeaconGroupSearch">
+        <where>
+           <if test="comNum != null">
+               A.COM_NUM = #{comNum}
+           </if>
+           <if test="keyword != '' and keyword  != null and opt != '' and opt  != null">
+                AND A.BEACON_GROUP_NAME LIKE CONCAT(#{keyword}, '%')
+            </if>
+       </where>
+    </sql>
+	<select id="getBeaconGroupCount" parameterType="core.wms.beacon.domain.BeaconGroupSearchParam" resultType="Integer">
+		SELECT COUNT(1) as cnt
+		  FROM TB_BEACON_GROUP A
+         <include refid="sqlBeaconGroupSearch"/>
+	</select>
+
+	<select id="getBeaconGroupList" parameterType="core.wms.beacon.domain.BeaconGroupSearchParam" resultMap="beaconGroupResult">
+		SELECT *
+          FROM (
+			SELECT A.BEACON_GROUP_NAME, A.REG_DATE, A.MOD_DATE, A.BEACON_GROUP_NUM, BEACON_COUNT
+                 , ROWNUM AS RNUM
+              FROM TB_BEACON_GROUP A
+              LEFT OUTER JOIN (SELECT BEACON_GROUP_NUM, COUNT(1) BEACON_COUNT
+                                 FROM TB_BEACON_GROUP_MAPPING
+                                GROUP BY BEACON_GROUP_NUM
+                              ) B
+                ON A.BEACON_GROUP_NUM = B.BEACON_GROUP_NUM
+             <include refid="sqlBeaconGroupSearch"/>
+			 ORDER BY A.BEACON_GROUP_NUM DESC
+          ) TB
+         <if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+	</select>
+
+	<select id="getBeaconGroup" parameterType="core.wms.beacon.domain.BeaconGroup" resultMap="beaconGroupResult">
+		SELECT *
+		FROM TB_BEACON_GROUP
+
+		WHERE BEACON_GROUP_NUM = #{beaconGroupNum}
+         <if test="comNum!=null">AND COM_NUM = #{comNum}</if>
+	</select>
+
+	<insert id="insertBeaconGroup" parameterType="core.wms.beacon.domain.BeaconGroup">
+		INSERT INTO TB_BEACON_GROUP
+		( COM_NUM
+		, BEACON_GROUP_NUM
+		, BEACON_GROUP_NAME
+		, MOD_DATE
+		, REG_DATE
+		)VALUES
+		( #{comNum}
+		, SEQ_BG_COM_NUM.nextval
+		, #{beaconGroupName}
+		, FN_UNIX_TIMESTEMP(SYSDATE)
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+	</insert>
+
+	<update id="updateBeaconGroup" parameterType="core.wms.beacon.domain.BeaconGroup">
+		UPDATE TB_BEACON_GROUP
+		   SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+		   <if test="beaconGroupName!=null"> , BEACON_GROUP_NAME=#{beaconGroupName}</if>
+
+		 WHERE BEACON_GROUP_NUM = #{beaconGroupNum}
+		 <if test="comNum!=null">AND COM_NUM = #{comNum}</if>
+	</update>
+
+	<delete id="deleteBeaconGroup" parameterType="core.wms.beacon.domain.BeaconGroup">
+		DELETE
+		  FROM TB_BEACON_GROUP
+		 WHERE BEACON_GROUP_NUM = #{beaconGroupNum}
+         <if test="comNum!=null">AND COM_NUM = #{comNum}</if>
+	</delete>
+
+    <!--
+    =====================TB_BEACON_GROUP_MAPPING=======================
+    -->
+	<insert id="insertBeaconGroupMapping" parameterType="core.wms.beacon.domain.BeaconGroupMapping">
+		INSERT INTO TB_BEACON_GROUP_MAPPING
+		( BEACON_GROUP_NUM
+		, BEACON_NUM
+		)VALUES
+		( #{beaconGroupNum}
+		, #{beaconNum})
+	</insert>
+
+	<update id="updateBeaconGroupMapping" parameterType="core.wms.beacon.domain.BeaconGroupMapping">
+		UPDATE TB_BEACON_GROUP_MAPPING
+		   SET BEACON_GROUP_NUM = #{beaconGroupNum}
+		     , BEACON_NUM = #{beaconNum}
+		 WHERE BEACON_GROUP_NUM = #{fromBeaconGroupNum}
+		   AND BEACON_NUM = #{fromBeaconNum}
+	</update>
+
+	<delete id="deleteBeaconGroupMapping" parameterType="core.wms.beacon.domain.BeaconGroupMapping">
+		DELETE FROM TB_BEACON_GROUP_MAPPING
+		 WHERE BEACON_GROUP_NUM = #{beaconGroupNum}
+           AND BEACON_NUM = #{beaconNum}
+	</delete>
+</mapper>

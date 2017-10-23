@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.common.CompanyDao">
+
+	<resultMap id="companyResult" type="core.api.common.domain.Company">
+		<result property="comNum"     column="COM_NUM" />
+		<result property="UUID"       column="UUID" />
+		<result property="comName"    column="COM_NAME" />
+		<result property="comBizNum"  column="COM_BIZ_NUM" />
+		<result property="lat"        column="LAT" />
+		<result property="lng"        column="LNG" />
+		<result property="regDate"    column="REG_DATE" />
+        <result property="oauthEnabled"    column="OAUTH_ENABLED" />
+	</resultMap>
+
+	<select id="getCompanyInfo" parameterType="core.api.common.domain.Company" resultMap="companyResult">
+		SELECT COM_NUM, UUID, COM_NAME, COM_BIZ_NUM, LAT, LNG, REG_DATE, OAUTH_ENABLED
+		  FROM TB_COMPANY
+		 WHERE COM_NUM = #{comNum}
+	</select>
+
+	<select id="getCompanyInfoByUUID" parameterType="core.api.common.domain.Company" resultMap="companyResult">
+		SELECT COM_NUM, UUID, COM_NAME, COM_BIZ_NUM, LAT, LNG, REG_DATE, OAUTH_ENABLED
+		  FROM TB_COMPANY
+		 WHERE UUID = #{UUID}
+	</select>
+
+</mapper>

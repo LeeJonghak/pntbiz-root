@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="pntbiz-admin:war">
+    <output-path>$PROJECT_DIR$/pntbiz-admin/target</output-path>
+    <root id="archive" name="pntbiz_admin-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="pntbiz-admin:war exploded" />
+    </root>
+  </artifact>
+</component>

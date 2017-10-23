@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.geofencing.dao.GeofencingDao">
+
+	<resultMap id="geofencingResult" type="core.common.geofencing.domain.Geofencing">
+		<result property="fcNum"      column="FC_NUM" />
+		<result property="comNum"     column="COM_NUM" />
+		<result property="fcType"     column="FC_TYPE" />
+		<result property="fcShape"    column="FC_SHAPE" />
+		<result property="fcName"     column="FC_NAME" />
+		<result property="floor"      column="FLOOR" />
+		<result property="evtEnter"   column="EVT_ENTER" />
+		<result property="evtLeave"   column="EVT_LEAVE" />
+		<result property="evtStay"    column="EVT_STAY" />
+		<result property="numEnter"   column="NUM_ENTER" />
+		<result property="numLeave"   column="NUM_LEAVE" />
+		<result property="numStay"    column="NUM_STAY" />
+		<result property="userID"     column="USERID" />
+		<result property="field1"     column="FIELD1" />
+		<result property="field2"     column="FIELD2" />
+		<result property="field3"     column="FIELD3" />
+		<result property="field4"     column="FIELD4" />
+		<result property="field5"     column="FIELD5" />
+		<result property="modDate"    column="MOD_DATE" />
+		<result property="regDate"    column="REG_DATE" />
+	</resultMap>
+
+
+    <resultMap id="codeActionResult" type="core.api.geofencing.domain.CodeAction">
+        <result property="comNum"   column="COM_NUM"/>
+        <result property="codeNum"  column="CODE_NUM"/>
+        <result property="codeType" column="CODE_TYPE"/>
+        <result property="code"     column="CODE"/>
+        <result property="codeName" column="CODE_NAME"/>
+        <result property="modDate"  column="MOD_DATE"/>
+        <result property="regDate"  column="REG_DATE"/>
+
+        <result property="refNum"   column="REF_NUM"/>
+        <result property="refType"  column="REF_TYPE"/>
+        <result property="refSubType" column="REF_SUB_TYPE"/>
+    </resultMap>
+
+    <resultMap id="contentsResult" type="core.api.contents.domain.Contents">
+        <result property="comNum"  column="COM_NUM" />
+        <result property="conNum"  column="CON_NUM" />
+        <result property="conType" column="CON_TYPE" />
+        <result property="conName" column="CON_NAME" />
+        <result property="userID"  column="USER_ID" />
+        <result property="acNum"   column="AC_NUM" />
+        <result property="expFlag" column="EXP_FLAG" />
+        <result property="rssi"    column="RSSI" />
+        <result property="conDesc" column="CON_DESC" />
+        <result property="sDate"   column="S_DATE" />
+        <result property="eDate"   column="E_DATE" />
+        <result property="modDate" column="MOD_DATE" />
+        <result property="regDate" column="REG_DATE" />
+
+        <result property="imgSrc1" column="IMG_SRC1" />
+        <result property="imgSrc2" column="IMG_SRC2" />
+        <result property="imgSrc3" column="IMG_SRC3" />
+        <result property="imgSrc4" column="IMG_SRC4" />
+        <result property="imgSrc5" column="IMG_SRC5" />
+        <result property="text1" column="TEXT1" />
+        <result property="text2" column="TEXT2" />
+        <result property="text3" column="TEXT3" />
+        <result property="text4" column="TEXT4" />
+        <result property="text5" column="TEXT5" />
+        <result property="soundSrc1" column="SOUND_SRC1" />
+        <result property="soundSrc2" column="SOUND_SRC2" />
+        <result property="soundSrc3" column="SOUND_SRC3" />
+        <result property="url1" column="URL1" />
+        <result property="url2" column="URL2" />
+        <result property="url3" column="URL3" />
+
+        <result property="imgURL1" column="IMG_URL1" />
+        <result property="imgURL2" column="IMG_URL2" />
+        <result property="imgURL3" column="IMG_URL3" />
+        <result property="imgURL4" column="IMG_URL4" />
+        <result property="imgURL5" column="IMG_URL5" />
+        <result property="soundURL1" column="SOUND_URL1" />
+        <result property="soundURL2" column="SOUND_URL2" />
+        <result property="soundURL3" column="SOUND_URL3" />
+
+        <result property="acName" column="AC_NAME" />
+
+        <result property="refNum" column="REF_NUM" />
+        <result property="refType" column="REF_TYPE" />
+        <result property="refSubType" column="REF_SUB_TYPE" />
+    </resultMap>
+
+    <resultMap id="geofencingZoneResult" type="core.api.geofencing.domain.GeofencingZone">
+        <result property="comNum"       column="COM_NUM"/>
+        <result property="fcNum"        column="FC_NUM"/>
+        <result property="fcType"       column="FC_TYPE"/>
+        <result property="fcShape"      column="FC_SHAPE"/>
+        <result property="fcName"       column="FC_NAME"/>
+        <result property="floor"        column="FLOOR"/>
+        <result property="evtEnter"     column="EVT_ENTER"/>
+        <result property="evtLeave"     column="EVT_LEAVE"/>
+        <result property="evtStay"      column="EVT_STAY"/>
+        <result property="numEnter"     column="NUM_ENTER"/>
+        <result property="numLeave"     column="NUM_LEAVE"/>
+        <result property="numStay"      column="NUM_STAY"/>
+        <result property="field1"       column="FIELD1"/>
+        <result property="field2"       column="FIELD2"/>
+        <result property="field3"       column="FIELD3"/>
+        <result property="field4"       column="FIELD4"/>
+        <result property="field5"       column="FIELD5"/>
+        <result property="userID"       column="USERID"/>
+        <result property="modDate"      column="MOD_DATE"/>
+        <result property="regDate"      column="REG_DATE"/>
+        <result property="fcGroupNum"   column="FC_GROUP_NUM"/>
+        <result property="fcGroupName"  column="FC_GROUP_NAME"/>
+        <result property="lat"      column="LAT"/>
+        <result property="lng"      column="LNG"/>
+        <result property="orderSeq"   column="ORDER_SEQ"/>
+        <result property="radius"  column="RADIUS"/>
+    </resultMap>
+
+    <resultMap id="geofencingLatlngResult" type="core.api.geofencing.domain.GeofencingLatlng">
+        <result property="lat"      column="LAT"/>
+        <result property="lng"      column="LNG"/>
+    </resultMap>
+
+	<select id="getGeofencing" parameterType="core.common.geofencing.domain.Geofencing" resultMap="geofencingResult">
+        SELECT FC_NUM, COM_NUM, FC_TYPE, FC_SHAPE, FC_NAME
+             , FLOOR, EVT_ENTER, EVT_LEAVE, EVT_STAY, NUM_ENTER
+             , NUM_LEAVE, NUM_STAY, USERID, FIELD1, FIELD2
+             , FIELD3, FIELD4, FIELD5, MOD_DATE, REG_DATE
+        FROM TB_GEOFENCING
+        <where>
+            AND FC_NUM=#{fcNum}
+            <if test="comNum!=null">
+            AND COM_NUM=#{comNum}
+            </if>
+        </where>
+    </select>
+
+    <select id="getGeofencingZone" parameterType="core.api.geofencing.domain.GeofencingZone" resultMap="geofencingZoneResult">
+        SELECT b.*, a.*, d.ZONE_TYPE
+        FROM TB_GEOFENCING_LATLNG a
+        INNER JOIN TB_GEOFENCING b
+        ON a.FC_NUM=b.FC_NUM
+        LEFT JOIN TB_GEOFENCING_BPZONE d
+        ON b.FC_NUM=d.FC_NUM
+        <where>
+            AND b.FC_NUM=#{fcNum}
+            <if test="floor!=null and floor!=''">
+                and b.FLOOR=#{floor}
+            </if>
+        </where>
+        ORDER BY a.ORDER_SEQ ASC
+    </select>
+
+    <select id="getGeofencingLatlngs" parameterType="core.common.geofencing.domain.Geofencing" resultMap="geofencingLatlngResult">
+        SELECT a.LAT, a.LNG
+        FROM TB_GEOFENCING_LATLNG a
+        INNER JOIN TB_GEOFENCING b
+        ON a.FC_NUM=b.FC_NUM
+        <where>
+            AND b.FC_NUM=#{fcNum}
+        </where>
+        ORDER BY a.ORDER_SEQ ASC
+    </select>
+
+    <select id="getGeofencingList" parameterType="java.util.HashMap" resultMap="geofencingResult">
+        SELECT A.FC_NUM, A.COM_NUM, A.FC_TYPE, A.FC_SHAPE, A.FC_NAME
+             , A.FLOOR, A.EVT_ENTER, A.EVT_LEAVE, A.EVT_STAY, A.NUM_ENTER
+             , A.NUM_LEAVE, A.NUM_STAY, A.USERID, A.FIELD1, A.FIELD2
+             , A.FIELD3, A.FIELD4, A.FIELD5, A.MOD_DATE, A.REG_DATE
+          FROM TB_GEOFENCING A
+             , TB_COMPANY B
+        <where>
+            AND B.UUID = #{UUID}
+            AND A.COM_NUM = B.COM_NUM
+            <if test="floor!=null and floor!=''">
+                and A.FLOOR=#{floor}
+            </if>
+        </where>
+        ORDER BY A.FC_NUM ASC
+    </select>
+
+
+    <select id="getGeofencingListByAll" parameterType="java.util.HashMap" resultMap="geofencingZoneResult">
+        SELECT b.*, a.*, d.ZONE_TYPE
+          FROM TB_GEOFENCING_LATLNG a
+         INNER JOIN TB_GEOFENCING b
+            ON a.FC_NUM=b.FC_NUM
+         INNER JOIN TB_COMPANY c
+            ON b.COM_NUM=c.COM_NUM
+          LEFT JOIN TB_GEOFENCING_BPZONE d
+            ON b.FC_NUM=d.FC_NUM
+        <where>
+            c.UUID=#{UUID}
+            <if test="floor!=null and floor!=''">
+                and b.FLOOR=#{floor}
+            </if>
+            <if test="fcNum!=null">
+                and b.FC_NUM=#{fcNum}
+            </if>
+        </where>
+        ORDER BY a.FC_NUM ASC, a.ORDER_SEQ ASC
+    </select>
+
+    <select id="getGeofencingListByCache" parameterType="java.lang.String" resultMap="geofencingZoneResult">
+        SELECT b.*, a.*, d.ZONE_TYPE
+        FROM TB_GEOFENCING_LATLNG a
+        INNER JOIN TB_GEOFENCING b
+        ON a.FC_NUM=b.FC_NUM
+        INNER JOIN TB_COMPANY c
+        ON b.COM_NUM=c.COM_NUM
+        LEFT JOIN TB_GEOFENCING_BPZONE d
+        ON b.FC_NUM=d.FC_NUM
+        <where>
+            c.UUID=#{UUID}
+        </where>
+        ORDER BY a.FC_NUM ASC, a.ORDER_SEQ ASC
+    </select>
+
+    <select id="getGeofencingContentsList" parameterType="java.util.HashMap" resultMap="contentsResult">
+        SELECT a.*, b.*, c.*
+          FROM TB_CONTENTS a
+         INNER JOIN TB_CONTENTS_DETAIL b
+            ON a.CON_NUM=b.CON_NUM
+         INNER JOIN TB_CONTENTS_MAPPING c
+            ON a.CON_NUM=c.CON_NUM
+           AND c.REF_TYPE='GF'
+         INNER JOIN TB_GEOFENCING d
+            ON d.FC_NUM=c.REF_NUM
+         INNER JOIN TB_COMPANY e
+            ON a.COM_NUM=e.COM_NUM
+        <where>
+            e.UUID=#{UUID}
+            <if test="floor!=null and floor!=''">
+                and d.FLOOR=#{floor}
+            </if>
+        </where>
+        ORDER BY d.FC_NUM ASC, a.CON_NUM ASC
+    </select>
+
+    <select id="getGeofencingActionList" parameterType="java.util.HashMap" resultMap="codeActionResult">
+        SELECT a.*, c.*
+          FROM TB_CODE_ACTION a
+         INNER JOIN TB_CODE_ACTION_MAPPING c
+            ON a.CODE_NUM=c.CODE_NUM
+           AND c.REF_TYPE='GF'
+         INNER JOIN TB_GEOFENCING d
+            ON d.FC_NUM=c.REF_NUM
+         INNER JOIN TB_COMPANY e
+            ON a.COM_NUM=e.COM_NUM
+        <where>
+            e.UUID=#{UUID}
+            <if test="floor!=null and floor!=''">
+                and d.FLOOR=#{floor}
+            </if>
+            <if test="fcNum!=null">
+                and d.FC_NUM=#{fcNum}
+            </if>
+        </where>
+        ORDER BY d.FC_NUM ASC, a.CODE_NUM ASC
+
+    </select>
+
+    <select id="getGeofencingFloorCodeList" parameterType="java.util.HashMap" resultMap="geofencingZoneResult">
+        SELECT b.*, a.*
+        FROM TB_GEOFENCING_LATLNG a
+        INNER JOIN TB_GEOFENCING b ON(a.FC_NUM=b.FC_NUM)
+        INNER JOIN TB_COMPANY c ON(b.COM_NUM=c.COM_NUM)
+        <where>
+            c.UUID=#{UUID}
+            <if test="floorCodeList != null">
+                AND b.FLOOR IN
+                <foreach item="item" index="index" collection="floorCodeList" open="(" separator="," close=")">#{item.nodeId}</foreach>
+            </if>
+        </where>
+        ORDER BY a.FC_NUM ASC, a.ORDER_SEQ ASC
+    </select>
+
+    <update id="updateGeofencing" parameterType="core.common.geofencing.domain.Geofencing">
+        UPDATE TB_GEOFENCING
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fcName!=null">FC_NAME=#{fcName},</if>
+            <if test="floor!=null">FLOOR=#{floor},</if>
+            <if test="evtEnter!=null">EVT_ENTER=#{evtEnter},</if>
+            <if test="evtLeave!=null">EVT_LEAVE=#{evtLeave},</if>
+            <if test="evtStay!=null">EVT_STAY=#{evtStay},</if>
+            <if test="numEnter!=null">NUM_ENTER=#{numEnter},</if>
+            <if test="numLeave!=null">NUM_LEAVE=#{numLeave},</if>
+            <if test="numStay!=null">NUM_STAY=#{numStay},</if>
+            <if test="field1!=null">FIELD1=#{field1},</if>
+            <if test="field2!=null">FIELD2=#{field2},</if>
+            <if test="field3!=null">FIELD3=#{field3},</if>
+            <if test="field4!=null">FIELD4=#{field4},</if>
+            <if test="field5!=null">FIELD5#{field5},</if>
+            MOD_DATE=FN_UNIX_TIMESTEMP(SYSDATE),
+        </trim>
+        <where>
+            FC_NUM=#{fcNum}
+            <if test="comNum!=null">
+                and COM_NUM=#{comNum}
+            </if>
+        </where>
+    </update>
+</mapper>

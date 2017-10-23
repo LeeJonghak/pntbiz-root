@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.NodeDao">
+
+    <resultMap id="nodeResult" type="core.wms.map.domain.Node">
+        <result property="nodeNum"  column="NODE_NUM"/>
+        <result property="comNum"   column="COM_NUM" />
+        <result property="nodeID"   column="NODE_ID"/>
+        <result property="floor"    column="FLOOR"/>
+        <result property="nodeName" column="NODE_NAME"/>
+        <result property="lat"      column="LAT"/>
+        <result property="lng"      column="LNG"/>
+        <result property="cate"     column="CATE"/>
+        <result property="jointName" column="JOINT_NAME"/>
+        <result property="type"     column="TYPE"/>
+    </resultMap>
+    <resultMap id="nodeContentsResult" type="core.wms.map.domain.NodeContents">
+        <result property="nodeNum"  column="NODE_NUM"/>
+	    <result property="comNum"   column="COM_NUM" />
+	    <result property="nodeID"   column="NODE_ID"/>
+	    <result property="floor"    column="FLOOR"/>
+	    <result property="nodeName" column="NODE_NAME"/>
+	    <result property="lat"      column="LAT"/>
+	    <result property="lng"      column="LNG"/>
+	    <result property="cate"     column="CATE"/>
+	    <result property="jointName" column="JOINT_NAME"/>
+	    <result property="type"     column="TYPE"/>
+	    <result property="refType"  column="REF_TYPE"/>
+	    <result property="refSubType" column="REF_SUB_TYPE"/>
+	    <result property="refNum" column="REF_NUM"/>
+	    <result property="evtNum" column="EVT_NUM"/>
+    </resultMap>
+
+
+    <!--
+    2015-11-18 nohsoo 제거 예정
+    -->
+    <select id="getNodeID" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select CASE WHEN nodeMin.nodeID is null or nodeMin.nodeID>10000 THEN 10000 ELSE node.nodeID END nodeID
+          from (select min(NODE_ID) as nodeID
+                  from TB_NODE
+                 where COM_NUM=#{comNum}
+                   and NODE_ID>0
+                ) nodeMin
+             , (select min(NODE_ID)+1 as nodeID
+                  from TB_NODE
+                 where COM_NUM=#{comNum}
+                   and NODE_ID>0
+                   and NODE_ID+1 not in (select NODE_ID
+                                          from TB_NODE
+                                         where COM_NUM=#{comNum}
+                                           and NODE_ID>0)
+                ) node
+    </select>
+
+    <select id="getNodeAll" parameterType="java.util.HashMap" resultMap="nodeContentsResult">
+      SELECT A.NODE_NUM, A.COM_NUM, A.NODE_ID, A.FLOOR, A.CATE
+           , A.NODE_NAME, A.LAT, A.LNG, A.JOINT_NAME, A.TYPE
+           , B.CON_NUM, B.REF_TYPE, B.REF_SUB_TYPE, B.EVT_NUM
+        FROM TB_NODE A
+        LEFT OUTER JOIN TB_CONTENTS_MAPPING B
+          ON (A.NODE_NUM = B.REF_NUM AND B.REF_TYPE = 'ND')
+      <where>
+          COM_NUM=#{comNum}
+          <if test="floor!=null">
+              AND A.FLOOR=#{floor}
+          </if>
+          <if test="type!=null">
+              AND A.TYPE=#{type}
+          </if>
+      </where>
+    </select>
+
+    <select id="getNode" parameterType="java.util.HashMap" resultMap="nodeResult">
+        select *
+          from TB_NODE
+        <where>
+            NODE_NUM=#{nodeNum}
+            <if test="type!=null">
+                and TYPE=#{type}
+            </if>
+        </where>
+    </select>
+
+    <!--
+    2015-11-18 nohsoo 노드 생성시 노드 ID자동 할당
+    -->
+    <update id="insertNode" parameterType="core.wms.map.domain.Node">
+        INSERT INTO TB_NODE
+        ( NODE_NUM
+        , COM_NUM
+        , NODE_ID
+        , FLOOR
+        , NODE_NAME
+        , LAT
+        , LNG
+        <if test="type!=null">, TYPE</if>
+        )
+        SELECT SEQ_NODE_NODE_NUM.NEXTVAL
+             , #{comNum}
+             , CASE WHEN nodeMin.nodeID IS NULL OR nodeMin.nodeID > 10000 THEN 10000 ELSE node.nodeID END nodeID
+             , #{floor}
+             , #{nodeName}
+             , #{lat}
+             , #{lng}
+             <if test="type!=null">, #{type}</if>
+          from (SELECT min(NODE_ID) AS nodeID
+                  FROM TB_NODE
+                 WHERE COM_NUM=#{comNum}
+                   AND NODE_ID > 0) nodeMin
+             , (SELECT min(NODE_ID)+1 AS nodeID
+                  FROM TB_NODE
+                 WHERE COM_NUM=#{comNum}
+                   AND NODE_ID>0
+                   AND NODE_ID+1 NOT IN (SELECT NODE_ID FROM TB_NODE WHERE COM_NUM=#{comNum} AND NODE_ID>0)
+               ) node
+
+        <selectKey keyProperty="nodeNum" resultType="Long">
+            SELECT SEQ_NODE_NODE_NUM.currval FROM DUAL
+        </selectKey>
+    </update>
+
+    <update id="updateNode" parameterType="core.wms.map.domain.Node">
+        UPDATE TB_NODE
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nodeId!=null">COM_NUM=#{nodeId},</if>
+            <if test="floor!=null">FLOOR=#{floor},</if>
+            <if test="nodeName!=null">NODE_NAME=#{nodeName},</if>
+            <if test="lat!=null">LAT=#{lat},</if>
+            <if test="lng!=null">LNG=#{lng},</if>
+            <if test='cate!=null and cate=="-"'>CATE=null,</if>
+            <if test='cate!=null and cate!="-"'>CATE=#{cate},</if>
+            <if test='jointName!=null and jointName=="-"'>JOINT_NAME=null,</if>
+            <if test='jointName!=null and jointName!="-"'>JOINT_NAME=#{jointName},</if>
+			<if test='areaName!=null and areaName!="-"'>AREA_NAME=#{areaName},</if>
+			<if test='areaNum!=null'>AREA_NUM=#{areaNum},</if>
+        </trim>
+        <where>
+			<if test="nodeNum!=null">
+				NODE_NUM=#{nodeNum}
+			</if>
+			<if test="nodeNumArray!=null">
+				NODE_NUM IN
+				<foreach collection="nodeNumArray" item="item" index="index" separator="," open="(" close=")">
+					#{item.value}
+				</foreach>
+			</if>
+        </where>
+    </update>
+
+    <delete id="deleteNode" parameterType="java.util.HashMap">
+        DELETE FROM TB_NODE
+        <where>
+            NODE_NUM=#{nodeNum}
+        </where>
+    </delete>
+
+
+    <select id="getPOICateList" resultType="core.common.code.domain.Code">
+        SELECT *
+        FROM TB_CODE
+        WHERE G_CD = 'POICATE'
+    </select>
+</mapper>

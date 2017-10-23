@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ChaosAreaDao">
+
+    <resultMap id="chaosAreaResult" type="core.api.beacon.domain.ChaosArea">
+        <result property="companyUUID" column="companyUUID"/>
+        <result property="areaNum" column="AREA_NUM"/>
+        <result property="comNum"  column="COM_NUM "/>
+        <result property="floor"   column="FLOOR"/>
+        <result property="lat"     column="LAT"/>
+        <result property="lng"     column="LNG"/>
+        <result property="radius"  column="RADIUS"/>
+        <result property="regDate" column="REG_DATE" />
+    </resultMap>
+
+    <select id="getChaosAreaListAll" parameterType="core.api.beacon.domain.ChaosArea" resultMap="chaosAreaResult">
+        SELECT a.*
+             , b.UUID AS companyUUID
+          FROM TB_CHAOS_AREA a
+         INNER JOIN TB_COMPANY b
+            on a.COM_NUM=b.COM_NUM
+         WHERE b.UUID=#{companyUUID}
+        <if test="floor!=null">
+            AND a.FLOOR=#{floor}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.beacon.beaconDao">
+
+	<resultMap id="cntResult" type="Integer">
+		<result property="cnt" column="CNT" />
+	</resultMap>
+
+	<resultMap id="beaconResult" type="core.api.beacon.domain.Beacon">
+		<result property="beaconNum"  column="BEACON_NUM" />
+		<result property="comNum"     column="COM_NUM" />
+		<result property="UUID"       column="UUID" />
+		<result property="majorVer"   column="MAJOR_VER" />
+		<result property="minorVer"   column="MINOR_VER" />
+		<result property="macAddr"    column="MAC_ADDR" />
+		<result property="txPower"    column="TX_POWER" />
+		<result property="battery"    column="BATTERY" />
+		<result property="beaconName" column="BEACON_NAME" />
+		<result property="beaconDesc" column="BEACON_DESC" />
+		<result property="floor"      column="FLOOR" />
+		<result property="lat"        column="LAT" />
+		<result property="lng"        column="LNG" />
+		<result property="lastDate"   column="LAST_DATE" />
+		<result property="modDate"    column="MOD_DATE" />
+		<result property="regDate"    column="REG_DATE" />
+	</resultMap>
+
+    <resultMap id="contentsResult" type="core.api.contents.domain.Contents">
+        <result property="comNum"  column="COM_NUM" />
+        <result property="conNum"  column="CON_NUM" />
+        <result property="conType" column="CON_TYPE" />
+        <result property="conName" column="CON_NAME" />
+        <result property="userID"  column="USER_ID" />
+        <result property="acNum"   column="AC_NUM" />
+        <result property="expFlag" column="EXP_FLAG" />
+        <result property="rssi"    column="RSSI" />
+        <result property="conDesc" column="CON_DESC" />
+        <result property="sDate"   column="S_DATE" />
+        <result property="eDate"   column="E_DATE" />
+        <result property="modDate" column="MOD_DATE" />
+        <result property="regDate" column="REG_DATE" />
+
+        <result property="imgSrc1" column="IMG_SRC1" />
+        <result property="imgSrc2" column="IMG_SRC2" />
+        <result property="imgSrc3" column="IMG_SRC3" />
+        <result property="imgSrc4" column="IMG_SRC4" />
+        <result property="imgSrc5" column="IMG_SRC5" />
+        <result property="text1" column="TEXT1" />
+        <result property="text2" column="TEXT2" />
+        <result property="text3" column="TEXT3" />
+        <result property="text4" column="TEXT4" />
+        <result property="text5" column="TEXT5" />
+        <result property="soundSrc1" column="SOUND_SRC1" />
+        <result property="soundSrc2" column="SOUND_SRC2" />
+        <result property="soundSrc3" column="SOUND_SRC3" />
+        <result property="url1" column="URL1" />
+        <result property="url2" column="URL2" />
+        <result property="url3" column="URL3" />
+
+        <result property="imgURL1" column="IMG_URL1" />
+        <result property="imgURL2" column="IMG_URL2" />
+        <result property="imgURL3" column="IMG_URL3" />
+        <result property="imgURL4" column="IMG_URL4" />
+        <result property="imgURL5" column="IMG_URL5" />
+        <result property="soundURL1" column="SOUND_URL1" />
+        <result property="soundURL2" column="SOUND_URL2" />
+        <result property="soundURL3" column="SOUND_URL3" />
+
+        <result property="acName" column="AC_NAME" />
+
+        <result property="refNum" column="REF_NUM" />
+        <result property="refType" column="REF_TYPE" />
+        <result property="refSubType" column="REF_SUB_TYPE" />
+    </resultMap>
+
+    <resultMap id="codeActionResult" type="core.api.geofencing.domain.CodeAction">
+        <result property="comNum"   column="COM_NUM"/>
+	    <result property="codeNum"  column="CODE_NUM"/>
+	    <result property="codeType" column="CODE_TYPE"/>
+	    <result property="code"     column="CODE"/>
+	    <result property="codeName" column="CODE_NAME"/>
+	    <result property="modDate"  column="MOD_DATE"/>
+	    <result property="regDate"  column="REG_DATE"/>
+
+	    <result property="refNum"   column="REF_NUM"/>
+	    <result property="refType"  column="REF_TYPE"/>
+	    <result property="refSubType" column="REF_SUB_TYPE"/>
+    </resultMap>
+
+    <resultMap id="beaconContentsResult" type="core.api.beacon.domain.BeaconContents">
+        <result property="beaconNum"  column="BEACON_NUM" />
+        <result property="comNum"     column="COM_NUM" />
+        <result property="UUID"       column="UUID" />
+        <result property="majorVer"   column="MAJOR_VER" />
+        <result property="minorVer"   column="MINOR_VER" />
+        <result property="macAddr"    column="MAC_ADDR" />
+        <result property="txPower"    column="TX_POWER" />
+        <result property="battery"    column="BATTERY" />
+        <result property="beaconName" column="BEACON_NAME" />
+        <result property="beaconDesc" column="BEACON_DESC" />
+        <result property="floor"      column="FLOOR" />
+        <result property="lat"        column="LAT" />
+        <result property="lng"        column="LNG" />
+        <result property="lastDate"   column="LAST_DATE" />
+        <result property="modDate"    column="MOD_DATE" />
+        <result property="regDate"    column="REG_DATE" />
+    </resultMap>
+
+	<select id="getBeaconInfo" parameterType="core.api.beacon.domain.Beacon" resultMap="beaconResult">
+		SELECT BEACON_NUM, COM_NUM, UUID, MAJOR_VER, MINOR_VER
+		     , MAC_ADDR, TX_POWER, BATTERY, BEACON_NAME, BEACON_DESC
+		     , FLOOR, LAT, LNG, LAST_DATE, MOD_DATE
+		     , REG_DATE
+		  FROM TB_BEACON
+		 WHERE UUID = #{UUID}
+		   AND MAJOR_VER = #{majorVer}
+		   AND MINOR_VER = #{minorVer}
+	</select>
+
+	<select id="getBeaconInfoByNum" parameterType="core.api.beacon.domain.Beacon" resultMap="beaconResult">
+		SELECT BEACON_NUM, COM_NUM, UUID, MAJOR_VER, MINOR_VER
+             , MAC_ADDR, TX_POWER, BATTERY, BEACON_NAME, BEACON_DESC
+             , FLOOR, LAT, LNG, LAST_DATE, MOD_DATE
+             , REG_DATE
+          FROM TB_BEACON
+		 WHERE BEACON_NUM = #{beaconNum}
+	</select>
+
+	<insert id="insertBeaconState" parameterType="core.api.beacon.domain.BeaconState">
+		INSERT INTO TB_LOG_BEACON_STATE
+		( LOG_NUM
+		, SUUID
+		, UUID
+		, MAJOR_VER
+		, MINOR_VER
+		, BATTERY
+		, REG_DATE
+		)VALUES
+		( SEQ_LBS_LOG_NUM.nextval
+		, #{SUUID}
+		, #{UUID}
+		, #{majorVer}
+		, #{minorVer}
+		, #{battery}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <!--
+        비콘 조회
+        2015-03-11 jhlee 박이사님요청으로  프레즌스 콘텐츠 제거
+    -->
+    <!-- <select id="getBeaconList" parameterType="java.util.HashMap" resultType="core.api.beacon.domain.BeaconContents"> -->
+    <select id="getBeaconList" parameterType="java.util.HashMap" resultMap="beaconResult">
+        SELECT DISTINCT(a.BEACON_NUM), a.*
+          FROM TB_BEACON a
+         INNER JOIN TB_CONTENTS_MAPPING b
+            ON a.BEACON_NUM=b.REF_NUM
+           AND b.REF_TYPE='BC'
+         INNER JOIN TB_CONTENTS c
+            ON b.CON_NUM=c.CON_NUM
+         INNER JOIN TB_COMPANY d
+            ON a.COM_NUM=d.COM_NUM
+        <trim prefix="where" prefixOverrides="and|or">
+
+            <if test="UUID!=null">
+                AND d.UUID=#{UUID}
+            </if>
+            <if test="majorVer!=null">
+                AND a.MAJOR_VER=#{majorVer}
+            </if>
+            <if test="minorVer!=null">
+                AND a.MINOR_VER=#{minorVer}
+            </if>
+            <if test="conType!=null">
+                AND c.CON_TYPE=#{conType}
+            </if>
+            <if test="conType==null">
+            	AND c.CON_TYPE != 'PRE'
+            </if>
+        </trim>
+        ORDER BY a.BEACON_NUM DESC
+    </select>
+
+    <select id="getBeaconListByAll" parameterType="java.util.HashMap" resultMap="beaconResult">
+        SELECT A.BEACON_NUM, A.COM_NUM, A.UUID, A.MAJOR_VER, A.MINOR_VER
+             , A.MAC_ADDR, A.TX_POWER, A.BATTERY, A.BEACON_NAME, A.BEACON_DESC
+             , A.FLOOR, A.LAT, A.LNG, A.LAST_DATE, A.MOD_DATE
+             , A.REG_DATE
+          FROM TB_BEACON A
+         INNER JOIN TB_COMPANY b
+            ON A.COM_NUM=b.COM_NUM
+         WHERE b.UUID=#{UUID}
+         ORDER BY A.BEACON_NUM DESC
+    </select>
+
+    <select id="getBeaconContentsList" parameterType="java.util.HashMap" resultMap="contentsResult">
+        SELECT a.*, b.*, c.*
+          FROM TB_CONTENTS a
+         INNER JOIN TB_CONTENTS_DETAIL b
+            ON a.CON_NUM=b.CON_NUM
+         INNER JOIN TB_CONTENTS_MAPPING c
+            ON a.CON_NUM=c.CON_NUM
+            AND c.REF_TYPE='BC'
+         INNER JOIN TB_BEACON d
+            ON d.BEACON_NUM=c.REF_NUM
+         INNER JOIN TB_COMPANY e
+            ON a.COM_NUM=e.COM_NUM
+            <where>
+                <if test="UUID!=null">
+                    and e.UUID=#{UUID}
+                </if>
+                <if test="majorVer!=null">
+                    and d.MAJOR_VER=#{majorVer}
+                </if>
+                <if test="minorVer!=null">
+                    and d.MINOR_VER=#{minorVer}
+                </if>
+                <if test="conType!=null">
+                    and a.CON_TYPE=#{conType}
+                </if>
+            </where>
+        ORDER BY d.BEACON_NUM ASC, a.CON_NUM ASC
+
+    </select>
+
+    <select id="getBeaconActionList" parameterType="java.util.HashMap" resultMap="codeActionResult">
+        SELECT a.*, c.*
+          FROM TB_CODE_ACTION a
+         INNER JOIN TB_CODE_ACTION_MAPPING c
+            ON a.CODE_NUM=c.CODE_NUM
+           AND c.REF_TYPE='BC'
+         INNER JOIN TB_BEACON d
+            ON d.BEACON_NUM=c.REF_NUM
+         INNER JOIN TB_COMPANY e
+            ON a.COM_NUM=e.COM_NUM
+        <where>
+            <if test="UUID!=null">
+                and e.UUID=#{UUID}
+            </if>
+            <if test="majorVer!=null">
+                and d.MAJOR_VER=#{majorVer}
+            </if>
+            <if test="minorVer!=null">
+                and d.MINOR_VER=#{minorVer}
+            </if>
+        </where>
+        ORDER BY d.BEACON_NUM ASC, a.CODE_NUM ASC
+
+    </select>
+
+    <select id="getBeaconFloorCodeList" parameterType="java.util.HashMap" resultMap="beaconContentsResult">
+        SELECT DISTINCT(a.BEACON_NUM), a.*
+        FROM TB_BEACON a
+        INNER JOIN TB_CONTENTS_MAPPING b ON a.BEACON_NUM=b.REF_NUM AND b.REF_TYPE='BC'
+        INNER JOIN TB_CONTENTS c ON b.CON_NUM=c.CON_NUM
+        INNER JOIN TB_COMPANY d ON a.COM_NUM=d.COM_NUM
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="UUID!=null">
+                AND d.UUID=#{UUID}
+            </if>
+            <if test="conType!=null">
+                and c.CON_TYPE=#{conType}
+            </if>
+            <if test="floorCodeList != null">
+                AND a.FLOOR IN
+                <foreach item="item" index="index" collection="floorCodeList" open="(" separator="," close=")">#{item.nodeId}</foreach>
+            </if>
+        </trim>
+        ORDER BY a.BEACON_NUM DESC
+    </select>
+
+    <select id="getBeaconFloorCodeListByField" parameterType="java.util.HashMap" resultMap="beaconContentsResult">
+        SELECT DISTINCT(a.BEACON_NUM), a.COM_NUM, a.UUID,  a.MAJOR_VER, a.MINOR_VER, a.MAC_ADDR, a.TX_POWER, a.BATTERY,
+        a.BEACON_NAME, a.BEACON_DESC, a.LAT, a.LNG, a.LAST_DATE, a.MOD_DATE, a.REG_DATE, e.NODE_FIELD FLOOR
+        FROM TB_BEACON a
+        INNER JOIN TB_CONTENTS_MAPPING b ON a.BEACON_NUM=b.REF_NUM AND b.REF_TYPE='BC'
+        INNER JOIN TB_CONTENTS c ON b.CON_NUM=c.CON_NUM
+        INNER JOIN TB_COMPANY d ON a.COM_NUM=d.COM_NUM
+        INNER JOIN TB_FLOOR_CODE e ON a.floor=e.node_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="UUID!=null">
+                AND d.UUID=#{UUID}
+            </if>
+            <if test="conType!=null">
+                and c.CON_TYPE=#{conType}
+            </if>
+            <if test="floorCodeList != null">
+                AND a.FLOOR IN
+                <foreach item="item" index="index" collection="floorCodeList" open="(" separator="," close=")">#{item.nodeId}</foreach>
+            </if>
+        </trim>
+        ORDER BY a.BEACON_NUM DESC
+    </select>
+</mapper>
+
+
+
+
+
+
+
+

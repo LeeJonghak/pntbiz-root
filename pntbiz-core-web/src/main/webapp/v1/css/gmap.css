@@ -1,0 +1,18 @@
+@charset "utf-8";
+
+.gmapBtn {
+	float: left;
+	padding: 2px;
+}
+.gmapBtnDiv {
+	background-color: white;
+	border: 1px solid #CCC;
+	cursor: pointer;
+	text-align: right;
+	margin: 4px;
+}
+.gmapBtnTDiv {
+	font-family: '돋움';
+	font-size: 14px;
+	padding: 4px;
+}

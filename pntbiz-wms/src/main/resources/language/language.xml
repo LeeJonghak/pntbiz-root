@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>언어팩 - 기본</comment>
+
+    <entry key="common.alert.error">오류가 발생하였습니다</entry>
+
+    <entry key="menu.000000">대시보드</entry>
+    <entry key="menu.000100">현황</entry>
+    <entry key="menu.000101">관제</entry>
+
+    <entry key="menu.100000">비콘</entry>
+    <entry key="menu.100100">비콘 관리</entry>
+    <entry key="menu.100101">비콘 목록</entry>
+    <entry key="menu.100102">비콘 등록</entry>
+    <entry key="menu.100103">비콘 수정</entry>
+    <entry key="menu.100104">통제구역 목록</entry>
+    <entry key="menu.100105">통제구역 등록</entry>
+    <entry key="menu.100106">통제구역 수정</entry>
+    <entry key="menu.100200">비콘 관제</entry>
+    <entry key="menu.100201">비콘 관제 목록</entry>
+    <entry key="menu.100202">비콘 관제 요약</entry>
+    <entry key="menu.100300">비콘 그룹 관리</entry>
+    <entry key="menu.100301">비콘 그룹 목록</entry>
+    <entry key="menu.100302">비콘 그룹 등록</entry>
+    <entry key="menu.100303">비콘 그룹 수정</entry>
+
+    <entry key="menu.110000">스캐너</entry>
+    <entry key="menu.110100">스캐너 관리</entry>
+    <entry key="menu.110101">스캐너 목록</entry>
+    <entry key="menu.110102">스캐너 등록</entry>
+    <entry key="menu.110103">스캐너 수정</entry>
+    <entry key="menu.110104">스캐너 정보 배치</entry>
+    <entry key="menu.110200">스캐너 정보 배포</entry>
+    <entry key="menu.110300">스캐너 서버 관리</entry>
+    <entry key="menu.110301">스캐너 서버 목록</entry>
+    <entry key="menu.110302">스캐너 서버 등록</entry>
+    <entry key="menu.110303">스캐너 서버 수정</entry>
+    <entry key="menu.110400">스캐너정보 배포 관리</entry>
+    <entry key="menu.110401">스캐너정보 배포 목록</entry>
+    <entry key="menu.110402">스캐너정보 배포 등록</entry>
+    <entry key="menu.110403">스캐너정보 배포 수정</entry>
+    <entry key="menu.110404">스캐너 정보 배포</entry>
+
+    <entry key="menu.120000">맵</entry>
+    <entry key="menu.120100">층 관리</entry>
+    <entry key="menu.120200">비콘 배치도</entry>
+    <entry key="menu.120300">지오펜싱 배치도</entry>
+    <entry key="menu.120400">스캐너 배치도</entry>
+    <entry key="menu.120500">비콘관제 배치도</entry>
+    <entry key="menu.120600">프레즌스맵 설정</entry>
+    <entry key="menu.120700">층 설정</entry>
+	<entry key="menu.120800">구역 배치도</entry>
+
+    <entry key="menu.130000">콘텐츠</entry>
+    <entry key="menu.130100">콘텐츠 관리</entry>
+    <entry key="menu.130101">콘텐츠 목록</entry>
+    <entry key="menu.130102">콘텐츠 등록</entry>
+    <entry key="menu.130103">콘텐츠 수정</entry>
+    <entry key="menu.130200">콘텐츠 매핑 관리</entry>
+    <entry key="menu.130300">콘텐츠 타입 관리</entry>
+    <entry key="menu.130301">콘텐츠 타입 목록</entry>
+    <entry key="menu.130302">콘텐츠 타입  등록</entry>
+    <entry key="menu.130303">콘텐츠 타입 수정</entry>
+
+    <entry key="menu.140000">서비스</entry>
+    <entry key="menu.140100">이벤트 관리</entry>
+    <entry key="menu.140101">이벤트 목록</entry>
+    <entry key="menu.140102">이벤트 등록</entry>
+    <entry key="menu.140103">이벤트 수정</entry>
+    <entry key="menu.140200">이벤트 유형 관리</entry>
+    <entry key="menu.140201">이벤트 유형 목록</entry>
+    <entry key="menu.140202">이벤트 유형 등록</entry>
+    <entry key="menu.140203">이벤트 유형 수정</entry>
+    <entry key="menu.140300">출석체크</entry>
+    <entry key="menu.140400">세미나 입장,퇴장</entry>
+
+    <entry key="menu.160000">지오펜싱</entry>
+    <entry key="menu.160100">지오펜싱 관리</entry>
+    <entry key="menu.160101">지오펜싱 목록</entry>
+    <entry key="menu.160102">지오펜싱 등록</entry>
+    <entry key="menu.160103">지오펜싱 수정</entry>
+    <entry key="menu.160200">지오펜싱 그룹 관리</entry>
+    <entry key="menu.160201">지오펜싱 그룹 목록</entry>
+    <entry key="menu.160202">지오펜싱 그룹 등록</entry>
+    <entry key="menu.160203">지오펜싱 그룹 수정</entry>
+
+    <entry key="menu.170000">통계</entry>
+    <entry key="menu.170100">RTLS</entry>
+    <entry key="menu.170101">실시간 측위 View</entry>
+    <entry key="menu.170200">트래킹</entry>
+    <entry key="menu.170201">스캐너 개별 대상자 측위</entry>
+    <entry key="menu.170211">비콘 개별 대상자 측위</entry>
+    <entry key="menu.170300">로그</entry>
+    <entry key="menu.170301">스캐너 위치측위 로그</entry>
+    <entry key="menu.170302">스캐너 지오펜스 로그</entry>
+    <entry key="menu.170303">스캐너 인/아웃 로그</entry>
+    <entry key="menu.170304">스캐너 위치측위 현황</entry>
+	<entry key="menu.170305">스캐너 층 로그</entry>
+    <entry key="menu.170311">비콘 위치측위 로그</entry>
+    <entry key="menu.170312">비콘 위치측위 현황</entry>
+    <entry key="menu.170313">마이크로펜스 관제 현황</entry>
+    <entry key="menu.170314">주요 Zone별 진출입 횟수</entry>
+
+    <entry key="menu.180000">모니터링</entry>
+    <entry key="menu.180100">서버 모니터링</entry>
+    <entry key="menu.180200">스캐너 모니터링</entry>
+
+    <entry key="menu.990000">기본 정보</entry>
+    <entry key="menu.990100">업체 정보</entry>
+    <entry key="menu.990200">코드 관리</entry>
+    <entry key="menu.990201">코드 목록</entry>
+    <entry key="menu.990202">코드 등록</entry>
+    <entry key="menu.990203">코드 수정</entry>
+    <entry key="menu.990300">광고업체 관리</entry>
+    <entry key="menu.990301">광고업체 목록</entry>
+    <entry key="menu.990302">광고업체 등록</entry>
+    <entry key="menu.990303">광고업체 수정</entry>
+    <entry key="menu.990400">위치정보 이용현황</entry>
+    <entry key="menu.990401">위치정보 이용현황 목록</entry>
+    <entry key="menu.990500">위치정보 열람대장</entry>
+    <entry key="menu.990501">위치정보 열람대장 목록</entry>
+    <entry key="menu.990502">위치정보 열람대장 등록</entry>
+    <entry key="menu.990600">OAuth클라이언트</entry>
+    <entry key="menu.990601">OAuth클라이언트 목록</entry>
+    <entry key="menu.990602">OAuth클라이언트 등록</entry>
+    <entry key="menu.990603">OAuth클라이언트 수정</entry>
+    <entry key="menu.990700">계정관리</entry>
+    <entry key="menu.990701">비밀번호 확인</entry>
+    <entry key="menu.990800">연동 인터페이스</entry>
+    <entry key="menu.990801">연동 인터페이스 목록</entry>
+    <entry key="menu.990802">연동 인터페이스 등록</entry>
+    <entry key="menu.990803">연동 인터페이스 수정</entry>
+
+    <entry key="btn.login">로그인</entry>
+    <entry key="btn.logout">로그아웃</entry>
+    <entry key="btn.list">리스트</entry>
+    <entry key="btn.search">검색</entry>
+    <entry key="btn.register">등록</entry>
+    <entry key="btn.modify">수정</entry>
+    <entry key="btn.delete">삭제</entry>
+    <entry key="btn.deploy">배포</entry>
+    <entry key="btn.batch">배치</entry>
+    <entry key="btn.update">업데이트</entry>
+    <entry key="btn.batch.update">배치 업데이트</entry>
+    <entry key="btn.run">실행</entry>
+    <entry key="btn.view">보기</entry>
+    <entry key="btn.download">다운로드</entry>
+    <entry key="btn.log.view">로그 보기</entry>
+    <entry key="btn.log.download">로그 다운로드</entry>
+    <entry key="btn.check">체크</entry>
+    <entry key="btn.confirm">확인</entry>
+    <entry key="btn.add">추가</entry>
+    <entry key="btn.close">닫기</entry>
+    <entry key="btn.send">전송</entry>
+    <entry key="btn.authentication">인증</entry>
+    <entry key="btn.home">홈</entry>
+    <entry key="btn.init">초기화</entry>
+    <entry key="btn.mapping">매핑</entry>
+    <entry key="btn.synchronization">동기화</entry>
+    <entry key="btn.beacon.list">비콘 리스트</entry>
+    <entry key="btn.restricted.zone.list">통제구역 리스트</entry>
+
+    <entry key="message.search.notmatch">검색 결과가 없습니다.</entry>
+
+    <entry key="auth.userid">아이디</entry>
+    <entry key="auth.password">비밀번호</entry>
+    <entry key="auth.login">로그인</entry>
+    <entry key="auth.logout">로그아웃</entry>
+    <entry key="auth.rememeber">아이디저장</entry>
+    <entry key="auth.welcome">{0} 님 반갑습니다.</entry>
+    <entry key="auth.otp">OTP</entry>
+    <entry key="auth.otp.authcode">인증코드</entry>
+    <entry key="auth.passwd">비밀번호 찾기</entry>
+
+    <entry key="dashboard.total.beacons">총 비콘 개수</entry>
+    <entry key="dashboard.total.geofencings">총 지오펜싱 개수</entry>
+    <entry key="dashboard.total.scanners">총 스캐너 개수</entry>
+    <entry key="dashboard.total.floors">총 층 개수</entry>
+    <entry key="dashboard.last.modified">마지막으로 수정된</entry>
+    <entry key="dashboard.loss.beacon">망실 가능성이 높은 비콘</entry>
+    <entry key="dashboard.loss.beacon.status">망실 가능성이 높은 비콘 관제 현황</entry>
+    <entry key="dashboard.scanner.monitor">스캐너 모니터</entry>
+
+    <entry key="word.language">언어</entry>
+    <entry key="word.account">계정</entry>
+    <entry key="word.settings">설정</entry>
+
+    <entry key="word.passwd">비밀번호</entry>
+    <entry key="word.passwd.text001">* 비밀번호를 변경하지 않을 경우에는 입력하지 마세요.</entry>
+    <entry key="word.email">이메일</entry>
+    <entry key="word.phonenumber">전화번호</entry>
+
+    <entry key="word.data">데이터</entry>
+    <entry key="word.cpu">CPU</entry>
+    <entry key="word.memory">Memory</entry>
+    <entry key="word.ping">Ping</entry>
+    <entry key="word.up">Up</entry>
+    <entry key="word.down">Down</entry>
+
+    <entry key="word.description">비고</entry>
+    <entry key="word.search.option">검색옵션</entry>
+    <entry key="word.search.keyword">검색어</entry>
+    <entry key="word.enter.search.term">검색어를 입력하세요.</entry>
+    <entry key="word.no">No.</entry>
+    <entry key="word.regdate">등록일</entry>
+    <entry key="word.moddate">수정일</entry>
+    <entry key="word.install.image">설치사진</entry>
+    <entry key="word.none">없음</entry>
+
+    <entry key="word.beacon">비콘</entry>
+    <entry key="word.beacon.name">비콘명</entry>
+	<entry key="word.beacon.macaddr">Mac</entry>
+    <entry key="word.beacon.group">비콘 그룹</entry>
+    <entry key="word.beacon.group.name">비콘 그룹명</entry>
+    <entry key="word.beacon.count">비콘 개수</entry>
+    <entry key="word.beacon.field">필드</entry>
+    <entry key="word.major.version">Major Version</entry>
+    <entry key="word.minor.version">Minor Version</entry>
+    <entry key="word.battery.level">베터리레벨</entry>
+    <entry key="word.txpower">TxPower</entry>
+    <entry key="word.floor">층</entry>
+    <entry key="word.total">총</entry>
+    <entry key="word.total.count">총 카운트</entry>
+    <entry key="word.uuid">UUID</entry>
+    <entry key="word.lat">위도</entry>
+    <entry key="word.lng">경도</entry>
+    <entry key="word.lat.lng">위도/경도</entry>
+    <entry key="word.show.map">지도보기</entry>
+    <entry key="word.state">상태</entry>
+    <entry key="word.normal">정상</entry>
+    <entry key="word.loss">망실</entry>
+    <entry key="word.unconfirmed">미확인</entry>
+    <entry key="word.sort.field">정렬필드</entry>
+    <entry key="word.sort.order">정렬방법</entry>
+    <entry key="word.sort.ascending">오름차순</entry>
+    <entry key="word.sort.descending">내림차순</entry>
+    <entry key="word.battery">베터리</entry>
+    <entry key="word.last.date">최근응답</entry>
+    <entry key="word.barcode">바코드</entry>
+    <entry key="word.external.id">대상키</entry>
+    <entry key="word.external.attribute">대상 정보</entry>
+    <entry key="word.key">키</entry>
+    <entry key="word.value">값</entry>
+    <entry key="word.display.name">표시 이름</entry>
+    <entry key="word.restricted.zone">통제구역</entry>
+    <entry key="word.zone.type">구역타입</entry>
+    <entry key="word.zone.id">구역번호</entry>
+    <entry key="word.zone.name">구역이름</entry>
+    <entry key="word.additional.attribute">추가 속성</entry>
+    <entry key="word.restricted.zone.type">통제 타입</entry>
+    <entry key="word.permitted">인가</entry>
+    <entry key="word.restricted">비인가</entry>
+    <entry key="word.set.to">구역으로 설정하기</entry>
+    <entry key="word.beacon.type">비콘 타입</entry>
+    <entry key="word.beacon.type.wearable">웨어러블</entry>
+    <entry key="word.beacon.type.movable">이동형</entry>
+    <entry key="word.beacon.type.fixed">고정형</entry>
+
+    <entry key="word.geofencing">지오펜싱</entry>
+    <entry key="word.geofencing.name">지오펜싱명</entry>
+    <entry key="word.geofencing.group">지오펜싱 그룹</entry>
+    <entry key="word.geofencing.group.name">지오펜싱 그룹명</entry>
+    <entry key="word.geofencing.count">지오펜싱 개수</entry>
+    <entry key="word.geofencing.type">펜스구분</entry>
+    <entry key="word.geofencing.isNodeEnable">노드 활성화 여부</entry>
+    <entry key="word.geofencing.isNodeEnable.enable">활성화</entry>
+    <entry key="word.geofencing.isNodeEnable.disable">비활성화</entry>
+    <entry key="word.geofencing.zone">지오펜싱존</entry>
+    <entry key="word.geofencing.zone.select">존선택</entry>
+    <entry key="word.geofencing.field">필드</entry>
+    <entry key="word.fence.type">펜스 타입</entry>
+    <entry key="word.fence.type.circle">원</entry>
+    <entry key="word.fence.type.polygon">폴리곤</entry>
+    <entry key="word.register">등록자</entry>
+    <entry key="word.general">일반</entry>
+    <entry key="word.system">시스템</entry>
+    <entry key="word.map">맵</entry>
+    <entry key="word.synchronization">동기화</entry>
+
+    <entry key="word.scanner">스캐너</entry>
+    <entry key="word.scanner.name">스캐너명</entry>
+    <entry key="word.mac.address">맥어드레스</entry>
+    <entry key="word.identifier">식별자</entry>
+    <entry key="word.scanner.information">스캐너 정보</entry>
+    <entry key="word.deploy.name">배포명</entry>
+    <entry key="word.deploy.info">배포 정보</entry>
+    <entry key="word.path">배포경로</entry>
+    <entry key="word.filename">파일명</entry>
+    <entry key="word.deploy">배포</entry>
+    <entry key="word.scanner.configuration.deploy.text001">* 배포 시에 파일 명이 변경됩니다.</entry>
+    <entry key="word.scanner.configuration.deploy.text002">ex) scannerPos.js => scannerPos_xxxxxx.js</entry>
+    <entry key="word.scanner.configuration.deploy.text003">* 마지막으로 배포된 정보입니다.</entry>
+    <entry key="word.scanner.configuration.deploy">스캐너 정보 배포</entry>
+    <entry key="word.scanner.deploy.type">배포유형</entry>
+    <entry key="word.scanner.deploy.text001">선택한 배포유형의 정보를 스캐너 서버에 배포 합니다. </entry>
+    <entry key="word.scanner.deploy.text002">배포가 되면 스캐너 프로그램이 자동으로 재 시작 됩니다.</entry>
+
+    <entry key="word.attendance">출석체크</entry>
+    <entry key="word.attendance.date">출석일</entry>
+    <entry key="word.attendance.regdate">출석등록일</entry>
+    <entry key="word.attendance.subject">과목</entry>
+    <entry key="word.attendance.student.id">학번</entry>
+    <entry key="word.attendance.student.name">학생명</entry>
+    <entry key="word.service">서비스</entry>
+    <entry key="word.phonenumber">휴대폰번호</entry>
+    <entry key="word.name">이름</entry>
+    <entry key="word.reset">초기화</entry>
+
+    <entry key="word.seminar">세미나</entry>
+    <entry key="word.seminar.enter.leave">세미나 입장/퇴장</entry>
+    <entry key="word.seminar.manager">세미나 관리</entry>
+    <entry key="word.seminar.register">세미나 등록</entry>
+    <entry key="word.seminar.name">세미나명</entry>
+    <entry key="word.seminar.list">세미나 목록</entry>
+    <entry key="word.close">닫기</entry>
+    <entry key="word.enter.leave">입장/퇴장</entry>
+    <entry key="word.enter">입장</entry>
+    <entry key="word.leave">퇴장</entry>
+    <entry key="word.export">내보내기</entry>
+    <entry key="word.device.infomation">단말정보</entry>
+    <entry key="word.date">날짜</entry>
+    <entry key="word.time">시간</entry>
+    <entry key="word.hour">시</entry>
+    <entry key="word.minute">분</entry>
+    <entry key="word.second">초</entry>
+
+
+    <entry key="word.contents">콘텐츠</entry>
+    <entry key="word.contents.name">컨텐츠명</entry>
+    <entry key="word.contents.type">컨텐츠 유형</entry>
+    <entry key="word.contents.type.name">컨텐츠 유형명</entry>
+    <entry key="word.contents.type.component">컨텐츠 유형 구성</entry>
+    <entry key="word.visible.option">노출여부</entry>
+    <entry key="word.advertising.provider">광고제공자</entry>
+    <entry key="word.validity.date">유효기간</entry>
+    <entry key="word.choose">선택</entry>
+    <entry key="word.change">변경</entry>
+    <entry key="word.image.choose">이미지 선택</entry>
+    <entry key="word.sound.choose">사운드 선택</entry>
+    <entry key="word.start.date">시작일</entry>
+    <entry key="word.end.date">종료일</entry>
+
+    <entry key="word.event">이벤트</entry>
+    <entry key="word.event.register">이벤트 등록</entry>
+    <entry key="word.event.modify">이벤트 수정</entry>
+    <entry key="word.event.delete">이벤트 삭제</entry>
+    <entry key="word.event.name">이벤트명</entry>
+    <entry key="word.beacon.push">비콘푸쉬</entry>
+    <entry key="word.search.choose">검색선택</entry>
+    <entry key="word.event.list">이벤트 목록</entry>
+    <entry key="word.event.id">이벤트ID</entry>
+    <entry key="word.memo">메모</entry>
+    <entry key="word.transfer">이관</entry>
+    <entry key="word.age">나이</entry>
+    <entry key="word.all">전체</entry>
+    <entry key="word.cancel">취소</entry>
+    <entry key="word.age.range">나이범위</entry>
+    <entry key="word.range">범위</entry>
+    <entry key="word.event.no">이벤트 없음</entry>
+
+    <entry key="word.beacon.push.manager.infomation">비콘푸쉬 관리정보</entry>
+    <entry key="word.gender">성별</entry>
+    <entry key="word.male">남성</entry>
+    <entry key="word.female">여성</entry>
+    <entry key="word.birthday">생일</entry>
+    <entry key="word.month">월</entry>
+    <entry key="word.day">일</entry>
+    <entry key="word.anniversary">기념일</entry>
+    <entry key="word.setup">설정</entry>
+    <entry key="word.visiting.count">방문횟수</entry>
+    <entry key="word.seat.number">좌석번호</entry>
+    <entry key="word.number">번</entry>
+    <entry key="word.prize">당첨혜택</entry>
+    <entry key="word.prize.seat">당첨혜택 좌석</entry>
+    <entry key="word.use">사용</entry>
+    <entry key="word.not.use">사용안함</entry>
+    <entry key="word.number.prize.fcfs">선착순 당첨인원</entry>
+    <entry key="word.prize.fail.message">낙첨메시지</entry>
+    <entry key="word.person">명</entry>
+    <entry key="word.block">블럭</entry>
+    <entry key="word.row">열</entry>
+
+    <entry key="word.mapping.type">매핑 타입</entry>
+    <entry key="word.sub.mapping.type">서브 매핑 타입</entry>
+    <entry key="word.reference">참조</entry>
+    <entry key="word.reference.information">참조정보</entry>
+    <entry key="word.event.description">이벤트 설명</entry>
+    <entry key="word.event.type">이벤트 유형</entry>
+    <entry key="word.event.condition">이벤트 조건</entry>
+    <entry key="word.event.type.code">이벤트 유형 코드</entry>
+    <entry key="word.event.type.register">이벤트 유형 등록</entry>
+    <entry key="word.event.type.name">이벤트 유형명</entry>
+    <entry key="word.condition.property">조건 속성</entry>
+    <entry key="word.column.type">컬럼 타입</entry>
+    <entry key="word.column.id">컬럼 아이디</entry>
+    <entry key="word.column.name">컬럼명</entry>
+    <entry key="word.column.register">컬럼등록</entry>
+    <entry key="word.event.type.list">이벤트 유형 목록</entry>
+    <entry key="word.selectable.item">선택가능 항목</entry>
+    <entry key="word.mapping.delete">매핑 삭제</entry>
+
+    <entry key="word.advertising.company">광고업체</entry>
+    <entry key="word.advertising.company.register">광고업체 등록</entry>
+    <entry key="word.advertising.company.list">광고업체 목록</entry>
+    <entry key="word.advertising.company.name">광고업체명</entry>
+    <entry key="word.basic.information">기본정보</entry>
+    <entry key="word.company.name">업체명</entry>
+
+    <entry key="word.code">코드</entry>
+    <entry key="word.code.register">코드 등록</entry>
+    <entry key="word.code.modify">코드 수정</entry>
+    <entry key="word.code.type">코드 종류</entry>
+    <entry key="word.code.name">코드명</entry>
+    <entry key="word.code.list">코드 목록</entry>
+
+    <entry key="word.company.information">업체 정보</entry>
+    <entry key="word.business.number">사업자 번호</entry>
+    <entry key="word.location.information.usage.lookup">위치정보 이용현황 조회</entry>
+    <entry key="word.location.information.reading.record">위치정보 열람대장</entry>
+    <entry key="word.os">운영체제</entry>
+    <entry key="word.admin.user.name">회원명</entry>
+    <entry key="word.serial.number">일련번호</entry>
+    <entry key="word.requester">요청자</entry>
+    <entry key="word.purpose">목적</entry>
+    <entry key="word.handler">취급자</entry>
+    <entry key="word.location.information.handler">위치정보 취급자</entry>
+    <entry key="word.realname">실명</entry>
+
+    <entry key="word.beacon.control.information">비콘관제 정보</entry>
+    <entry key="word.beacon.install.image">비콘설치사진</entry>
+    <entry key="word.status">상태</entry>
+    <entry key="word.reason">사유</entry>
+    <entry key="word.confirm">확인</entry>
+    <entry key="word.beacon.information">비콘 정보</entry>
+    <entry key="word.assign.event">이벤트 할당</entry>
+    <entry key="word.assign.content">컨텐츠 할당</entry>
+    <entry key="word.task">태스크</entry>
+    <entry key="word.delete.multiple.item">선택삭제</entry>
+    <entry key="word.type">유형</entry>
+    <entry key="word.kind">종류</entry>
+    <entry key="word.node">노드</entry>
+    <entry key="word.node.information">노드 정보</entry>
+    <entry key="word.node.name">노드명</entry>
+    <entry key="word.node.id">노드ID</entry>
+    <entry key="word.node.field">노드필드</entry>
+    <entry key="word.category">카테고리</entry>
+    <entry key="word.intersection.name">교차점명</entry>
+
+    <entry key="word.beacon.map">비콘 배치도</entry>
+    <entry key="word.show.beacon">비콘 표시</entry>
+    <entry key="word.show.node">노드 표시</entry>
+    <entry key="word.show.pair">연결선 표시</entry>
+    <entry key="word.show.poi">POI 표시</entry>
+    <entry key="word.show.intersection">교차점 표시</entry>
+    <entry key="word.show.chaosarea">혼돈지역 표시</entry>
+
+    <entry key="word.hide">감추기</entry>
+    <entry key="word.readonly">읽기전용</entry>
+    <entry key="word.beacon.node"></entry>
+    <entry key="word.move.beacon.node">비콘/노드 이동</entry>
+    <entry key="word.create.node">노드 생성</entry>
+    <entry key="word.create.chaosarea">혼돈지역 생성</entry>
+    <entry key="word.connect.node">노드 연결</entry>
+    <entry key="word.disconnect.node">노드 연결해제</entry>
+    <entry key="word.undo">되돌리기</entry>
+
+    <entry key="word.floor.map">층 관리</entry>
+
+    <entry key="word.heatmap">히트맵</entry>
+    <entry key="word.marker">마커</entry>
+    <entry key="word.movement">동선</entry>
+    <entry key="word.target.name">대상명</entry>
+    <entry key="word.inout">인/아웃</entry>
+    <entry key="word.gate.order">게이트순서</entry>
+    <entry key="word.phone.number">전화번호</entry>
+    <entry key="word.device.info">단말정보</entry>
+
+    <entry key="word.init">초기</entry>
+    <entry key="word.zoom.level">줌 레벨</entry>
+    <entry key="word.check.interval">체크 인터벌</entry>
+    <entry key="word.remove.interval">제거 인터벌</entry>
+    <entry key="word.move.interval">이동 인터벌</entry>
+    <entry key="word.move.unit">이동 단위</entry>
+
+    <entry key="word.unit">단위</entry>
+
+    <entry key="word.tracking.setmap.text001">비콘을 맵에서 제거 시 체크하는 인터벌 시간</entry>
+    <entry key="word.tracking.setmap.text002">신호가 없을경우 비콘 제거 인터벌 시간이 지나면 맵에서 비콘을 제거</entry>
+    <entry key="word.tracking.setmap.text003">지속적으로 신호가 들어와도 비콘 이동 인터벌 시간 이후에 맵에서 이동</entry>
+
+    <entry key="word.stat.beacon.monitor.text001">총 비콘 갯수</entry>
+    <entry key="word.stat.beacon.monitor.text002">측위용 비콘 갯수</entry>
+    <entry key="word.stat.beacon.monitor.text003">망실 가능성 높은 비콘 갯수</entry>
+    <entry key="word.stat.beacon.monitor.text004">산정 기준</entry>
+    <entry key="word.stat.beacon.monitor.text005">{0} 일 이전에 인식 안된 비콘 리스트</entry>
+
+    <entry key="word.beacon.unit">개</entry>
+    <entry key="word.recent.responsedate">최근응답일</entry>
+    <entry key="word.location.check">위치확인</entry>
+
+    <entry key="word.floor.name">층 이름</entry>
+    <entry key="word.image">이미지</entry>
+
+    <entry key="word.show.geofencing">일반 펜스 보기</entry>
+    <entry key="word.show.geofencing.system">시스템 펜스 보기</entry>
+    <entry key="word.geofencing.edit">지오펜스 편집</entry>
+
+    <entry key="word.info">정보</entry>
+
+    <entry key="word.correction">보정치</entry>
+    <entry key="word.maximum">최대횟수</entry>
+    <entry key="word.unlimited">무제한</entry>
+
+    <entry key="word.move.scanner.node">스캐너/노드이동</entry>
+    <entry key="word.scanner.choose">스캐너 선택</entry>
+    <entry key="word.show.scanner">스캐너 표시</entry>
+
+
+    <entry key="word.oauth.client.id">클라이언트 아이디</entry>
+    <entry key="word.oauth.secret.key">비밀 키</entry>
+    <entry key="word.oauth.grant.type">권한 유형</entry>
+    <entry key="word.oauth.token">토큰</entry>
+    <entry key="word.oauth.token.access">엑서스 토큰</entry>
+    <entry key="word.oauth.token.expiration.time">만료 시간</entry>
+    
+    <entry key="word.binding.type">인터페이스 대상 구분</entry>
+    <entry key="word.command.type">인터페이스 유형</entry>
+    <entry key="word.interlocking.method">연동 방식</entry>
+    <entry key="word.target.info">연동 대상 정보</entry>
+    <entry key="word.message.header">메시지 헤더</entry>
+    <entry key="word.protocol">프로토콜</entry>
+    <entry key="word.host">호스트</entry>
+    <entry key="word.port">포트</entry>
+    <entry key="word.uri">URI</entry>
+    <entry key="word.method">Method</entry>
+
+    <entry key="word.location.common">측위신호 전체</entry>
+    <entry key="word.floor.common">층 전체</entry>
+    <entry key="word.specific.floor">특정 층</entry>
+    <entry key="word.geofence.common">지오펜스 전체</entry>
+    <entry key="word.location.change">위치 변경</entry>
+    <entry key="word.floor.in">층 진입</entry>
+    <entry key="word.floor.stay">층 머무름</entry>
+    <entry key="word.floor.out">층 퇴장</entry>
+    <entry key="word.geofence.in">지오펜스 진입</entry>
+    <entry key="word.geofence.stay">지오펜스 머무름</entry>
+    <entry key="word.geofence.out">지오펜스 퇴장</entry>
+    <entry key="word.restriction.in">비인가구역 진입</entry>
+    <entry key="word.restriction.stay">비인가구역 머무름</entry>
+    <entry key="word.restriction.out">비인가구역 퇴장</entry>
+
+    <entry key="word.floor.code.upper.node">상위 노드</entry>
+    <entry key="word.floor.code.sort.no">정렬 순서</entry>
+
+    <entry key="db.code.contents.attendance">출결용비콘</entry>
+    <entry key="db.code.contents.goodbye">굿바이</entry>
+    <entry key="db.code.contents.children">어린이</entry>
+    <entry key="db.code.contents.coupon">쿠폰</entry>
+    <entry key="db.code.contents.complex">복합</entry>
+    <entry key="db.code.contents.image">이미지</entry>
+    <entry key="db.code.contents.intro">인트로</entry>
+    <entry key="db.code.contents.materials">자재</entry>
+    <entry key="db.code.contents.member">회원</entry>
+    <entry key="db.code.contents.notification">노티</entry>
+    <entry key="db.code.contents.presence">프레즌스</entry>
+    <entry key="db.code.contents.sound">사운드</entry>
+    <entry key="db.code.contents.text">텍스트</entry>
+    <entry key="db.code.contents.uri">URI</entry>
+    <entry key="db.code.contents.video">동영상</entry>
+    <entry key="db.code.contents.welcome">웰컴</entry>
+
+    <entry key="db.code.reference.beacon">비콘</entry>
+    <entry key="db.code.reference.geofencing">지오펜싱</entry>
+    <entry key="db.code.reference.node">노드</entry>
+    <entry key="db.code.reference.beacon.group">비콘 그룹</entry>
+    <entry key="db.code.refrence.geofencing.group">지오펜싱 그룹</entry>
+    <entry key="db.code.reference.sub.detect">DETECT</entry>
+    <entry key="db.code.reference.sub.enter">ENTER</entry>
+    <entry key="db.code.reference.sub.event">EVENT</entry>
+    <entry key="db.code.reference.sub.stay">STAY</entry>
+    <entry key="db.code.reference.sub.leave">LEAVE</entry>
+    <entry key="db.code.reference.sub.push">PUSH</entry>
+
+    <entry key="db.code.scanner.deptype.contents">콘텐츠</entry>
+    <entry key="db.code.scanner.deptype.gate">게이트</entry>
+    <entry key="db.code.scanner.deptype.geofence">지오펜스</entry>
+    <entry key="db.code.scanner.deptype.materials">자재</entry>
+    <entry key="db.code.scanner.deptype.node">스캐너 노드</entry>
+    <entry key="db.code.scanner.deptype.position">스캐너 포지션</entry>
+    <entry key="db.code.scanner.deptype.floor">층</entry>
+    <entry key="db.code.scanner.deptype.bnode">비콘 노드</entry>
+    <entry key="db.code.scanner.deptype.bposition">비콘 포지션</entry>
+
+    <entry key="db.code.fence.shape.circle">원형</entry>
+    <entry key="db.code.fence.shape.polygon">다각형</entry>
+    <entry key="db.code.fence.shape.square">사각형</entry>
+
+    <entry key="db.code.fence.type.general">일반</entry>
+    <entry key="db.code.fence.type.system">시스템정의</entry>
+    <entry key="db.code.fence.type.warning">위험지역</entry>
+
+    <entry key="db.code.expose.flag.yes">노출</entry>
+    <entry key="db.code.expose.flag.no">노출안함</entry>
+
+    <entry key="db.code.beacon.type.fixed">고정형</entry>
+    <entry key="db.code.beacon.type.movable">이동형</entry>
+    <entry key="db.code.beacon.type.wearable">웨어러블</entry>
+
+</properties>

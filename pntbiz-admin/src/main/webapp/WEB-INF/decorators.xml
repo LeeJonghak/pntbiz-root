@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/jsp">
+    <excludes>
+        <pattern>/index.jsp</pattern>
+        <pattern>/html/error.html</pattern>
+        <pattern>/log/*</pattern>
+        <pattern>/common/excel.do</pattern>
+    </excludes>
+    <decorator name="layout" page="_global/layout.jsp">
+        <pattern>/*</pattern>
+    </decorator>
+    <decorator name="top" page="_global/top.jsp" />
+    <decorator name="footer" page="_global/footer.jsp" />
+    <decorator name="include" page="_global/include.jsp" />
+    <decorator name="popup" page="_global/popup.jsp" >
+        <pattern>/beacon/map.do</pattern>
+        <pattern>/service/event/popup/content_list.do</pattern>
+    </decorator>
+    <decorator name="ajax" page="_global/ajax.jsp" >
+        <pattern>/**/*.ajax.do</pattern>
+    </decorator>
+</decorators>

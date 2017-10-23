@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+        http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-4.3.xsd
+        ">
+
+    <context:component-scan base-package="framework.*,core.common.*,core.wms.*,wms.*,custom.*">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+    </context:component-scan>
+
+    <!-- Request Mapping Customizing -->
+    <bean class="framework.web.config.CustomRequestMappingHandlerMapping"
+          p:alwaysUseFullPath="true"/>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <!-- MessageConverter 설정 -->
+        <property name="messageConverters">
+            <list>
+                <ref bean="stringHttpMessageConverter" />
+                <ref bean="formHttpMessageConverter" />
+                <ref bean="jsonHttpMessageConverter" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- MessageConverter 설정 -->
+    <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="formHttpMessageConverter" class="org.springframework.http.converter.FormHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/x-www-form-urlencoded;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+	<mvc:resources mapping="/v1/**" location="/v1/" />
+	<mvc:resources mapping="/v2/**" location="/v2/" />
+	<mvc:resources mapping="/html/**" location="/html/" />
+	<mvc:resources mapping="/upload/**" location="file:E:/contents_pnt/" />
+	<mvc:resources mapping="/logs/wms/**" location="file:E:/apache-tomcat-7.0.76-pnt_wms/logs/" />
+	<mvc:resources mapping="/logs/api/**" location="file:E:/apache-tomcat-7.0.76-pnt_api/logs/" />
+	
+    <!-- Include a swagger configuration-->
+    <!--
+    <bean name="/applicationSwaggerConfig" class="spring.config.SwaggerConfig"/>
+    -->
+
+    <!-- file download resolver -->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />
+
+    <!-- mvc resolver customizing -->
+    <bean id="viewResolver" class="framework.web.config.CustomInternalResourceViewResolver"
+            p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" p:order="1" p:cache="#{config['view.cache']?:true}" />
+    <bean id="applicationContextProvder" class="framework.ApplicationContextProvider" />
+
+    <!-- Autowired Config for site Customizing -->
+    <bean id="autowireCandidateResolverConfigurer" class="framework.web.config.AutowireCandidateResolverConfigurer">
+        <constructor-arg index="0"  value="#{config['site.shortName']}" />
+        <constructor-arg index="1">
+            <bean class="framework.web.config.CustomAutowiredCandidateResolver" />
+        </constructor-arg>
+    </bean>
+
+    <!--
+        2015-11-19 nohsoo 다국어 처리
+    -->
+    <bean id="messageSource" class="framework.web.language.ExposedResourceMessageBundleSource">
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="useCodeAsDefaultMessage" value="true" />
+        <property name="basenames">
+            <list>
+                <value>classpath:language/language</value>
+            </list>
+        </property>
+    </bean>
+    <!--<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="ko" />
+    </bean>-->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"></bean>
+
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="lang"></property>
+        </bean>
+    </mvc:interceptors>
+
+    <!-- task scheduler -->
+    <task:annotation-driven />
+
+    <task:scheduled-tasks scheduler="beaconStateScheduler">
+        <task:scheduled ref="BeaconStateScheduler" method="batchBeaconState" cron="0 0 4 * * *" />
+        <!-- <task:scheduled ref="LGDisplayScheduler" method="deletePresenceLog" cron="0 0 0 * * *" />
+        <task:scheduled ref="LGDisplayScheduler" method="syncFloorCode" cron="0 10 0 * * *" /> -->
+        <!-- <task:scheduled ref="LGDisplayScheduler" method="updateBeaconStatus" cron="0 0/5 * * * *" /> -->
+    </task:scheduled-tasks>
+    <task:scheduler id="beaconStateScheduler" pool-size="1" />
+
+</beans>

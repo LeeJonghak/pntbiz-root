@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.info.dao.AdvertCompanyDao">
+
+	<resultMap id="advertCompanyResult" type="core.wms.info.domain.AdvertCompany">
+		<result property="comNum" column="comNum" />
+		<result property="acNum" column="acNum" />
+		<result property="acName" column="acName" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<sql id="sqlAdverCompanySearch">
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+		<if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+			AND acName LIKE CONCAT(#{keyword}, '%')
+		</if>
+	</sql>
+	<select id="getAdvertCompanyCount" parameterType="core.wms.info.domain.AdvertCompanySearchParam" resultType="Integer">
+		SELECT COUNT(comNum) CNT
+		FROM TB_ADVERT_COMPANY
+		WHERE 1
+		<include refid="sqlAdverCompanySearch"/>
+	</select>
+
+	<select id="getAdvertCompanyList" parameterType="core.wms.info.domain.AdvertCompanySearchParam" resultMap="advertCompanyResult">
+		SELECT comNum, acNum, acName, regDate
+		FROM TB_ADVERT_COMPANY
+		WHERE 1
+		<include refid="sqlAdverCompanySearch"/>
+
+		ORDER BY acNum DESC
+		LIMIT #{firstItemNo}, #{pageSize}
+	</select>
+
+	<select id="getAdvertCompanyListByAll" parameterType="core.wms.info.domain.AdvertCompanySearchParam" resultMap="advertCompanyResult">
+		SELECT comNum, acNum, acName, regDate
+		FROM TB_ADVERT_COMPANY
+		WHERE 1
+		<include refid="sqlAdverCompanySearch"/>
+	</select>
+
+	<select id="getAdvertCompanyInfo" parameterType="core.wms.info.domain.AdvertCompany" resultMap="advertCompanyResult">
+		SELECT comNum, acNum, acName, regDate
+		FROM TB_ADVERT_COMPANY
+		WHERE 1
+		AND acNum = #{acNum}
+	</select>
+
+	<insert id="insertAdvertCompany" parameterType="core.wms.info.domain.AdvertCompany">
+        INSERT INTO TB_ADVERT_COMPANY
+        (comNum, acName, regDate)
+        VALUES
+        (#{comNum}, #{acName}, UNIX_TIMESTAMP())
+    </insert>
+
+    <update id="updateAdvertCompany" parameterType="core.wms.info.domain.AdvertCompany">
+        UPDATE TB_ADVERT_COMPANY
+        <set>
+        	<if test="acName != '' and acName != null">acName = #{acName},</if>
+        	regDate = UNIX_TIMESTAMP(),
+        </set>
+        WHERE acNum = #{acNum}
+    </update>
+
+    <delete id="deleteAdvertCompany" parameterType="core.wms.info.domain.AdvertCompany">
+        DELETE
+        FROM TB_ADVERT_COMPANY
+        WHERE acNum = #{acNum}
+    </delete>
+
+</mapper>

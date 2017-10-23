@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- config properties -->
+	<context:property-placeholder properties-ref="config" />
+	<util:properties id="config" location="classpath:config-influxdb.properties.xml" scope="singleton" />
+
+	<bean id="influxdbConnectionProperites" class="framework.influxdb.InfluxdbConnectionProperites">
+		<property name="database" value="#{config['influxdb.database']}" />
+		<property name="url" value="#{config['influxdb.url']}" />
+		<property name="username" value="#{config['influxdb.username']}" />
+		<property name="password" value="#{config['influxdb.password']}" />
+	</bean>
+
+	<bean id="influxdbConnectionFactory" class="framework.influxdb.InfluxdbConnectionFactory">
+		<constructor-arg ref="influxdbConnectionProperites" />
+	</bean>
+
+	<bean id="influsdbTemplate" class="framework.influxdb.InfluxdbTemplate">
+		<constructor-arg ref="influxdbConnectionFactory" />
+	</bean>
+
+</beans>

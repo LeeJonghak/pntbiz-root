@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.scanner.dao.ScannerDao">
+
+    <!--
+        스캐너 목록
+        edit: nohsoo 2015-04-23 floor 조건 추가
+    -->
+	<select id="getScannerCountSample" parameterType="core.wms.scanner.domain.ScannerSearchParam" resultType="Integer">
+		SELECT COUNT(scannerNum) CNT
+		FROM TB_SCANNER TS
+		WHERE 1
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+        <if test="floor != '' and floor!=null">AND floor=#{floor}</if>
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null">
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+	</select>
+
+    <!--
+        스캐너 목록
+        edit: nohsoo 2015-04-23 firstItemNo, pageSize 조건 NULL 체크, floor 조건 추가
+    -->
+	<select id="getScannerListSample" parameterType="core.wms.scanner.domain.ScannerSearchParam" resultMap="scannerResult">
+
+        SELECT TS.scannerNum, TS.comNum, TS.macAddr, TS.majorVer, 'TestName' as scannerName
+             , TS.sid, TS.lat, TS.lng, TS.rssi, TS.srssi
+             , TS.mrssi, TS.drssi, TS.exMeter, TS.calPoint, TS.maxSig
+             , TS.maxBuf, TS.fwVer, TS.modDate, TS.regDate
+             , TF.floorName AS FLOOR
+         FROM TB_SCANNER TS
+         LEFT OUTER JOIN (SELECT TF.floor, TFC.nodeName AS floorName
+                            FROM TB_FLOOR TF
+                           INNER JOIN TB_FLOOR_CODE TFC
+                              ON TF.floor = TFC.nodeId
+                             AND TFC.comNum = #{comNum}
+                            WHERE TF.comNum = #{comNum}
+                            ) TF ON TS.FLOOR = TF.floor
+        WHERE TS.comNum = #{comNum}
+
+        <if test="floor != '' and floor!=null">AND TS.floor=#{floor}</if>
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null">
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+		ORDER BY TS.scannerNum DESC
+        <if test="firstItemNo!=null and pageSize!=null and firstItemNo>=0 and pageSize>0">
+            LIMIT ${firstItemNo}, ${pageSize}
+        </if>
+	</select>
+
+</mapper>

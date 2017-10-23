@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.stat.dao.StatDao">
+
+
+    <resultMap id="beaconResult" type="core.wms.beacon.domain.Beacon">
+        <result property="beaconNum"          column="BEACON_NUM"/>
+        <result property="comNum"             column="COM_NUM"/>
+        <result property="UUID"               column="UUID"/>
+        <result property="majorVer"           column="MAJOR_VER"/>
+        <result property="minorVer"           column="MINOR_VER"/>
+        <result property="battery"            column="BATTERY"/>
+        <result property="beaconName"         column="BEACON_NAME"/>
+        <result property="beaconDesc"         column="BEACON_DESC"/>
+        <result property="floor"              column="FLOOR"/>
+        <result property="lastDate"           column="LAST_DATE"/>
+    </resultMap>
+    <sql id="selectBeaconMonitorSearch">
+        <where>
+            <if test="comNum!=null">
+                AND COM_NUM=#{comNum}
+            </if>
+            <if test="beaconName != '' and beaconName  != null">
+                AND BEACON_NAME LIKE CONCAT(#{beaconName}, '%')
+            </if>
+            <if test="lastDate != '' and lastDate  != null">
+                AND LAST_DATE <![CDATA[<=]]> FN_UNIX_TIMESTEMP(TO_DATE(#{lastDate}, 'YYYY-MM-DD HH24:MI:SS'))
+            </if>
+       </where>
+    </sql>
+	<select id="statBeaconMonitorCount" parameterType="core.wms.stat.domain.StatBeaconSearchParam" resultType="Integer">
+        SELECT COUNT(1) as CNT
+          FROM TB_BEACON
+         <include refid="selectBeaconMonitorSearch"/>
+    </select>
+
+    <select id="statBeaconMonitorList" parameterType="core.wms.stat.domain.StatBeaconSearchParam" resultMap="beaconResult">
+        SELECT BEACON_NUM, UUID, MAJOR_VER, MINOR_VER, BATTERY, FLOOR, BEACON_NAME, BEACON_DESC, LAST_DATE
+          FROM TB_BEACON
+         <include refid="selectBeaconMonitorSearch"/>
+         ORDER BY LAST_DATE DESC
+    </select>
+
+    <select id="statBeaconPresenceCount" parameterType="core.wms.stat.domain.StatBeaconSearchParam" resultType="Integer">
+		SELECT COUNT(*)
+		  FROM TB_BEACON A
+         INNER JOIN TB_CONTENTS_MAPPING B
+            ON A.BEACON_NUM = B.REF_NUM
+           AND B.REF_TYPE = 'BC'
+         INNER JOIN (SELECT CON_NUM
+		               FROM TB_CONTENTS
+		              WHERE CON_TYPE = 'PRE'
+		                AND COM_NUM=#{comNum}) C
+		    ON B.CON_NUM = C.CON_NUM
+ 		 WHERE A.COM_NUM = #{comNum}
+    </select>
+</mapper>

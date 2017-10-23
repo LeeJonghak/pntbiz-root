@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.scanner.dao.ScannerDeployDao">
+
+	<resultMap id="scannerDeployResult" type="core.wms.scanner.domain.ScannerDeploy">
+		<result property="servNum" column="servNum" />
+		<result property="depNum" column="depNum" />
+		<result property="depType" column="depType" />
+		<result property="depName" column="depName" />
+		<result property="depPath" column="depPath" />
+		<result property="depFile" column="depFile" />
+		<result property="depContents" column="depContents" />
+		<result property="modDate" column="modDate" />
+		<result property="regDate" column="regDate" />
+		<result property="comNum" column="comNum" />
+		<result property="ftpHost" column="ftpHost" />
+	</resultMap>
+
+	<resultMap id="companyResult" type="core.wms.admin.company.domain.Company">
+		<result property="comNum" column="comNum" />
+		<result property="UUID" column="UUID" />
+	</resultMap>
+
+	<resultMap id="scannerPosResult" type="core.wms.scanner.domain.ScannerPos">
+		<result property="UUID" column="UUID" />
+		<result property="macAddr" column="macAddr" />
+		<result property="majorVer" column="majorVer" />
+		<result property="scannerName" column="scannerName" />
+		<result property="sid" column="sid" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="rssi" column="rssi" />
+		<result property="srssi" column="srssi" />
+		<result property="mrssi" column="mrssi" />
+		<result property="drssi" column="drssi" />
+		<result property="exMeter" column="exMeter" />
+		<result property="calPoint" column="calPoint" />
+		<result property="maxSig" column="maxSig" />
+		<result property="maxBuf" column="maxBuf" />
+		<result property="fwVer" column="fwVer" />
+		<result property="floor" column="floor" />
+	</resultMap>
+
+	<resultMap id="scannerNodeResult" type="core.wms.scanner.domain.ScannerNode">
+		<result property="nodeNum" column="nodeNum" />
+		<result property="comNum" column="comNum" />
+		<result property="nodeID" column="nodeID" />
+		<result property="nodeName" column="nodeName" />
+		<result property="floor" column="floor" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+	</resultMap>
+
+	<resultMap id="scannerEdgeResult" type="core.wms.scanner.domain.ScannerEdge">
+		<result property="edgeNum" column="edgeNum" />
+		<result property="comNum" column="comNum" />
+		<result property="floor" column="floor" />
+		<result property="startPoint" column="startPoint" />
+		<result property="endPoint" column="endPoint" />
+		<result property="type" column="type" />
+	</resultMap>
+
+	<resultMap id="scannerBeaconPosResult" type="core.wms.scanner.domain.ScannerBeaconPos">
+		<result property="UUID" column="UUID" />
+		<result property="majorVer" column="majorVer" />
+		<result property="minorVer" column="minorVer" />
+		<result property="macAddr" column="macAddr" />
+		<result property="txPower" column="txPower" />
+		<result property="battery" column="battery" />
+		<result property="beaconName" column="beaconName" />
+		<result property="floor" column="floor" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+	</resultMap>
+
+	<resultMap id="scannerBeaconNodeResult" type="core.wms.scanner.domain.ScannerBeaconNode">
+		<result property="nodeNum" column="nodeNum" />
+		<result property="comNum" column="comNum" />
+		<result property="nodeID" column="nodeID" />
+		<result property="nodeName" column="nodeName" />
+		<result property="floor" column="floor" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+	</resultMap>
+
+	<resultMap id="scannerBeaconEdgeResult" type="core.wms.scanner.domain.ScannerBeaconEdge">
+		<result property="edgeNum" column="edgeNum" />
+		<result property="comNum" column="comNum" />
+		<result property="floor" column="floor" />
+		<result property="startPoint" column="startPoint" />
+		<result property="endPoint" column="endPoint" />
+		<result property="type" column="type" />
+	</resultMap>
+
+	<resultMap id="scannerMaterialsResult" type="core.wms.scanner.domain.ScannerMaterials">
+		<result property="SUUID" column="SUUID" />
+		<result property="UUID" column="UUID" />
+		<result property="majorVer" column="majorVer" />
+		<result property="minorVer" column="minorVer" />
+		<result property="beaconName" column="beaconName" />
+		<result property="conName" column="conName" />
+	</resultMap>
+
+	<resultMap id="scannerContentsResult" type="core.wms.scanner.domain.ScannerContents">
+		<result property="SUUID" column="SUUID" />
+		<result property="UUID" column="UUID" />
+		<result property="majorVer" column="majorVer" />
+		<result property="minorVer" column="minorVer" />
+		<result property="beaconName" column="beaconName" />
+		<result property="conType" column="conType" />
+		<result property="conName" column="conName" />
+		<result property="refType" column="refType" />
+		<result property="refSubType" column="refSubType" />
+		<result property="imgSrc1" column="imgSrc1" />
+		<result property="imgSrc2" column="imgSrc2" />
+		<result property="imgSrc3" column="imgSrc3" />
+		<result property="imgSrc4" column="imgSrc4" />
+		<result property="imgSrc5" column="imgSrc5" />
+		<result property="text1" column="text1" />
+		<result property="text2" column="text2" />
+		<result property="text3" column="text3" />
+		<result property="text4" column="text4" />
+		<result property="text5" column="text5" />
+		<result property="soundSrc1" column="soundSrc1" />
+		<result property="soundSrc2" column="soundSrc2" />
+		<result property="soundSrc3" column="soundSrc3" />
+		<result property="url1" column="url1" />
+		<result property="url2" column="url2" />
+		<result property="url3" column="url3" />
+	</resultMap>
+
+	<resultMap id="scannerGeofenceResult" type="core.wms.scanner.domain.ScannerGeofence">
+		<result property="fcNum" column="fcNum" />
+		<result property="fcType" column="fcType" />
+		<result property="fcShape" column="fcShape" />
+		<result property="fcName" column="fcName" />
+		<result property="floor" column="floor" />
+		<result property="evtEnter" column="evtEnter" />
+		<result property="evtLeave" column="evtLeave" />
+		<result property="evtStay" column="evtStay" />
+		<result property="numEnter" column="numEnter" />
+		<result property="numLeave" column="numLeave" />
+		<result property="numStay" column="numStay" />
+		<result property="field1" column="field1" />
+		<result property="field2" column="field2" />
+		<result property="field3" column="field3" />
+	</resultMap>
+
+	<resultMap id="scannerGeofenceLatlngResult" type="core.wms.scanner.domain.ScannerGeofenceLatlng">
+		<result property="fcNum" column="fcNum" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="orderSeq" column="orderSeq" />
+		<result property="radius" column="radius" />
+	</resultMap>
+
+	<resultMap id="scannerFloorResult" type="core.wms.scanner.domain.ScannerFloor">
+		<result property="UUID" column="UUID" />
+		<result property="floorNum" column="floorNum" />
+		<result property="floor" column="floor" />
+		<result property="floorName" column="floorName" />
+		<result property="swLat" column="swLat" />
+		<result property="swLng" column="swLng" />
+		<result property="neLat" column="neLat" />
+		<result property="neLng" column="neLng" />
+		<result property="deg" column="deg" />
+		<result property="imgSrc" column="imgSrc" />
+	</resultMap>
+
+	<select id="getScannerDeployInfo" parameterType="core.wms.scanner.domain.ScannerDeploy" resultMap="scannerDeployResult">
+		SELECT servNum, depNum, depType, depName, depPath, depFile, depContents, modDate, regDate
+		FROM TB_SCANNER_DEPLOY
+		WHERE depNum = #{depNum}
+	</select>
+
+	<select id="getScannerDeployInfoByNum" parameterType="core.wms.scanner.domain.ScannerDeploy" resultMap="scannerDeployResult">
+		SELECT servNum, depNum, depType, depName, depPath, depFile, depContents, modDate, regDate
+		FROM TB_SCANNER_DEPLOY
+		WHERE depNum = #{depNum}
+	</select>
+
+	<select id="getScannerDeployList" parameterType="core.wms.scanner.domain.ScannerDeploy" resultMap="scannerDeployResult">
+		SELECT A.servNum, A.depNum, A.depType, A.depName, A.depPath, A.depFile, A.depContents, A.modDate, A.regDate,
+		B.comNum, B.ftpHost
+		FROM TB_SCANNER_DEPLOY A, TB_SCANNER_SERVER B
+		WHERE A.servNum = B.servNum
+		<if test="comNum != '' and comNum != null">AND B.comNum = #{comNum}</if>
+		ORDER BY A.depNum DESC
+	</select>
+
+	<insert id="insertScannerDeploy" parameterType="core.wms.scanner.domain.ScannerDeploy">
+		INSERT INTO TB_SCANNER_DEPLOY
+		(servNum, depType, depName, depPath, depFile, modDate, regDate)
+		VALUES
+		(#{servNum}, #{depType}, #{depName}, #{depPath}, #{depFile}, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
+    </insert>
+
+    <update id="updateScannerDeploy" parameterType="core.wms.scanner.domain.ScannerDeploy">
+        UPDATE TB_SCANNER_DEPLOY
+		<set>
+			<if test="servNum != null">servNum = #{servNum},</if>
+			<if test="depType != null">depType = #{depType},</if>
+			<if test="depName != null">depName = #{depName},</if>
+			<if test="depPath != null">depPath = #{depPath},</if>
+			<if test="depFile != null">depFile = #{depFile},</if>
+			<if test="depContents != null">depContents = #{depContents},</if>
+			modDate = UNIX_TIMESTAMP(),
+		</set>
+		WHERE depNum = #{depNum}
+    </update>
+
+    <delete id="deleteScannerDeploy" parameterType="core.wms.scanner.domain.ScannerDeploy">
+    	DELETE
+    	FROM TB_SCANNER_DEPLOY
+		WHERE depNum = #{depNum}
+    </delete>
+
+    <select id="getScannerPermission" parameterType="core.wms.admin.company.domain.Company" resultMap="companyResult">
+		SELECT A.comNum, C.UUID
+		FROM TB_LOGIN A, TB_LOGIN_ROLE_AUTHORITIES B, TB_COMPANY C
+		WHERE B.authCode = 'BF_SCANNER'
+		AND A.roleNum = B.roleNum
+		AND A.comNum = C.comNum
+		GROUP BY C.UUID
+		<if test="comNum != '' and comNum != null">AND C.comNum = #{comNum}</if>
+	</select>
+
+	<select id="getScannerPosList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerPosResult">
+		SELECT A.macAddr, A.majorVer, A.scannerName, A.sid, A.lat, A.lng, A.rssi, A.srssi, A.mrssi, A.drssi,
+		A.exMeter, A.calPoint, A.maxSig, A.maxBuf, A.fwVer, A.floor, B.UUID
+		FROM TB_SCANNER A, TB_COMPANY B
+		WHERE A.comNum = B.comNum
+		<if test="comNum != '' and comNum != null">AND B.comNum = #{comNum}</if>
+	</select>
+
+	<select id="getScannerNodeList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerNodeResult">
+		SELECT nodeNum, comNum, nodeID, nodeName, floor, lat, lng
+		FROM TB_NODE
+		WHERE comNum = #{comNum}
+		AND type = 'S'
+	</select>
+
+	<select id="getScannerEdgeList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerEdgeResult">
+		SELECT edgeNum, comNum, floor,  startPoint, endPoint
+		FROM TB_NODE_EDGE
+		WHERE comNum = #{comNum}
+		AND type = 'S'
+	</select>
+
+	<select id="getScannerEdgeList2" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerEdgeResult">
+		SELECT edgeNum, comNum, floor,  startPoint, endPoint
+		FROM TB_NODE_EDGE
+		WHERE comNum = #{comNum}
+		AND type = 'S'
+
+		UNION
+
+		SELECT edgeNum, comNum, floor,  endPoint, startPoint
+		FROM TB_NODE_EDGE
+		WHERE comNum = #{comNum}
+		AND type = 'S'
+	</select>
+
+	<select id="getScannerBeaconPosList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerBeaconPosResult">
+		SELECT A.UUID, A.majorVer, A.minorVer, A.macAddr, A.txPower, A.battery, A.beaconName, A.floor, A.lat, A.lng
+		FROM TB_BEACON A, TB_COMPANY B, TB_CONTENTS_MAPPING C, TB_CONTENTS D
+		WHERE A.comNum = B.comNum
+		AND A.beaconNum = C.refNum
+		AND C.refType = 'BC'
+		AND C.refSubType = 'DETECT'
+		AND C.conNum = D.conNum
+		AND D.conType = 'PRE'
+		<if test="comNum != '' and comNum != null">AND B.comNum = #{comNum}</if>
+	</select>
+
+	<select id="getScannerBeaconNodeList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerBeaconNodeResult">
+		SELECT nodeNum, comNum, nodeID, nodeName, floor, lat, lng
+		FROM TB_NODE
+		WHERE comNum = #{comNum}
+		AND type = 'B'
+	</select>
+
+	<select id="getScannerBeaconEdgeList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerBeaconEdgeResult">
+		SELECT edgeNum, comNum, floor,  startPoint, endPoint
+		FROM TB_NODE_EDGE
+		WHERE comNum = #{comNum}
+		AND type = 'B'
+	</select>
+
+	<select id="getScannerMaterialsList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerMaterialsResult">
+		SELECT A.UUID, A.majorVer, A.minorVer, A.beaconName, B.conName, D.UUID AS SUUID
+		FROM TB_BEACON A, TB_CONTENTS B, TB_CONTENTS_MAPPING C, TB_COMPANY D
+		WHERE A.comNum = #{comNum}
+		AND A.beaconNum = C.refNum
+		AND C.conNum = B.conNum
+		AND A.comNum = D.comNum
+		AND B.conType = 'MAT'
+		GROUP BY C.refNum
+	</select>
+
+	<select id="getScannerContentsList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerContentsResult">
+		SELECT E.UUID AS SUUID, A.UUID, A.majorVer, A.minorVer, A.beaconName, B.conType, B.conName,
+		C.imgSrc1, C.imgSrc2, C.imgSrc3, C.imgSrc4, C.imgSrc5, C.text1, C.text2, C.text3, C.text4, C.text5,
+		C.soundSrc1, C.soundSrc2, C.soundSrc3, C.url1, C.url2, C.url3, D.refType, D.refSubType
+		FROM TB_BEACON A, TB_CONTENTS B, TB_CONTENTS_DETAIL C, TB_CONTENTS_MAPPING D, TB_COMPANY E
+		WHERE A.comNum = #{comNum}
+		AND A.beaconNum = D.refNum
+		AND D.conNum = B.conNum
+		AND D.conNum = C.conNum
+		AND A.comNum = E.comNum
+		GROUP BY D.refNum
+	</select>
+
+	<select id="getScannerGeofenceList" resultMap="scannerGeofenceResult">
+		SELECT fcNum, fcType, fcShape, fcName, floor, evtEnter, evtLeave, evtStay,
+		numEnter, numLeave, numStay, field1, field2, field3, isNodeEnable
+		FROM TB_GEOFENCING
+		WHERE comNum = #{comNum}
+	</select>
+
+	<select id="getScannerGeofenceLatlngList" parameterType="core.wms.scanner.domain.ScannerGeofenceLatlng" resultMap="scannerGeofenceLatlngResult">
+		SELECT fcNum, lat, lng, orderSeq, radius
+		FROM TB_GEOFENCING_LATLNG
+		WHERE fcNum = #{fcNum}
+		ORDER BY orderSeq
+	</select>
+
+	<select id="getScannerFloorList" parameterType="core.wms.admin.company.domain.Company" resultMap="scannerFloorResult">
+		SELECT floorNum, floor, floorName, swLat, swLng, neLat, neLng, deg, imgSrc
+		FROM TB_FLOOR
+		WHERE comNum = #{comNum}
+	</select>
+
+</mapper>

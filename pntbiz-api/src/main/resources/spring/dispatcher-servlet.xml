@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/cache
+		http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-4.3.xsd
+">
+	<cache:annotation-driven />
+
+	<context:component-scan base-package="framework.*, core.common.*, core.api.*, api.*, custom.Sample.*, spring.config.exception">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+	<bean class="framework.web.config.CustomRequestMappingHandlerMapping"
+		  p:alwaysUseFullPath="true"/>
+
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+	<!-- MessageConverter 설정 -->
+		<property name="messageConverters">
+			<list>
+				<ref bean="stringHttpMessageConverter" />
+				<ref bean="formHttpMessageConverter" />
+				<ref bean="jsonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- MessageConverter 설정 -->
+	<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/plain;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="formHttpMessageConverter" class="org.springframework.http.converter.FormHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/x-www-form-urlencoded;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"></bean>
+	<!-- file download resolver -->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />
+	<!-- mvc resolver -->
+	<bean id="viewResolver" class="framework.web.config.CustomInternalResourceViewResolver"
+		  p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" p:order="1" p:contentType="text/html;charset=UTF-8" />
+
+	<!-- Autowired Config for site Customizing -->
+	<bean id="autowireCandidateResolverConfigurer" class="framework.web.config.AutowireCandidateResolverConfigurer">
+		<constructor-arg index="0"  value="#{config['site.shortName']}" />
+		<constructor-arg index="1">
+			<bean class="framework.web.config.CustomAutowiredCandidateResolver" />
+		</constructor-arg>
+	</bean>
+
+	<!-- Exception Handler -->
+	<bean id="exceptionResolver" class="spring.config.exception.BaseExceptionResolver" />
+<!--
+	<task:scheduled-tasks scheduler="batchGeofenceInout">
+		<task:scheduled ref="ISMScheduler" method="batchGeofenceInout" cron="*/30 * * * * *" />
+	</task:scheduled-tasks>
+	<task:scheduler id="batchGeofenceInout" pool-size="1" />
+-->
+
+	<!-- redis Pub/Sub Event 처리 설정 -->
+	<bean id="redisKeyExpireMessageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+		<constructor-arg>
+			<bean class="framework.redis.RedisKeyExpireMessageListener" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="redisContainer1" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+		<property name="connectionFactory" ref="jedisConnFactory"/>
+		<property name="messageListeners">
+			<map>
+				<entry key-ref="redisKeyExpireMessageListener">
+					<bean class="org.springframework.data.redis.listener.PatternTopic">
+						<constructor-arg value="__keyevent@*:expired"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<!--
+	<bean id="redisContainer2" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+		<property name="connectionFactory" ref="jedisConnFactory2"/>
+		<property name="messageListeners">
+			<map>
+				<entry key-ref="redisKeyExpireMessageListener1">
+					<bean class="org.springframework.data.redis.listener.PatternTopic">
+						<constructor-arg value="__keyevent@*:expired"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="redisContainer3" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+		<property name="connectionFactory" ref="jedisConnFactory3"/>
+		<property name="messageListeners">
+			<map>
+				<entry key-ref="redisKeyExpireMessageListener1">
+					<bean class="org.springframework.data.redis.listener.PatternTopic">
+						<constructor-arg value="__keyevent@*:expired"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	-->
+
+	<task:executor id="externalInterfaceExecutor" pool-size="100"  />
+	<task:annotation-driven executor="externalInterfaceExecutor"/>
+
+</beans>

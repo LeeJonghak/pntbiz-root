@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.log.dao.AdminLogDao">
+
+	<resultMap id="adminLogResult" type="core.admin.log.domain.AdminLog">
+		<result property="logNum" 		column="LOG_NUM" />
+		<result property="adminID" 		column="ADMIN_ID" />
+		<result property="tableName" 	column="TABLE_NAME" />
+		<result property="crudType" 	column="CRUD_TYPE" />
+		<result property="pk" 			column="PK" />
+		<result property="regDate" 		column="REG_DATE" />
+	</resultMap>
+
+
+	<sql id="sqlAdminLogListSearch">
+		<where>
+        	<if test="crudType != '' and crudType != null">CRUD_TYPE = #{crudType}</if>
+	        <if test="keyword != '' and keyword  != null">
+	        	<choose>
+	        		<when test="opt == 'adminID'">
+	        			AND ADMIN_ID LIKE CONCAT(#{keyword}, '%')
+	        		</when>
+	        		<when test="opt == 'tableName'">
+	        			AND TABLE_NAME LIKE CONCAT(#{keyword}, '%')
+	        		</when>
+	        		<otherwise>
+	        			AND (ADMIN_ID LIKE CONCAT(#{keyword}, '%') OR TABLE_NAME LIKE CONCAT(#{keyword}, '%'))
+	        		</otherwise>
+	        	</choose>
+	        </if>
+        </where>
+	</sql>
+
+	<select id="getAdminLogCount" parameterType="core.admin.log.domain.AdminLogSearchParam" resultType="Integer">
+		SELECT COUNT(1) CNT
+		  FROM TB_LOG_ADMIN
+		<include refid="sqlAdminLogListSearch"/>
+	</select>
+
+	<select id="getAdminLogList" parameterType="core.admin.log.domain.AdminLogSearchParam" resultMap="adminLogResult">
+		SELECT *
+   		  FROM (
+			SELECT LOG_NUM, ADMIN_ID, TABLE_NAME, CRUD_TYPE, PK, REG_DATE
+			     , ROWNUM AS RNUM
+			  FROM TB_LOG_ADMIN
+			<include refid="sqlAdminLogListSearch"/>
+			 ORDER BY LOG_NUM DESC
+
+		  ) TB
+		 WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+	</select>
+
+	<insert id="insertAdminLog" parameterType="core.admin.log.domain.AdminLog">
+		INSERT INTO TB_LOG_ADMIN
+		( LOG_NUM
+		, ADMIN_ID
+		, TABLE_NAME
+		, CRUD_TYPE
+		, PK
+		, REG_DATE)
+		VALUES
+		( SEQ_LA_LOG_NUM.nextval
+		, #{adminID}
+		, #{tableName}
+		, #{crudType}
+		, #{pk}
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+	</insert>
+
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.AreaLatlngDao">
+
+    <select id="getAreaLatlngList" parameterType="java.util.Map" resultType="core.wms.map.domain.AreaLatlng">
+
+		SELECT areaNum, lat, lng, orderSeq
+		FROM TB_AREA_LATLNG
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="areaNum!=null">
+				and areaNum=#{areaNum}
+			</if>
+		</trim>
+		ORDER BY areaNum DESC, orderSeq ASC
+
+    </select>
+
+    <select id="getAreaLatlngCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) cnt
+        FROM TB_AREA_LATLNG
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="areaNum!=null">
+                and areaNum=#{areaNum}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insertAreaLatlng" parameterType="core.wms.map.domain.AreaLatlng">
+        INSERT INTO TB_AREA_LATLNG(areaNum, lat, lng, orderSeq)
+        VALUES (#{areaNum}, #{lat}, #{lng}, #{orderSeq})
+    </insert>
+
+    <delete id="deleteAreaLatlng" parameterType="java.util.Map">
+        DELETE FROM TB_AREA_LATLNG
+        <where>
+            areaNum=#{areaNum}
+        </where>
+    </delete>
+
+</mapper>

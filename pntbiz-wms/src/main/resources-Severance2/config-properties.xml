@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>config-svsc2</comment>
+
+    <entry key="buildVersion"></entry>
+	<entry key="view.version">v1</entry>
+	<entry key="view.cache">true</entry>
+	<entry key="map.type">openlayers</entry>
+	<!--<entry key="map.default.type">googlemaps</entry>-->
+
+    <entry key="presenceURL">http://wms-sev2.yuhs.ac</entry>
+    <entry key="apiServerUrl">http://api-sev2.yuhs.ac</entry>
+    <entry key="staticURL"></entry>
+    <entry key="contentsURL">https://wms-sev1.yuhs.ac/upload</entry>
+	<entry key="apiServerUrl">http://api-sev2.yuhs.ac</entry>
+
+    <entry key="contents.ftp.host">128.134.212.91</entry>
+    <entry key="contents.ftp.port">22</entry>
+    <entry key="contents.ftp.id">pntadmin</entry>
+    <entry key="contents.ftp.passwd">tjqjrhksfl!@#123</entry>
+    <entry key="contents.ftp.privatekey"></entry>
+
+    <entry key="contents.root.path.no"></entry>
+    <entry key="contents.root.path">E:/contents_pnt</entry>
+
+    <entry key="contents.image.path">/images</entry>
+    <entry key="contents.image.src">/images</entry>
+    <entry key="contents.sound.path">/sound</entry>
+    <entry key="contents.sound.src">/sound</entry>
+
+    <entry key="floor.image.path">/floor</entry>
+    <entry key="floor.image.src">/floor</entry>
+
+    <entry key="beacon.image.src">/beacon</entry>
+
+    <entry key="local.image.path">C:/Temp</entry>
+    <entry key="local.image.window.path">C:/Temp</entry>
+    <entry key="local.privatekey.path">/data/key</entry>
+    <entry key="local.privatekey.window.path">C:/key</entry>
+
+    <entry key="google.map.apikey">AIzaSyC5flBQIVK7pcBA6IDA3MZHvIcAWPDMqPQ</entry>
+
+    <entry key="db.driver">com.mysql.jdbc.Driver</entry>
+	<entry key="db.url">jdbc:mysql://10.10.11.182:3306/pntbiz_beacon</entry>
+    <entry key="db.id">pntbiz</entry>
+    <entry key="db.passwd">tjqj!@#123</entry>
+    <entry key="db.maxactive">30</entry>
+    <entry key="db.maxidle">10</entry>
+    <entry key="db.maxwait">10000</entry>
+    <entry key="db.autocommit">false</entry>
+
+    <!-- redis cluster -->
+    <entry key="redis.cluster.conf.maxredirects">5</entry>
+    <entry key="redis.cluster.pool.maxtotal">1000</entry>
+    <entry key="redis.cluster.pool.idle">1000</entry>
+    <entry key="redis.cluster.pool.maxwaitmillis">1000</entry>
+    <entry key="redis.cluster.node.host">localhost</entry>
+    <entry key="redis.cluster.node.port">6379</entry>
+    <entry key="redis.cluster.node.host1">localhost</entry>
+    <entry key="redis.cluster.node.port1">6379</entry>
+    <entry key="redis.cluster.node.host2">localhost</entry>
+    <entry key="redis.cluster.node.port2">6380</entry>
+    <entry key="redis.cluster.node.host3">localhost</entry>
+    <entry key="redis.cluster.node.port3">6381</entry>
+    <entry key="redis.cluster.node.host4">localhost</entry>
+    <entry key="redis.cluster.node.port4">6382</entry>
+    <entry key="redis.cluster.node.host5">localhost</entry>
+    <entry key="redis.cluster.node.port5">6383</entry>
+    <entry key="redis.cluster.node.host6">localhost</entry>
+    <entry key="redis.cluster.node.port6">6384</entry>
+    <entry key="redis.cluster.node.host7">localhost</entry>
+    <entry key="redis.cluster.node.port7">6385</entry>
+    <entry key="redis.cluster.node.host8">localhost</entry>
+    <entry key="redis.cluster.node.port8">6386</entry>
+    <!-- redis single -->
+    <entry key="redis.single.pool.maxtotal">1000</entry>
+    <entry key="redis.single.pool.idle">1000</entry>
+    <entry key="redis.single.pool.maxwaitmillis">1000</entry>
+    <entry key="redis.single.node.host">localhost</entry>
+    <entry key="redis.single.node.port">6379</entry>
+    <entry key="redis.single.node.password"></entry>
+
+	<!-- influxDB info -->
+	<!-- <entry key="log.db.type">influxDB</entry> -->
+    <entry key="influxdb.url">http://localhost:8086</entry>
+    <entry key="influxdb.name">pntbiz_beacon</entry>
+
+    <entry key="scanner.ftp.host">112.216.20.125,112.216.20.124</entry>
+    <entry key="scanner.ftp.port">22,22</entry>
+    <entry key="scanner.ftp.id">pntadmin,pntadmin</entry>
+    <entry key="scanner.ftp.passwd">,</entry>
+    <entry key="scanner.ftp.privatekey">,</entry>
+    <entry key="scanner.nodejs.position.path">/data/www/scanner_nodejs/RSSI-No-Queue/data/position</entry>
+    <entry key="scanner.nodejs.node.path">/data/www/scanner_nodejs/RSSI-No-Queue/data/node</entry>
+    <entry key="scanner.presence.position.path">/data/www/scanner_presence/data/position</entry>
+    <entry key="scanner.presence.node.path">/data/www/scanner_presence/data/node</entry>
+    <entry key="scanner.presence.bposition.path">/data/www/scanner_presence/data/bposition</entry>
+    <entry key="scanner.presence.bnode.path">/data/www/scanner_presence/data/bnode</entry>
+    <entry key="scanner.presence.materials.path">/data/www/scanner_presence/data/materials</entry>
+    <entry key="scanner.presence.contents.path">/data/www/scanner_presence/data/contents</entry>
+    <entry key="scanner.presence.geofence.path">/data/www/scanner_presence/data/geofence</entry>
+    <entry key="scanner.presence.gate.path">/data/www/scanner_presence/data/gate</entry>
+    <entry key="scanner.presence.floor.path">/data/www/scanner_presence/data/floor</entry>
+
+    <entry key="mail.host">mail.pntbiz.com</entry>
+    <entry key="mail.port">587</entry>
+    <entry key="mail.username">no-reply@pntbiz.com</entry>
+    <entry key="mail.password"></entry>
+    <entry key="mail.charset">UTF-8</entry>
+    <entry key="mail.from">no-reply@pntbiz.com</entry>
+
+</properties>

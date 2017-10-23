@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.NodePairDao">
+
+    <select id="getNodePairAll" parameterType="java.util.HashMap" resultType="core.wms.map.domain.NodePair">
+        select *
+        from TB_NODE_EDGE
+        <where>
+            comNum=#{comNum}
+            <if test="floor!=null">
+                and floor=#{floor}
+            </if>
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="getNodePair" parameterType="java.util.HashMap" resultType="core.wms.map.domain.NodePair">
+        select *
+        from TB_NODE_EDGE
+        <where>
+            comNum=#{comNum}
+            <if test="pairNum!=null">
+                and pairNum=#{pairNum}
+            </if>
+            <if test="startPoint!=null and endPoint!=null">
+                and (
+                    (startPoint=#{startPoint} and endPoint=#{endPoint})
+                    or
+                    (startPoint=#{endPoint} and endPoint=#{startPoint})
+                )
+            </if>
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="countNodePair" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        select count(1) as cnt
+        from TB_NODE_EDGE
+        <where>
+            comNum=#{comNum}
+            <if test="pairNum!=null">
+                and pairNum=#{pairNum}
+            </if>
+            <if test="floor!=null">
+                and floor=#{floor}
+            </if>
+            <if test="startPoint!=null and endPoint!=null">
+                and (
+                (startPoint=#{startPoint} and endPoint=#{endPoint})
+                or
+                (startPoint=#{endPoint} and endPoint=#{startPoint})
+                )
+            </if>
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertNodePair" parameterType="core.wms.map.domain.NodePair" keyColumn="pairNum" keyProperty="pairNum">
+        insert into TB_NODE_EDGE(comNum, floor, startPoint, endPoint <if test="type!=null">, type</if>)
+        values(#{comNum}, #{floor}, #{startPoint}, #{endPoint} <if test="type!=null">, #{type}</if>)
+    </insert>
+
+    <update id="updateNodePair" parameterType="core.wms.map.domain.NodePair">
+        update TB_NODE_EDGE
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="floor!=null">floor=#{floor}</if>
+            <if test="startPoint!=null">startPoint=#{startPoint}</if>
+            <if test="endPoint!=null">endPoint=#{endPoint}</if>
+        </trim>
+        <where>
+            pairNum=#{pairNum}
+        </where>
+    </update>
+
+    <delete id="deleteNodePair" parameterType="java.util.HashMap">
+        delete from TB_NODE_EDGE
+        <where>
+            comNum=#{comNum}
+            <if test="pairNum!=null">
+                and pairNum=#{pairNum}
+            </if>
+            <if test="nodeID!=null">
+                and (startPoint=#{nodeID} or endPoint=#{nodeID})
+            </if>
+            <if test="startPoint!=null and endPoint!=null">
+                and (
+                (startPoint=#{startPoint} and endPoint=#{endPoint})
+                or
+                (startPoint=#{endPoint} and endPoint=#{startPoint})
+                )
+            </if>
+            <if test="type!=null">and type=#{type}</if>
+        </where>
+    </delete>
+
+</mapper>

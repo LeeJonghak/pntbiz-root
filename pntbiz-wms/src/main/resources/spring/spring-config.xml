@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-4.3.xsd
+ 		">
+
+ 	<!-- config properties -->
+    <context:property-placeholder properties-ref="config" />
+	<util:properties id="config" location="classpath:config-properties.xml" scope="singleton" />
+	<!--<util:properties id="config" location="classpath:config-properties-oracle.xml" scope="singleton" />-->
+
+    <!-- mysql 접속 설정 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="#{config['db.driver']}"/>
+		<property name="url" value="#{config['db.url']}"/>
+		<property name="username" value="#{config['db.id']}"/>
+		<property name="password" value="#{config['db.passwd']}"/>
+		<property name="maxActive" value="#{config['db.maxactive']}"/>
+		<property name="maxIdle" value="#{config['db.maxidle']}"/>
+		<property name="maxWait" value="#{config['db.maxwait']}"/>
+		<property name="defaultAutoCommit" value="#{config['db.autocommit']}"/>
+	</bean>
+
+	<!--  set for mybatis Database Layer -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" 	ref="dataSource" />
+		<property name="mapperLocations">
+			<array>
+				<value>classpath*:mybatis/mapper/common/mysql/**/*.xml</value>
+				<value>classpath*:mybatis/mapper/wms/mysql/**/*.xml</value>
+				<value>classpath*:mybatis/mapper/custom/#{config['site.shortName']?:'cloud'}/**/*.xml</value>
+			</array>
+		</property>
+
+		<!--<property name="mapperLocations">
+			<array>
+				<value>classpath*:mybatis/mapper/common/oracle/**/*.xml</value>
+				<value>classpath*:mybatis/mapper/wms/oracle/**/*.xml</value>
+				<value>classpath*:mybatis/mapper/custom/#{config['site.shortName']?:'cloud'}/**/*.xml</value>
+			</array>
+		</property>-->
+
+	<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+</bean>
+<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+  <constructor-arg ref="sqlSessionFactory" />
+</bean>
+
+<!--  Transaction -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<import resource="classpath:spring/spring-redis-config.xml" />
+
+	<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+	<bean id="jsonRedisSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="jedisConnFactory" />
+		<property name="keySerializer" ref="stringRedisSerializer" />
+		<property name="valueSerializer" ref="jsonRedisSerializer" />
+		<property name="hashKeySerializer" ref="stringRedisSerializer" />
+		<property name="hashValueSerializer" ref="jsonRedisSerializer" />
+		<property name="enableTransactionSupport" value="true" />
+	</bean>
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="#{config['mail.host']}" />
+		<property name="port" value="#{config['mail.port']}" />
+		<property name="username" value="#{config['mail.username']}" />
+		<property name="password" value="#{config['mail.password']}" />
+		<property name="javaMailProperties">
+		   <props>
+			  <prop key="mail.smtp.auth">true</prop>
+			  <prop key="mail.smtp.starttls.enable">true</prop>
+		   </props>
+		</property>
+		<property name="defaultEncoding" value="#{config['mail.charset']}"/>
+	</bean>
+
+</beans>

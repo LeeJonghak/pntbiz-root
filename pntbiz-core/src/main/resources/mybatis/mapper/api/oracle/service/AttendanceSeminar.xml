@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.service.dao.AttendanceSeminarDao">
+    <resultMap id="attendanceSeminarResult" type="core.api.service.domain.AttendanceSeminar">
+        <result property="logNum"      column="LOG_NUM"/>
+        <result property="UUID"        column="UUID"/>
+        <result property="majorVer"    column="MAJOR_VER"/>
+        <result property="minorVer"    column="MINOR_VER"/>
+        <result property="macAddr"     column="MAC_ADDR"/>
+        <result property="phoneNumber" column="PHONE_NUMBER"/>
+        <result property="deviceInfo"  column="DEVICE_INFO"/>
+        <result property="state"       column="STATE"/>
+        <result property="attdDate"    column="ATTD_DATE"/>
+        <result property="subject"     column="SUBJECT"/>
+        <result property="regDate"     column="REG_DATE"/>
+    </resultMap>
+
+	<select id="getAttendanceSeminarCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		  FROM TB_ATTENDANCE_SEMINAR
+		<trim prefix="WHERE" prefixOverrides="and|or">
+			<if test="UUID!=null">AND UUID=#{UUID}</if>
+			<if test="majorVer!=null">AND MAJOR_VER=#{majorVer}</if>
+			<if test="minorVer!=null">AND MINOR_VER=#{minorVer}</if>
+            <if test="macAddr!=null">AND MAC_ADDR=#{macAddr}</if>
+			<if test="state!=null">AND STATE=#{state}</if>
+			<if test="attdDate!=null">AND ATTD_DATE=#{attdDate}</if>
+			<if test="phoneNumber!=null">AND PHONE_NUMBER=#{phoneNumber}</if>
+			<if test="deviceInfo!=null">AND DEVICE_INFO=#{deviceInfo}</if>
+		</trim>
+	</select>
+
+	<select id="getAttendanceSeminarList" parameterType="java.util.Map" resultMap="attendanceSeminarResult">
+		SELECT *
+		  FROM TB_ATTENDANCE_SEMINAR
+		<trim prefix="WHERE" prefixOverrides="and|or">
+			<if test="UUID!=null">AND UUID=#{UUID}</if>
+			<if test="majorVer!=null">AND MAJOR_VER=#{majorVer}</if>
+			<if test="minorVer!=null">AND MINOR_VER=#{minorVer}</if>
+            <if test="macAddr!=null">AND MAC_ADDR=#{macAddr}</if>
+			<if test="state!=null">AND STATE=#{state}</if>
+			<if test="attdDate!=null">AND UUID=#{attdDate}</if>
+			<if test="phoneNumber!=null">AND PHONE_NUMBER=#{phoneNumber}</if>
+			<if test="deviceInfo!=null">AND DEVICE_INFO=#{deviceInfo}</if>
+		</trim>
+	</select>
+
+	<insert id="insertAttendanceSeminar" parameterType="core.api.service.domain.AttendanceSeminar">
+		INSERT INTO TB_ATTENDANCE_SEMINAR
+		( LOG_NUM
+		, UUID
+		, MAJOR_VER
+		, MINOR_VER
+		, MAC_ADDR
+		, PHONE_NUMBER
+		, DEVICE_INFO
+		, STATE
+		, ATTD_DATE
+		, SUBJECT
+		, REG_DATE
+		)VALUES
+		( SEQ_AS_LOG_NUM.nextval
+		, #{UUID}
+		, #{majorVer}
+		, #{minorVer}
+		, #{macAddr}
+		, #{phoneNumber}
+		, #{deviceInfo}
+		, #{state}
+		, #{attdDate}
+		, #{subject}
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+</mapper>

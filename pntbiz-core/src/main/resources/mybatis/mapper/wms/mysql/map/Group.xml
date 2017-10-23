@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.GroupDao">
+
+    <select id="getGroupInfo" parameterType="java.util.HashMap" resultType="core.wms.map.domain.Group">
+        SELECT *
+        FROM TB_GROUP
+        WHERE groupNum=#{groupNum}
+    </select>
+
+    <select id="getGroupList" parameterType="java.util.HashMap" resultType="core.wms.map.domain.Group">
+        SELECT *
+        FROM TB_GROUP
+        WHERE comNum=#{comNum}
+        ORDER BY groupNum DESC
+        <if test="firstItemNo!=null and pageSize!=null">
+            LIMIT #{firstItemNo}, #{pageSize}
+        </if>
+    </select>
+
+    <select id="getGroupCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+        FROM TB_GROUP
+        WHERE comNum=#{comNum}
+    </select>
+
+    <insert id="insertGroup" parameterType="core.wms.map.domain.Group" keyColumn="groupNum" keyProperty="groupNum">
+        INSERT INTO TB_GROUP(groupName, comNum, regDate)
+        VALUES(#{groupName}, #{comNum}, UNIX_TIMESTAMP())
+    </insert>
+
+    <update id="modifyGroup" parameterType="core.wms.map.domain.Group">
+        UPDATE TB_GROUP
+        SET groupName=#{groupName}
+        WHERE groupNum=#{groupNum}
+    </update>
+
+    <delete id="deleteGroup">
+        DELETE FROM TB_GROUP
+        WHERE groupNum=#{groupNum}
+    </delete>
+
+</mapper>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.MyContentsDao">
+
+    <resultMap id="contentsResult" type="core.wms.contents.domain.Contents">
+        <result property="comNum"   column="COM_NUM" />
+        <result property="conNum"   column="CON_NUM" />
+        <result property="conType"  column="CON_TYPE" />
+        <result property="conName"  column="CON_NAME" />
+        <result property="userID"   column="USER_ID" />
+        <result property="acNum"    column="AC_NUM" />
+        <result property="expFlag"  column="EXP_FLAG" />
+        <result property="rssi"     column="RSSI" />
+        <result property="conDesc"  column="CON_DESC" />
+        <result property="sDate"    column="S_DATE" />
+        <result property="eDate"    column="E_DATE" />
+        <result property="modDate"  column="MOD_DATE" />
+        <result property="regDate"  column="REG_DATE" />
+        <result property="imgSrc1"  column="IMG_SRC1" />
+        <result property="imgSrc2"  column="IMG_SRC2" />
+        <result property="imgSrc3"  column="IMG_SRC3" />
+        <result property="imgSrc4"  column="IMG_SRC4" />
+        <result property="imgSrc5"  column="IMG_SRC5" />
+        <result property="text1"    column="TEXT1" />
+        <result property="text2"    column="TEXT2" />
+        <result property="text3"    column="TEXT3" />
+        <result property="url1"     column="URL1" />
+        <result property="url2"     column="URL2" />
+        <result property="url3"     column="URL3" />
+        <result property="desc"     column="DESC" />
+        <result property="refNum"   column="REF_NUM" />
+        <result property="refType"  column="REF_TYPE" />
+      <result property="refSubType" column="REF_SUB_TYPE" />
+        <result property="evtNum"   column="EVT_NUM" />
+    </resultMap>
+    <!--
+        컨텐츠 연결(맵핑)
+        @author nohsoo 2015-03-12
+    -->
+    <insert id="insertContentMapping" parameterType="core.wms.map.domain.ContentsMapping">
+        insert into TB_CONTENTS_MAPPING
+        ( CON_NUM
+        , REF_TYPE
+        , REF_SUB_TYPE
+        , REF_NUM
+        , EVT_NUM
+        )values
+        ( #{conNum}
+        , #{refType}
+        , #{refSubType}
+        , #{refNum}
+        , <if test="evtNum==null">0</if><if test="evtNum!=null">#{evtNum}</if>)
+    </insert>
+
+    <!--
+        컨텐츠 맵핑 정보 수정
+        create: nohsoo 2015-04-22 evtNum 값을 업데이트하기 위해서 만듬.
+    -->
+    <update id="modifyContentMapping" parameterType="core.wms.map.domain.ContentsMapping">
+        UPDATE TB_CONTENTS_MAPPING
+           SET EVT_NUM = #{evtNum}
+         WHERE CON_NUM = #{conNum}
+           AND REF_TYPE = #{refType}
+           AND REF_SUB_TYPE = #{refSubType}
+           AND REF_NUM = #{refNum}
+    </update>
+
+
+    <!--
+        할당된 컨텐츠 제거(맵핑해제)
+        @author nohsoo 2015-03-12
+    -->
+    <delete id="deleteContentMapping" parameterType="core.wms.map.domain.ContentsMapping">
+        DELETE
+          FROM TB_CONTENTS_MAPPING
+         WHERE REF_TYPE = #{refType}
+        <if test="conNum!=null">
+            AND CON_NUM = #{conNum}
+        </if>
+        <if test="refNum!=null">
+            AND REF_NUM = #{refNum}
+        </if>
+        <if test="refSubType!=null">
+            AND REF_SUB_TYPE = #{refSubType}
+        </if>
+    </delete>
+
+
+    <!--
+        비콘에 할당된 컨텐츠 목록
+        @author nohsoo 2015-03-12
+    -->
+    <select id="getMyBeaconContentsList" parameterType="java.util.HashMap" resultMap="contentsResult">
+        SELECT a.*
+             , b.*
+             , c.REF_NUM, c.REF_TYPE, c.REF_SUB_TYPE, c.EVT_NUM
+          FROM TB_CONTENTS a
+         INNER JOIN TB_CONTENTS_MAPPING c ON (a.CON_NUM=c.CON_NUM AND c.REF_TYPE='BC')
+          LEFT JOIN TB_CONTENTS_DETAIL b  ON (b.CON_NUM=a.CON_NUM)
+         INNER JOIN TB_BEACON d           ON(c.REF_NUM=d.BEACON_NUM)
+         WHERE a.COM_NUM = #{comNum}
+        <if test="beaconNum!=null">
+            AND d.BEACON_NUM = #{beaconNum}
+        </if>
+    </select>
+
+    <!--
+        지오펜스에 할당된 컨텐츠 목록
+        @author nohsoo 2015-03-12
+    -->
+    <select id="getMyGeofencingContentsList" parameterType="java.util.HashMap" resultMap="contentsResult">
+        SELECT a.*
+             , b.*
+             , c.REF_NUM, c.REF_TYPE, c.REF_SUB_TYPE, c.EVT_NUM
+          FROM TB_CONTENTS a
+         INNER JOIN TB_CONTENTS_MAPPING c ON(a.CON_NUM=c.CON_NUM AND c.REF_TYPE='GF')
+          LEFT JOIN TB_CONTENTS_DETAIL b  ON(b.CON_NUM=a.CON_NUM)
+         INNER JOIN TB_GEOFENCING d       ON(c.REF_NUM=d.FC_NUM)
+         WHERE a.COM_NUM = #{comNum}
+        <if test="fcNum!=null">
+            AND d.FC_NUM = #{fcNum}
+        </if>
+    </select>
+
+    <!--
+        노드에 할당된 컨텐츠 목록
+        @author nohsoo 2015-03-31
+    -->
+    <select id="getMyNodeContentsList" parameterType="java.util.HashMap" resultMap="contentsResult">
+        SELECT a.*
+             , b.*
+             , c.REF_NUM, c.REF_TYPE, c.REF_SUB_TYPE, c.EVT_NUM
+         FROM TB_CONTENTS a
+        INNER JOIN TB_CONTENTS_MAPPING c ON(a.CON_NUM=c.CON_NUM AND c.REF_TYPE='ND')
+         LEFT JOIN TB_CONTENTS_DETAIL b  ON(b.CON_NUM=a.CON_NUM)
+        INNER JOIN TB_NODE d             ON(c.REF_NUM=d.NODE_NUM)
+        WHERE a.COM_NUM = #{comNum}
+        <if test="nodeNum!=null">
+            AND d.NODE_NUM = #{nodeNum}
+        </if>
+    </select>
+
+    <!--
+        비콘 또는 지오펜스에 할당 가능한 컨텐츠 목록
+        @author nohsoo 2015-03-11
+                       2015-03-12 지오펜스에서도 사용가능하도록 수정
+    -->
+    <select id="getMapContentsList" parameterType="java.util.HashMap" resultMap="contentsResult">
+        SELECT *
+          FROM (
+	        SELECT a.COM_NUM, a.CON_NUM, a.TYPE_NUM, a.CON_TYPE, a.CON_NAME, a.USER_ID, a.AC_NUM,
+            a.EXP_FLAG, a.RSSI, a.CON_DESC, a.S_DATE, a.E_DATE, a.MOD_DATE, a.REG_DATE,
+            b.IMG_SRC1, b.IMG_SRC2, b.IMG_SRC3, b.IMG_SRC4, b.IMG_SRC5, b.TEXT1, b.TEXT2, b.TEXT3, b.TEXT4, b.TEXT5,
+            b.SOUND_SRC1, b.SOUND_SRC2, b.SOUND_SRC3, b.URL1, b.URL2, b.URL3, ROWNUM RNUM
+	          FROM TB_CONTENTS a
+	          LEFT JOIN TB_CONTENTS_DETAIL b ON(b.CON_NUM=a.CON_NUM)
+	         <where>
+	            <if test="comNum!=null">
+		            AND a.COM_NUM = #{comNum}
+		        </if>
+
+		        <if test="opt!=null and keyword!=null">
+		            AND ${opt} LIKE #{keyword}
+		        </if>
+	         </where>
+
+          ) TB
+         <if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+    </select>
+
+    <!--
+        비콘 또는 지오펜스에 할당 가능한 컨텐츠 목록
+        @author nohsoo 2015-03-11
+                       2015-03-12 지오펜스에서도 사용가능하도록 수정
+    -->
+    <select id="countMapContentsList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+          FROM TB_CONTENTS a
+          LEFT JOIN TB_CONTENTS_DETAIL b on(b.CON_NUM=a.CON_NUM)
+        <where>
+	        <if test="comNum!=null">
+	            AND a.COM_NUM = #{comNum}
+	        </if>
+	        <if test="beaconNum!=null">
+	            AND a.CON_NUM NOT IN (SELECT c.CON_NUM
+							            FROM TB_CONTENTS_MAPPING c
+							           INNER JOIN TB_BEACON d ON(c.REF_NUM=d.BEACON_NUM AND c.REF_TYPE='BC')
+							           WHERE d.BEACON_NUM = #{beaconNum})
+	        </if>
+	        <if test="fcNum!=null">
+	            AND a.CON_NUM NOT IN (SELECT c.CON_NUM
+							            FROM TB_CONTENTS_MAPPING c
+							           INNER JOIN TB_GEOFENCING d ON(c.REF_NUM=d.FC_NUM AND c.REF_TYPE='GF')
+							            WHERE d.FC_NUM = #{fcNum})
+	        </if>
+	        <if test="opt!=null and keyword!=null">
+	            AND ${opt} LIKE #{keyword}
+	        </if>
+	    </where>
+    </select>
+
+</mapper>

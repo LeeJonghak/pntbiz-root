@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/pntbiz-admin/pntbiz-admin.iml" filepath="$PROJECT_DIR$/pntbiz-admin/pntbiz-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pntbiz-api/pntbiz-api.iml" filepath="$PROJECT_DIR$/pntbiz-api/pntbiz-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pntbiz-core/pntbiz-core.iml" filepath="$PROJECT_DIR$/pntbiz-core/pntbiz-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pntbiz-core-web/pntbiz-core-web.iml" filepath="$PROJECT_DIR$/pntbiz-core-web/pntbiz-core-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pntbiz-root.iml" filepath="$PROJECT_DIR$/pntbiz-root.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pntbiz-wms/pntbiz-wms.iml" filepath="$PROJECT_DIR$/pntbiz-wms/pntbiz-wms.iml" />
+    </modules>
+  </component>
+</project>

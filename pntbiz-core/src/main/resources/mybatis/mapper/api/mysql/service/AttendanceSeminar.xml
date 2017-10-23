@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.service.dao.AttendanceSeminarDao">
+
+	<select id="getAttendanceSeminarCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM TB_ATTENDANCE_SEMINAR
+		<trim prefix="WHERE" prefixOverrides="and|or">
+			<if test="UUID!=null">AND UUID=#{UUID}</if>
+			<if test="majorVer!=null">AND majorVer=#{majorVer}</if>
+			<if test="minorVer!=null">AND minorVer=#{minorVer}</if>
+            <if test="macAddr!=null">AND macAddr=#{macAddr}</if>
+			<if test="state!=null">AND state=#{state}</if>
+			<if test="attdDate!=null">AND attdDate=#{attdDate}</if>
+			<if test="phoneNumber!=null">AND phoneNumber=#{phoneNumber}</if>
+			<if test="deviceInfo!=null">AND deviceInfo=#{deviceInfo}</if>
+		</trim>
+	</select>
+	
+	<select id="getAttendanceSeminarList" parameterType="java.util.Map" resultType="core.api.service.domain.AttendanceSeminar">
+		SELECT *
+		FROM TB_ATTENDANCE_SEMINAR
+		<trim prefix="WHERE" prefixOverrides="and|or">
+			<if test="UUID!=null">AND UUID=#{UUID}</if>
+			<if test="majorVer!=null">AND majorVer=#{majorVer}</if>
+			<if test="minorVer!=null">AND minorVer=#{minorVer}</if>
+            <if test="macAddr!=null">AND macAddr=#{macAddr}</if>
+			<if test="state!=null">AND UUID=#{state}</if>
+			<if test="attdDate!=null">AND UUID=#{attdDate}</if>
+			<if test="phoneNumber!=null">AND phoneNumber=#{phoneNumber}</if>
+			<if test="deviceInfo!=null">AND deviceInfo=#{deviceInfo}</if>
+		</trim>
+	</select>
+	
+	<insert id="insertAttendanceSeminar" parameterType="core.api.service.domain.AttendanceSeminar">
+		INSERT INTO TB_ATTENDANCE_SEMINAR
+		(UUID, majorVer, minorVer, macAddr, phoneNumber, deviceInfo, state, attdDate, subject, regDate)
+		VALUES
+		(#{UUID}, #{majorVer}, #{minorVer}, #{macAddr}, #{phoneNumber}, #{deviceInfo}, #{state}, #{attdDate}, #{subject}, UNIX_TIMESTAMP())
+    </insert>
+
+</mapper>

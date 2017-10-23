@@ -1,0 +1,617 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>언어팩 - 기본</comment>
+
+    <entry key="common.alert.error">エラーが発生しました。</entry>
+
+    <entry key="menu.000000">ダッシュボード</entry>
+	<entry key="menu.000100">現況</entry>
+	<entry key="menu.000101">管制</entry>
+
+    <entry key="menu.100000">ビーコン</entry>
+    <entry key="menu.100100">ビーコン管理</entry>
+    <entry key="menu.100101">ビーコンリスト</entry>
+    <entry key="menu.100102">ビーコン登録</entry>
+    <entry key="menu.100103">ビーコン修正</entry>
+    <entry key="menu.100104">統制区域のリスト</entry>
+    <entry key="menu.100105">統制区域登録</entry>
+    <entry key="menu.100106">統制区域の変更</entry>
+    <entry key="menu.100200">ビーコン管制</entry>
+    <entry key="menu.100201">ビーコン管制リスト</entry>
+    <entry key="menu.100202">ビーコン管制要約</entry>
+    <entry key="menu.100300">ビーコングループ管理</entry>
+    <entry key="menu.100301">ビーコングループリスト</entry>
+    <entry key="menu.100302">ビーコングループ登録</entry>
+    <entry key="menu.100303">ビーコングループ修正</entry>
+
+    <entry key="menu.110000">スキャナー</entry>
+    <entry key="menu.110100">スキャナー管理</entry>
+    <entry key="menu.110101">スキャナーリスト</entry>
+    <entry key="menu.110102">スキャナー登録</entry>
+    <entry key="menu.110103">スキャナー修正</entry>
+    <entry key="menu.110104">スキャナー情報配置</entry>
+    <entry key="menu.110200">スキャナー情報配布</entry>
+    <entry key="menu.110300">スキャナーサーバー管理</entry>
+    <entry key="menu.110301">スキャナーサーバーリスト</entry>
+    <entry key="menu.110302">スキャナーサーバー登録</entry>
+    <entry key="menu.110303">スキャナーサーバー修正</entry>
+    <entry key="menu.110400">スキャナー情報配布管理</entry>
+    <entry key="menu.110401">スキャナー情報配布リスト</entry>
+    <entry key="menu.110402">スキャナー情報配布登録</entry>
+    <entry key="menu.110403">スキャナー情報配布修正</entry>
+    <entry key="menu.110404">スキャナー情報配布</entry>
+
+    <entry key="menu.120000">マップ</entry>
+    <entry key="menu.120100">階管理</entry>
+    <entry key="menu.120200">ビーコン配置図</entry>
+    <entry key="menu.120300">ジオフェンシング配置図</entry>
+    <entry key="menu.120400">スキャナー配置図</entry>
+    <entry key="menu.120500">ビーコン管制配置図</entry>
+    <entry key="menu.120600">プレゼンスマップ設定</entry>
+    <entry key="menu.120700">Floor Setting</entry>
+	<entry key="menu.120800">Area Plan Management</entry>
+
+    <entry key="menu.130000">コンテンツ</entry>
+    <entry key="menu.130100">コンテンツ管理</entry>
+    <entry key="menu.130101">コンテンツリスト</entry>
+    <entry key="menu.130102">コンテンツ登録</entry>
+    <entry key="menu.130103">コンテンツ修正</entry>
+    <entry key="menu.130200">コンテンツマッピング管理</entry>
+    <entry key="menu.130300">コンテンツタイプ管理</entry>
+    <entry key="menu.130301">コンテンツタイプリスト</entry>
+    <entry key="menu.130302">コンテンツタイプ登録</entry>
+    <entry key="menu.130303">コンテンツタイプ修正</entry>
+
+    <entry key="menu.140000">サービス</entry>
+    <entry key="menu.140100">イベント管理</entry>
+    <entry key="menu.140101">イベントリスト</entry>
+    <entry key="menu.140102">イベント登録</entry>
+    <entry key="menu.140103">イベント修正</entry>
+    <entry key="menu.140200">イベント類型管理</entry>
+    <entry key="menu.140201">イベント類型リスト</entry>
+    <entry key="menu.140202">イベント類型登録</entry>
+    <entry key="menu.140203">イベント類型修正</entry>
+    <entry key="menu.140300">出席チェック</entry>
+    <entry key="menu.140400">セミナー入場・退場</entry>
+
+    <entry key="menu.160000">ジオフェンシング</entry>
+    <entry key="menu.160100">ジオフェンシング管理</entry>
+    <entry key="menu.160101">ジオフェンシングリスト</entry>
+    <entry key="menu.160102">ジオフェンシング登録</entry>
+    <entry key="menu.160103">ジオフェンシング修正</entry>
+    <entry key="menu.160200">ジオフェンシンググループ管理</entry>
+    <entry key="menu.160201">ジオフェンシンググループリスト</entry>
+    <entry key="menu.160202">ジオフェンシンググループ登録</entry>
+    <entry key="menu.160203">ジオフェンシンググループ修正</entry>
+
+    <entry key="menu.170000">統計</entry>
+    <entry key="menu.170100">RTLS</entry>
+    <entry key="menu.170101">リアルタイム測位View</entry>
+    <entry key="menu.170200">トラッキング</entry>
+    <entry key="menu.170201">スキャナー個別対象者測位</entry>
+    <entry key="menu.170211">ビーコン個別対象者測位</entry>
+    <entry key="menu.170300">ログ</entry>
+    <entry key="menu.170301">スキャナー位置測位ログ</entry>
+    <entry key="menu.170302">スキャナージオフェンスログ</entry>
+    <entry key="menu.170303">スキャナーイン/アウトログ</entry>
+    <entry key="menu.170304">スキャナー 位置測位 現況</entry>
+	<entry key="menu.170305">スキャナー フロアログ</entry>
+    <entry key="menu.170311">ビーコン位置測位ログ</entry>
+    <entry key="menu.170312">ビーコン位置測位現況</entry>
+    <entry key="menu.170313">マイクロフェンス管制現況</entry>
+    <entry key="menu.170314">主要ゾーン別の進出入回数</entry>
+
+    <entry key="menu.180000">モニタリング</entry>
+    <entry key="menu.180100">サーバ モニタリング</entry>
+    <entry key="menu.180200">スキャナー モニタリング</entry>
+
+    <entry key="menu.180000">使用者</entry>
+    <entry key="menu.180100">使用者リスト</entry>
+    <entry key="menu.180200">使用者登録</entry>
+
+    <entry key="menu.190000">資産</entry>
+    <entry key="menu.190100">資産リスト</entry>
+    <entry key="menu.190200">資産登録</entry>
+
+    <entry key="menu.990000">基本情報</entry>
+    <entry key="menu.990100">会社情報</entry>
+    <entry key="menu.990200">コード管理</entry>
+    <entry key="menu.990201">コードリスト</entry>
+    <entry key="menu.990202">コード登録</entry>
+    <entry key="menu.990203">コード修正</entry>
+    <entry key="menu.990300">広告会社管理</entry>
+    <entry key="menu.990301">広告会社リスト</entry>
+    <entry key="menu.990302">広告会社登録</entry>
+    <entry key="menu.990303">広告会社修正</entry>
+    <entry key="menu.990400">位置情報利用現況</entry>
+    <entry key="menu.990401">位置情報利用現況リスト</entry>
+    <entry key="menu.990500">位置情報閲覧台帳</entry>
+    <entry key="menu.990501">位置情報閲覧台帳リスト</entry>
+    <entry key="menu.990502">位置情報閲覧台帳 登録</entry>
+    <entry key="menu.990600">OAuthクライアント</entry>
+    <entry key="menu.990601">OAuthクライアントリスト</entry>
+    <entry key="menu.990602">OAuthクライアント登録</entry>
+    <entry key="menu.990603">OAuthクライアント修正</entry>
+    <entry key="menu.990700">アカウント管理</entry>
+    <entry key="menu.990701">パスワード確認</entry>
+    <entry key="menu.990800">連動インターフェース</entry>
+    <entry key="menu.990801">連動インターフェースのリスト</entry>
+    <entry key="menu.990802">連動インターフェース登録</entry>
+    <entry key="menu.990803">連動インターフェイスの変更</entry>
+
+    <entry key="btn.login">ログイン</entry>
+    <entry key="btn.logout">ログアウト</entry>
+    <entry key="btn.list">リスト</entry>
+    <entry key="btn.search">検索</entry>
+    <entry key="btn.register">登録</entry>
+    <entry key="btn.modify">修正</entry>
+    <entry key="btn.delete">削除</entry>
+    <entry key="btn.deploy">配布</entry>
+    <entry key="btn.batch">配置</entry>
+    <entry key="btn.update">アップデート</entry>
+    <entry key="btn.batch.update">配置アップデート</entry>
+    <entry key="btn.run">実行</entry>
+    <entry key="btn.view">見る</entry>
+    <entry key="btn.download">ダウンロード</entry>
+    <entry key="btn.log.view">ログ確認</entry>
+    <entry key="btn.log.download">ログダウンロード</entry>
+    <entry key="btn.check">チェック</entry>
+    <entry key="btn.confirm">確認</entry>
+    <entry key="btn.add">追加</entry>
+    <entry key="btn.close">閉じる</entry>
+    <entry key="btn.send">伝送</entry>
+    <entry key="btn.authentication">認証</entry>
+    <entry key="btn.home">ホーム</entry>
+    <entry key="btn.init">初期化</entry>
+    <entry key="btn.mapping">マッピング</entry>
+    <entry key="btn.synchronization">同期化</entry>
+    <entry key="btn.beacon.list">ビーコンリスト</entry>
+    <entry key="btn.restricted.zone.list">統制区域リスト</entry>
+
+    <entry key="message.search.notmatch">検索結果がありません。</entry>
+
+    <entry key="auth.userid">ID</entry>
+    <entry key="auth.password">パスワード</entry>
+    <entry key="auth.login">ログイン</entry>
+    <entry key="auth.logout">ログアウト</entry>
+    <entry key="auth.rememeber">IDを保存</entry>
+    <entry key="auth.welcome">{0} 様、ようこそ。</entry>
+    <entry key="auth.otp">OTP</entry>
+    <entry key="auth.otp.authcode">認証コード</entry>
+    <entry key="auth.passwd">パスワードを確認</entry>
+
+    <entry key="dashboard.total.beacons">総ビーコン個数</entry>
+    <entry key="dashboard.total.geofencings">総ジオフェンシング個数</entry>
+    <entry key="dashboard.total.scanners">総スキャナー個数</entry>
+    <entry key="dashboard.total.floors">総階個数</entry>
+    <entry key="dashboard.last.modified">最後に修正された</entry>
+    <entry key="dashboard.loss.beacon">亡失の可能性が高いビーコン</entry>
+    <entry key="dashboard.loss.beacon.status">亡失の可能性が高いビーコンの管制現況</entry>
+    <entry key="dashboard.scanner.monitor">スキャナーモニター</entry>
+
+    <entry key="word.language">言語</entry>
+    <entry key="word.account">アカウント</entry>
+    <entry key="word.settings">設定</entry>
+
+    <entry key="word.passwd">パスワード</entry>
+    <entry key="word.passwd.text001">* パスワードを変更しない場合、入力しないでください。</entry>
+    <entry key="word.email">電子メール</entry>
+    <entry key="word.phonenumber">電話番号</entry>
+
+    <entry key="word.data">データ</entry>
+    <entry key="word.cpu">CPU</entry>
+    <entry key="word.memory">Memory</entry>
+    <entry key="word.ping">Ping</entry>
+    <entry key="word.up">Up</entry>
+    <entry key="word.down">Down</entry>
+
+    <entry key="word.description">備考</entry>
+    <entry key="word.search.option">検索オプション</entry>
+    <entry key="word.search.keyword">検索語</entry>
+    <entry key="word.enter.search.term">検索用語を入力してください.</entry>
+    <entry key="word.no">No.</entry>
+    <entry key="word.regdate">登録日</entry>
+    <entry key="word.moddate">修正日</entry>
+    <entry key="word.install.image">設置写真</entry>
+    <entry key="word.none">なし</entry>
+
+    <entry key="word.beacon">ビーコン</entry>
+    <entry key="word.beacon.name">ビーコン名</entry>
+	<entry key="word.beacon.macaddr">Mac</entry>
+    <entry key="word.beacon.group">ビーコングループ</entry>
+    <entry key="word.beacon.group.name">ビーコングループ名</entry>
+    <entry key="word.beacon.count">ビーコン個数</entry>
+    <entry key="word.beacon.field">フィールド</entry>
+    <entry key="word.major.version">Major Version</entry>
+    <entry key="word.minor.version">Minor Version</entry>
+    <entry key="word.battery.level">バッテリレベル</entry>
+    <entry key="word.txpower">TxPower</entry>
+    <entry key="word.floor">階</entry>
+    <entry key="word.total">総</entry>
+    <entry key="word.total.count">総カウント</entry>
+    <entry key="word.uuid">UUID</entry>
+    <entry key="word.lat">緯度</entry>
+    <entry key="word.lng">経度</entry>
+    <entry key="word.lat.lng">緯度/経度</entry>
+    <entry key="word.show.map">マップを見る</entry>
+    <entry key="word.state">状態</entry>
+    <entry key="word.normal">正常</entry>
+    <entry key="word.loss">亡失</entry>
+    <entry key="word.unconfirmed">未確認</entry>
+    <entry key="word.sort.field">整列フィールド</entry>
+    <entry key="word.sort.order">整列方法</entry>
+    <entry key="word.sort.ascending">昇順</entry>
+    <entry key="word.sort.descending">降順</entry>
+    <entry key="word.battery">バッテリ</entry>
+    <entry key="word.last.date">最近応答</entry>
+	<entry key="word.barcode">バーコード</entry>
+	<entry key="word.external.id">対象キー</entry>
+	<entry key="word.external.attribute">ターゲット情報</entry>
+	<entry key="word.key">キー</entry>
+	<entry key="word.value">値</entry>
+	<entry key="word.display.name">表示名</entry>
+	<entry key="word.restricted.zone">チュルイン統制区域</entry>
+	<entry key="word.zone.type">エリアの種類</entry>
+	<entry key="word.zone.id">セクション番号</entry>
+  <entry key="word.zone.name">セクション名</entry>
+	<entry key="word.additional.attribute">追加のプロパティ</entry>
+	<entry key="word.restricted.zone.type">制御タイプ</entry>
+	<entry key="word.permitted">か</entry>
+	<entry key="word.restricted">不正</entry>
+	<entry key="word.set.to">区域に設定する</entry>
+    <entry key="word.beacon.type">ビーコンタイプ</entry>
+    <entry key="word.beacon.type.wearable">ウェアラブル</entry>
+    <entry key="word.beacon.type.movable">移動型</entry>
+    <entry key="word.beacon.type.fixed">固定型</entry>
+
+    <entry key="word.geofencing">ジオフェンシング</entry>
+    <entry key="word.geofencing.name">ジオフェンシング名</entry>
+    <entry key="word.geofencing.group">ジオフェンシンググループ</entry>
+    <entry key="word.geofencing.group.name">ジオフェンシンググループ名</entry>
+    <entry key="word.geofencing.count">ジオフェンシング個数</entry>
+    <entry key="word.geofencing.type">フェンス区分</entry>
+    <entry key="word.geofencing.isNodeEnable">ノードを有効にするかどうか</entry>
+    <entry key="word.geofencing.isNodeEnable.enable">有効</entry>
+    <entry key="word.geofencing.isNodeEnable.disable">無効</entry>
+    <entry key="word.geofencing.zone">ジオフェンシングゾーン</entry>
+    <entry key="word.geofencing.zone.select">ゾーン選択</entry>
+    <entry key="word.geofencing.field">フィールド</entry>
+    <entry key="word.fence.type">フェンスタイプ</entry>
+    <entry key="word.fence.type.circle">サークル</entry>
+    <entry key="word.fence.type.polygon">ポリゴン</entry>
+    <entry key="word.register">登録者</entry>
+    <entry key="word.general">一般</entry>
+    <entry key="word.system">システム</entry>
+    <entry key="word.map">マップ</entry>
+    <entry key="word.synchronization">同期化</entry>
+
+    <entry key="word.scanner">スキャナー</entry>
+    <entry key="word.scanner.name">スキャナー名</entry>
+    <entry key="word.mac.address">MACアドレス</entry>
+    <entry key="word.identifier">識別者</entry>
+    <entry key="word.scanner.information">スキャナー情報</entry>
+    <entry key="word.deploy.name">配布名</entry>
+    <entry key="word.deploy.info">配布情報</entry>
+    <entry key="word.path">配布経路</entry>
+    <entry key="word.filename">ファイル名</entry>
+    <entry key="word.deploy">配布</entry>
+    <entry key="word.scanner.configuration.deploy.text001">* 配布の際、ファイル名は変更されます。</entry>
+    <entry key="word.scanner.configuration.deploy.text002">ex) scannerPos.js => scannerPos_xxxxxx.js</entry>
+    <entry key="word.scanner.configuration.deploy.text003">* 最後に配布された情報です。</entry>
+    <entry key="word.scanner.configuration.deploy">スキャナー情報配布</entry>
+    <entry key="word.scanner.deploy.type">配布類型</entry>
+    <entry key="word.scanner.deploy.text001">選択した配布類型の情報をスキャナーサーバーに配布します。</entry>
+    <entry key="word.scanner.deploy.text002">配布したらスキャナーポログラムが自動的に再起動します。</entry>
+
+    <entry key="word.attendance">出席チェック</entry>
+    <entry key="word.attendance.date">出席日</entry>
+    <entry key="word.attendance.regdate">出席登録日</entry>
+    <entry key="word.attendance.subject">科目</entry>
+    <entry key="word.attendance.student.id">学番</entry>
+    <entry key="word.attendance.student.name">学生名</entry>
+    <entry key="word.service">サービス</entry>
+    <entry key="word.phonenumber">携帯番号</entry>
+    <entry key="word.name">名前</entry>
+    <entry key="word.reset">初期化</entry>
+
+    <entry key="word.seminar">セミナー</entry>
+    <entry key="word.seminar.enter.leave">セミナー入場/退場</entry>
+    <entry key="word.seminar.manager">セミナー管理</entry>
+    <entry key="word.seminar.register">セミナー登録</entry>
+    <entry key="word.seminar.name">セミナー名</entry>
+    <entry key="word.seminar.list">セミナーリスト</entry>
+    <entry key="word.close">閉じる</entry>
+    <entry key="word.enter.leave">入場/退場</entry>
+    <entry key="word.enter">入場</entry>
+    <entry key="word.leave">退場</entry>
+    <entry key="word.export">送り出す</entry>
+    <entry key="word.device.infomation">端末情報</entry>
+    <entry key="word.date">日付</entry>
+    <entry key="word.time">時間</entry>
+	<entry key="word.hour">時</entry>
+	<entry key="word.minute">分</entry>
+	<entry key="word.second">秒</entry>
+
+    <entry key="word.contents">コンテンツ</entry>
+    <entry key="word.contents.name">コンテンツ名</entry>
+    <entry key="word.contents.type">コンテンツ類型</entry>
+    <entry key="word.contents.type.name">コンテンツ類型名</entry>
+    <entry key="word.contents.type.component">コンテンツ構成</entry>
+    <entry key="word.visible.option">露出可否</entry>
+    <entry key="word.advertising.provider">広告提供者</entry>
+    <entry key="word.validity.date">有効期間</entry>
+    <entry key="word.choose">選択</entry>
+    <entry key="word.change">変更</entry>
+    <entry key="word.image.choose">イメージ選択</entry>
+    <entry key="word.sound.choose">サウンド選択</entry>
+    <entry key="word.start.date">開始日</entry>
+    <entry key="word.end.date">終了日</entry>
+
+    <entry key="word.event">イベント</entry>
+    <entry key="word.event.register">イベント登録</entry>
+    <entry key="word.event.modify">イベント修正</entry>
+    <entry key="word.event.delete">イベント削除</entry>
+    <entry key="word.event.name">イベント名</entry>
+    <entry key="word.beacon.push">ビーコンプッシュ</entry>
+    <entry key="word.search.choose">検索選択</entry>
+    <entry key="word.event.list">イベントリスト</entry>
+    <entry key="word.event.id">イベントID</entry>
+    <entry key="word.memo">メモ</entry>
+    <entry key="word.transfer">移管</entry>
+    <entry key="word.age">年齢</entry>
+    <entry key="word.all">全体</entry>
+    <entry key="word.cancel">取り消し</entry>
+    <entry key="word.age.range">年齢範囲</entry>
+    <entry key="word.range">範囲</entry>
+    <entry key="word.event.no">イベントなし</entry>
+
+    <entry key="word.beacon.push.manager.infomation">ビーコンプッシュ管理情報</entry>
+    <entry key="word.gender">性別</entry>
+    <entry key="word.male">男性</entry>
+    <entry key="word.female">女性</entry>
+    <entry key="word.birthday">誕生日</entry>
+    <entry key="word.month">月</entry>
+    <entry key="word.day">日</entry>
+    <entry key="word.anniversary">記念日</entry>
+    <entry key="word.setup">設定</entry>
+    <entry key="word.visiting.count">訪問回数</entry>
+    <entry key="word.seat.number">座席番号</entry>
+    <entry key="word.number">番</entry>
+    <entry key="word.prize">当籤の利益</entry>
+    <entry key="word.prize.seat">当籤の座席</entry>
+    <entry key="word.use">使用</entry>
+    <entry key="word.not.use">使用しない</entry>
+    <entry key="word.number.prize.fcfs">先着順の当籤人員</entry>
+    <entry key="word.prize.fail.message">落籤メッセージ</entry>
+    <entry key="word.person">名</entry>
+    <entry key="word.block">ブロック</entry>
+    <entry key="word.row">列</entry>
+
+    <entry key="word.mapping.type">マッピングタイプ</entry>
+    <entry key="word.sub.mapping.type">サブマッピングタイプ</entry>
+    <entry key="word.reference">参照</entry>
+    <entry key="word.reference.information">参照情報</entry>
+    <entry key="word.event.description">イベント説明</entry>
+    <entry key="word.event.type">イベント類型</entry>
+    <entry key="word.event.condition">イベント条件</entry>
+    <entry key="word.event.type.code">イベント類型コード</entry>
+    <entry key="word.event.type.register">イベント類型登録</entry>
+    <entry key="word.event.type.name">イベント類型名</entry>
+    <entry key="word.condition.property">条件属性</entry>
+    <entry key="word.column.type">コラムタイプ</entry>
+    <entry key="word.column.id">コラムID</entry>
+    <entry key="word.column.name">コラム名</entry>
+    <entry key="word.column.register">コラム登録</entry>
+    <entry key="word.event.type.list">イベント類型リスト</entry>
+    <entry key="word.selectable.item">選択可能項目</entry>
+    <entry key="word.mapping.delete">マッピング削除</entry>
+
+    <entry key="word.advertising.company">広告会社</entry>
+    <entry key="word.advertising.company.register">広告会社登録</entry>
+    <entry key="word.advertising.company.list">広告会社リスト</entry>
+    <entry key="word.advertising.company.name">広告会社名</entry>
+    <entry key="word.basic.information">基本情報</entry>
+    <entry key="word.company.name">会社名</entry>
+
+    <entry key="word.code">コード</entry>
+    <entry key="word.code.register">コード登録</entry>
+    <entry key="word.code.modify">コード修正</entry>
+    <entry key="word.code.type">コード種類</entry>
+    <entry key="word.code.name">コード名</entry>
+    <entry key="word.code.list">コードリスト</entry>
+
+    <entry key="word.company.information">会社情報</entry>
+    <entry key="word.business.number">事業者番号</entry>
+    <entry key="word.location.information.usage.lookup">位置情報利用現況</entry>
+    <entry key="word.location.information.reading.record">位置情報閲覧台帳</entry>
+    <entry key="word.os">運営体制</entry>
+    <entry key="word.admin.user.name">会員名</entry>
+    <entry key="word.serial.number">一連番号</entry>
+    <entry key="word.requester">要請者</entry>
+    <entry key="word.purpose">目的</entry>
+    <entry key="word.handler">取扱者</entry>
+    <entry key="word.location.information.handler">位置情報取扱者</entry>
+    <entry key="word.realname">実名</entry>
+
+    <entry key="word.beacon.control.information">ビーコン管制情報</entry>
+    <entry key="word.beacon.install.image">ビーコン設置写真</entry>
+    <entry key="word.status">状態</entry>
+    <entry key="word.reason">事由</entry>
+    <entry key="word.confirm">確認</entry>
+    <entry key="word.beacon.information">ビーコン情報</entry>
+    <entry key="word.assign.event">イベント割り当て</entry>
+    <entry key="word.assign.content">コンテンツ割り当て</entry>
+    <entry key="word.task">タスク</entry>
+    <entry key="word.delete.multiple.item">選択削除</entry>
+    <entry key="word.type">類型</entry>
+    <entry key="word.kind">種類</entry>
+    <entry key="word.node">ノード</entry>
+    <entry key="word.node.information">ノード情報</entry>
+    <entry key="word.node.name">ノード名</entry>
+    <entry key="word.node.id">ノードID</entry>
+    <entry key="word.node.field">ノードフィールド</entry>
+    <entry key="word.category">カテゴリ</entry>
+    <entry key="word.intersection.name">交差点名</entry>
+
+    <entry key="word.beacon.map">ビーコン配置図</entry>
+    <entry key="word.show.beacon">ビーコン表示</entry>
+    <entry key="word.show.node">ノード表示</entry>
+    <entry key="word.show.pair">連結線表示</entry>
+    <entry key="word.show.poi">POI 表示</entry>
+    <entry key="word.show.intersection">交差点表示</entry>
+    <entry key="word.show.chaosarea">混沌地域表示</entry>
+
+    <entry key="word.hide">隠す</entry>
+    <entry key="word.readonly">読み取り専用</entry>
+    <entry key="word.beacon.node">ビーコンノード</entry>
+    <entry key="word.move.beacon.node">ビーコン/ノード移動</entry>
+    <entry key="word.create.node">ノード生成</entry>
+    <entry key="word.create.chaosarea">混沌地域生成</entry>
+    <entry key="word.connect.node">ノード連結</entry>
+    <entry key="word.disconnect.node">ノード連結解除</entry>
+    <entry key="word.undo">戻す</entry>
+
+    <entry key="word.floor.map">階管理</entry>
+
+    <entry key="word.heatmap">ヒットマップ</entry>
+    <entry key="word.marker">マーカー</entry>
+    <entry key="word.movement">動線</entry>
+    <entry key="word.target.name">対象名</entry>
+    <entry key="word.inout">イン/アウト</entry>
+    <entry key="word.gate.order">ゲート順番</entry>
+    <entry key="word.phone.number">電話番号</entry>
+    <entry key="word.device.info">端末情報</entry>
+
+    <entry key="word.init">初期</entry>
+    <entry key="word.zoom.level">ズームレベル</entry>
+    <entry key="word.check.interval">チェックインターバル</entry>
+    <entry key="word.remove.interval">除去インターバル</entry>
+    <entry key="word.move.interval">移動インターバル</entry>
+    <entry key="word.move.unit">移動単位</entry>
+
+    <entry key="word.unit">単位</entry>
+
+    <entry key="word.tracking.setmap.text001">ビーコンをマップから除去する時、チェックするインターバル時間</entry>
+    <entry key="word.tracking.setmap.text002">信号がない場合、ビーコンの除去インターバル時間が過ぎたらマップのビーコンを除去</entry>
+    <entry key="word.tracking.setmap.text003">持続的に信号が入ってもビーコン移動インターバル時間以後にマップから移動</entry>
+
+    <entry key="word.stat.beacon.monitor.text001">総ビーコン個数</entry>
+    <entry key="word.stat.beacon.monitor.text002">測位用ビーコン個数</entry>
+    <entry key="word.stat.beacon.monitor.text003">亡失の可能性が高いビーコン個数</entry>
+    <entry key="word.stat.beacon.monitor.text004">算定基準</entry>
+    <entry key="word.stat.beacon.monitor.text005">{0} 日以前に認識されていないビーコンリスト</entry>
+
+    <entry key="word.beacon.unit">個</entry>
+    <entry key="word.recent.responsedate">最近応答日</entry>
+    <entry key="word.location.check">位置確認</entry>
+
+    <entry key="word.floor.name">階名</entry>
+    <entry key="word.image">イメージ</entry>
+
+    <entry key="word.show.geofencing">一般フェンスを見る</entry>
+    <entry key="word.show.geofencing.system">システムフェンスを見る</entry>
+    <entry key="word.geofencing.edit">ジオフェンス編集</entry>
+
+    <entry key="word.info">情報</entry>
+
+    <entry key="word.correction">補正値</entry>
+    <entry key="word.maximum">最大回数</entry>
+    <entry key="word.unlimited">無制限</entry>
+
+    <entry key="word.move.scanner.node">スキャナー/ノード移動</entry>
+    <entry key="word.scanner.choose">スキャナー選択</entry>
+    <entry key="word.show.scanner">スキャナー表示</entry>
+
+
+    <entry key="word.oauth.client.id">クライアントID</entry>
+    <entry key="word.oauth.secret.key">シークレットキー</entry>
+    <entry key="word.oauth.grant.type">権限類型</entry>
+    <entry key="word.oauth.token">トークン</entry>
+    <entry key="word.oauth.token.access">アクセストークン</entry>
+    <entry key="word.oauth.token.expiration.time">満了時間</entry>
+
+    <entry key="word.binding.type">インターフェース対象区分</entry>
+    <entry key="word.command.type">インターフェイスの種類</entry>
+    <entry key="word.interlocking.method">連動方式</entry>
+    <entry key="word.target.info">連動対象情報</entry>
+    <entry key="word.message.header">メッセージのヘッダー</entry>
+    <entry key="word.protocol">プロトコル</entry>
+    <entry key="word.host">ホスト</entry>
+    <entry key="word.port">ポート</entry>
+    <entry key="word.uri">URI</entry>
+    <entry key="word.method">Method</entry>
+
+    <entry key="word.location.common">測位信号全体</entry>
+    <entry key="word.floor.common">層全体</entry>
+    <entry key="word.specific.floor">特定の層</entry>
+    <entry key="word.geofence.common">ジオフェンス全体</entry>
+    <entry key="word.location.change">位置の変更</entry>
+    <entry key="word.floor.in">層参入した</entry>
+    <entry key="word.floor.stay">層留まっ</entry>
+    <entry key="word.floor.out">層退場。</entry>
+    <entry key="word.geofence.in">ジオフェンス参入した</entry>
+    <entry key="word.geofence.stay">ジオフェンス留まっ</entry>
+    <entry key="word.geofence.out">ジオフェンス退場</entry>
+    <entry key="word.restriction.in">制限区域進入</entry>
+    <entry key="word.restriction.stay">制限区域留まっ</entry>
+    <entry key="word.restriction.out">制限区域退場</entry>
+
+    <entry key="word.floor.code.upper.node">Upper Node</entry>
+    <entry key="word.floor.code.sort.no">Sort No.</entry>
+
+    <entry key="db.code.contents.attendance">出欠用ビーコン</entry>
+    <entry key="db.code.contents.goodbye">Good Bye</entry>
+    <entry key="db.code.contents.children">子供</entry>
+    <entry key="db.code.contents.coupon">クーポン</entry>
+    <entry key="db.code.contents.complex">複合</entry>
+    <entry key="db.code.contents.image">イメージ</entry>
+    <entry key="db.code.contents.intro">イントロ</entry>
+    <entry key="db.code.contents.materials">資材</entry>
+    <entry key="db.code.contents.member">会員</entry>
+    <entry key="db.code.contents.notification">お知らせ</entry>
+    <entry key="db.code.contents.presence">プレゼンス</entry>
+    <entry key="db.code.contents.sound">サウンド</entry>
+    <entry key="db.code.contents.text">テキスト</entry>
+    <entry key="db.code.contents.uri">URI</entry>
+    <entry key="db.code.contents.video">動画</entry>
+    <entry key="db.code.contents.welcome">ウェルカム</entry>
+
+    <entry key="db.code.reference.beacon">ビーコン</entry>
+    <entry key="db.code.reference.geofencing">ジオフェンシング</entry>
+    <entry key="db.code.reference.node">ノード</entry>
+    <entry key="db.code.reference.beacon.group">ビーコングループ</entry>
+    <entry key="db.code.refrence.geofencing.group">ジオフェンシンググループ</entry>
+    <entry key="db.code.reference.sub.detect">DETECT</entry>
+    <entry key="db.code.reference.sub.enter">ENTER</entry>
+    <entry key="db.code.reference.sub.event">EVENT</entry>
+    <entry key="db.code.reference.sub.stay">NODE</entry>
+    <entry key="db.code.reference.sub.leave">LEAVE</entry>
+    <entry key="db.code.reference.sub.push">PUSH</entry>
+
+    <entry key="db.code.scanner.deptype.contents">コンテンツ</entry>
+    <entry key="db.code.scanner.deptype.gate">ゲート</entry>
+    <entry key="db.code.scanner.deptype.geofence">ジオフェンス</entry>
+    <entry key="db.code.scanner.deptype.materials">資材</entry>
+    <entry key="db.code.scanner.deptype.node">スキャナーノード</entry>
+    <entry key="db.code.scanner.deptype.position">スキャナーポジション</entry>
+    <entry key="db.code.scanner.deptype.floor">階</entry>
+    <entry key="db.code.scanner.deptype.bnode">ビーコンノード</entry>
+    <entry key="db.code.scanner.deptype.bposition">ビーコンポジション</entry>
+
+    <entry key="db.code.fence.shape.circle">円形</entry>
+    <entry key="db.code.fence.shape.polygon">多角形</entry>
+    <entry key="db.code.fence.shape.square">四角形</entry>
+
+    <entry key="db.code.fence.type.general">一般</entry>
+    <entry key="db.code.fence.type.system">システム定義</entry>
+    <entry key="db.code.fence.type.warning">危険地域</entry>
+
+    <entry key="db.code.expose.flag.yes">露出</entry>
+    <entry key="db.code.expose.flag.no">露出なし</entry>
+
+    <entry key="db.code.beacon.type.fixed">固定型</entry>
+    <entry key="db.code.beacon.type.movable">移動型</entry>
+    <entry key="db.code.beacon.type.wearable">ウェアラブル</entry>
+
+</properties>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.oauth.dao.OauthClientDao">
+
+    <select id="getOauthClientInfo" parameterType="java.util.Map" resultType="core.admin.oauth.domain.OauthClient">
+        SELECT *
+        FROM TB_OAUTH_CLIENT
+        WHERE clientID=#{clientID}
+        <if test="comNum!=null">
+            and comNum=#{comNum}
+        </if>
+        <if test="opt != '' and opt  != null">
+            <if test="keyword != '' and keyword  != null">
+                AND ${opt} LIKE CONCAT(#{keyword}, '%')
+            </if>
+        </if>
+    </select>
+
+    <select id="getOauthClientList" parameterType="java.util.Map" resultType="core.admin.oauth.domain.OauthClient">
+        SELECT *
+        FROM TB_OAUTH_CLIENT
+        WHERE 1
+        <if test="comNum!=null">
+            and comNum=#{comNum}
+        </if>
+        <if test="opt != '' and opt  != null">
+            <if test="keyword != '' and keyword  != null">
+                AND ${opt} LIKE CONCAT(#{keyword}, '%')
+            </if>
+        </if>
+        ORDER BY regDate DESC
+        <if test="firstItemNo!=null and pageSize!=null">
+            LIMIT ${firstItemNo}, ${pageSize}
+        </if>
+    </select>
+
+    <select id="getOauthClientCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+        FROM TB_OAUTH_CLIENT
+        WHERE 1
+        <if test="comNum!=null">
+            and comNum=#{comNum}
+        </if>
+        <if test="opt != '' and opt  != null">
+            <if test="keyword != '' and keyword  != null">
+                AND ${opt} LIKE CONCAT(#{keyword}, '%')
+            </if>
+        </if>
+    </select>
+
+    <insert id="insertOauthClient" parameterType="core.admin.oauth.domain.OauthClient">
+        INSERT INTO TB_OAUTH_CLIENT(comNum,clientID,clientSecret,grantTypes,authorities,scope,resourceIDs,redirectUri,additionalInformation,accessTokenValidity,refreshTokenValidity,memo,modDate,regDate)
+        VALUES(#{comNum},#{clientID},#{clientSecret},#{grantTypes},#{authorities},#{scope},#{resourceIDs},#{redirectUri},#{additionalInformation},#{accessTokenValidity},#{refreshTokenValidity},#{memo},0,UNIX_TIMESTAMP())
+    </insert>
+
+    <update id="modifyOauthClient" parameterType="core.admin.oauth.domain.OauthClient">
+        UPDATE TB_OAUTH_CLIENT
+        SET clientID=#{clientID},
+            clientSecret=#{clientSecret},
+            grantTypes=#{grantTypes},
+            authorities=#{authorities},
+            scope=#{scope},
+            resourceIDs=#{resourceIDs},
+            redirectUri=#{redirectUri},
+            additionalInformation=#{additionalInformation},
+            accessTokenValidity=#{accessTokenValidity},
+            refreshTokenValidity=#{refreshTokenValidity},
+            memo=#{memo},
+            modDate=UNIX_TIMESTAMP()
+        WHERE clientID=#{clientID}
+    </update>
+
+    <delete id="deleteOauthClient" parameterType="core.admin.oauth.domain.OauthClient">
+        DELETE FROM TB_OAUTH_CLIENT
+        WHERE clientID=#{clientID}
+    </delete>
+
+</mapper>

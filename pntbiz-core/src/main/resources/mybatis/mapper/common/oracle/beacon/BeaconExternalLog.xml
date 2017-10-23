@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.common.beacon.dao.BeaconExternalLogDao">
+
+	<resultMap id="BeaconExternalLog" type="core.common.beacon.domain.BeaconExternalLog">
+		<id column="logNum" property="logNum" />
+		<result column="TYPE" property="type" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result column="BEACON_NUM" property="beaconNum" />
+		<result column="EXTERNAL_ID" property="externalId" />
+		<result column="EXTERNAL_ATTRIBUTE" property="externalAttributeRaw" />
+		<result column="REG_DATE" property="regDate" />
+	</resultMap>
+
+	<insert id="insertBeaconExternalLog"
+			parameterType="core.common.beacon.domain.BeaconExternalLog">
+
+		INSERT INTO TB_BEACON_EXTERNAL_LOG(BEACON_NUM, TYPE, EXTERNAL_ID, EXTERNAL_ATTRIBUTE, REG_DATE)
+		SELECT BEACON_NUM, #{type, typeHandler=framework.database.ValueEnumTypeHandler}, EXTERNAL_ID, EXTERNAL_ATTRIBUTE, UNIX_TIMESTAMP()
+		FROM TB_BEACON
+		WHERE BEACON_NUM=#{beaconNum}
+
+	</insert>
+
+	<select id="listBeaconExternalLog"
+			parameterType="core.common.beacon.domain.BeaconExternalLog"
+			resultMap="BeaconExternalLog">
+
+		SELECT LOG_NUM, TYPE, BEACON_NUM, EXTERNAL_ID, EXTERNAL_ATTRIBUTE, REG_DATE
+		FROM TB_BEACON_EXTERNAL_LOG
+		WHERE BEACON_NUM=#{beaconNum}
+		<if test="type!=null">AND TYPE=#{type, typeHandler=framework.database.ValueEnumTypeHandler}</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.oauth.dao.OauthClientDao">
+
+    <resultMap id="oauthClientResult" type="core.wms.oauth.domain.OauthClient">
+        <result property="comNum"                column="COM_NUM"/>
+		<result property="clientID"              column="CLIENT_ID"/>
+		<result property="clientSecret"          column="CLIENT_SECRET"/>
+		<result property="grantTypes"            column="GRANT_TYPES"/>
+		<result property="authorities"           column="AUTHORITIES"/>
+		<result property="scope"                 column="SCOPE"/>
+		<result property="resourceIDs"           column="RESOURCE_IDS"/>
+		<result property="redirectUri"           column="REDIRECT_URI"/>
+		<result property="additionalInformation" column="ADDITIONAL_INFORMATION"/>
+		<result property="accessTokenValidity"   column="ACCESS_TOKEN_VALIDITY"/>
+		<result property="refreshTokenValidity"  column="REFRESH_TOKEN_VALIDITY"/>
+		<result property="memo"                  column="MEMO"/>
+		<result property="modDate"               column="MOD_DATE"/>
+		<result property="regDate"               column="REG_DATE"/>
+    </resultMap>
+
+    <select id="getOauthClientInfo" parameterType="java.util.Map" resultMap="oauthClientResult">
+        SELECT *
+          FROM TB_OAUTH_CLIENT
+         WHERE CLIENT_ID = #{clientID}
+        <if test="comNum!=null">
+            and COM_NUM=#{comNum}
+        </if>
+    </select>
+
+    <select id="getOauthClientList" parameterType="java.util.Map" resultMap="oauthClientResult">
+        SELECT *
+         FROM (
+	        SELECT A.*
+                 , ROWNUM RNUM
+	          FROM TB_OAUTH_CLIENT A
+	          <if test="comNum!=null"> WHERE COM_NUM = #{comNum}</if>
+	         ORDER BY REG_DATE DESC
+	     ) TB
+         <if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+    </select>
+
+    <select id="getOauthClientCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+          FROM TB_OAUTH_CLIENT
+	     <if test="comNum!=null"> WHERE COM_NUM = #{comNum}</if>
+    </select>
+
+    <insert id="insertOauthClient" parameterType="core.wms.oauth.domain.OauthClient">
+        INSERT INTO TB_OAUTH_CLIENT
+        ( COM_NUM
+        , CLIENT_ID
+        , CLIENT_SECRET
+        , GRANT_TYPES
+        , AUTHORITIES
+        , SCOPE
+        , RESOURCE_IDS
+        <if test="additionalInformation != null">, ADDITIONAL_INFORMATION</if>
+        <if test="redirectUri != null">, REDIRECT_URI</if>
+        , ACCESS_TOKEN_VALIDITY
+        , REFRESH_TOKEN_VALIDITY
+        , MEMO
+        , MOD_DATE
+        , REG_DATE
+        )VALUES
+        ( #{comNum}
+        , #{clientID}
+        , #{clientSecret}
+        , #{grantTypes}
+        , #{authorities}
+        , #{scope}
+        , #{resourceIDs}
+        <if test="additionalInformation != null">, #{additionalInformation}</if>
+        <if test="redirectUri != null">, #{redirectUri}</if>
+        , #{accessTokenValidity}
+        , #{refreshTokenValidity}
+        , #{memo}
+        , 0
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="modifyOauthClient" parameterType="core.wms.oauth.domain.OauthClient">
+        UPDATE TB_OAUTH_CLIENT
+           SET MOD_DATE      =FN_UNIX_TIMESTEMP(SYSDATE),
+               CLIENT_ID     =#{clientID},
+               CLIENT_SECRET =#{clientSecret},
+               GRANT_TYPES   =#{grantTypes},
+               AUTHORITIES   =#{authorities},
+               SCOPE         =#{scope},
+               RESOURCE_IDS  =#{resourceIDs},
+               <if test='additionalInformation != null'>ADDITIONAL_INFORMATION =#{additionalInformation},</if>
+               <if test='redirectUri != null'>REDIRECT_URI  =#{redirectUri},</if>
+               ACCESS_TOKEN_VALIDITY  =#{accessTokenValidity},
+               REFRESH_TOKEN_VALIDITY =#{refreshTokenValidity},
+               MEMO                   =#{memo}
+         WHERE CLIENT_ID=#{clientID}
+    </update>
+
+    <delete id="deleteOauthClient" parameterType="core.wms.oauth.domain.OauthClient">
+        DELETE
+          FROM TB_OAUTH_CLIENT
+         WHERE CLIENT_ID=#{clientID}
+    </delete>
+
+</mapper>

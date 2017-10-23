@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.ow2.bundles:ow2-bundles-externals-jsch:1.0.33">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/bundles/ow2-bundles-externals-jsch/1.0.33/ow2-bundles-externals-jsch-1.0.33.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/bundles/ow2-bundles-externals-jsch/1.0.33/ow2-bundles-externals-jsch-1.0.33-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/bundles/ow2-bundles-externals-jsch/1.0.33/ow2-bundles-externals-jsch-1.0.33-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

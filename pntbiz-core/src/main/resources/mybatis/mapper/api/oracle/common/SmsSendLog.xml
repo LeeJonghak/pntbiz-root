@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.common.dao.SmsSendLogDao">
+
+    <resultMap id="smsSendLogResult" type="core.api.common.domain.SmsSendLog">
+		 <result property="logNum"        column="LOG_NUM"/>
+		 <result property="stype"         column="STYPE"/>
+		 <result property="transid"       column="TRANS_ID"/>
+		 <result property="title"         column="TITLE"/>
+		 <result property="message"       column="MESSAGE"/>
+		 <result property="senderNumber"  column="SENDER_NUMBER"/>
+		 <result property="receiverNumber" column="RECEIVER_NUMBER"/>
+		 <result property="sendDate"      column="SEND_DATE"/>
+		 <result property="status"        column="STATUS"/>
+		 <result property="responseMessage" column="RESULT_MESSAGE"/>
+		 <result property="modDate"       column="MOD_DATE"/>
+		 <result property="regDate"       column="REG_DATE"/>
+    </resultMap>
+
+    <select id="getSmsSendLogInfo" parameterType="java.util.Map" resultMap="smsSendLogResult">
+        SELECT *
+          FROM TB_SMS_SEND_LOG
+         WHERE TRANS_ID=#{transid}
+    </select>
+
+    <insert id="insertSmsSendLog" parameterType="core.api.common.domain.SmsSendLog">
+        INSERT INTO TB_SMS_SEND_LOG
+        ( LOG_NUM
+        , STYPE
+        , TRANS_ID
+        , TITLE
+        , MESSAGE
+        , SENDER_NUMBER
+        , RECEIVER_NUMBER
+        , SEND_DATE
+        , STATUS
+        , RESULT_MESSAGE
+        , REG_DATE
+        )VALUES
+        ( SEQ_SSL_LOG_NUM.nextval
+        , #{stype}
+        , #{transid}
+        , #{title}
+        , #{message}
+        , #{senderNumber}
+        , #{receiverNumber}
+        , #{sendDate}
+        , #{status}
+        , #{responseMessage}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateSmsSendLog" parameterType="core.api.common.domain.SmsSendLog">
+        UPDATE TB_SMS_SEND_LOG
+           SET STYPE           =#{stype}
+             , TITLE           =#{title}
+             , MESSAGE         =#{message}
+             , SENDER_NUMBER   =#{senderNumber}
+             , RECEIVER_NUMBER =#{receiverNumber}
+             , SEND_DATE       =#{sendDate}
+             , STATUS          =#{status}
+             , RESULT_MESSAGE  =#{responseMessage}
+             , MOD_DATE        =FN_UNIX_TIMESTEMP(SYSDATE)
+         WHERE LOG_NUM=#{logNum}
+    </update>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.stat.dao.StatDao">
+	
+	<select id="statBeaconMonitorCount" parameterType="core.wms.stat.domain.StatBeaconSearchParam" resultType="Integer">
+        SELECT COUNT(beaconNum) as CNT
+        FROM TB_BEACON
+        WHERE 1
+        <if test="comNum!=null">
+            and comNum=#{comNum}
+        </if>
+        <if test="beaconName != '' and beaconName  != null">
+                AND beaconName LIKE CONCAT(#{beaconName}, '%')
+        </if>
+        <if test="lastDate != '' and lastDate  != null">
+                AND lastDate <![CDATA[<=]]> UNIX_TIMESTAMP(#{lastDate})
+        </if>
+    </select>
+    
+    <select id="statBeaconMonitorList" parameterType="core.wms.stat.domain.StatBeaconSearchParam" resultType="core.wms.beacon.domain.Beacon">
+        SELECT beaconNum, UUID, majorVer, minorVer, battery, floor, beaconName, beaconDesc, lastDate  
+        FROM TB_BEACON
+        WHERE 1
+        <if test="comNum!=null">
+            and comNum=#{comNum}
+        </if>        
+        <if test="beaconName != '' and beaconName  != null">
+                AND beaconName LIKE CONCAT(#{beaconName}, '%')
+        </if>
+        <if test="lastDate != '' and lastDate  != null">
+                AND lastDate <![CDATA[<=]]> UNIX_TIMESTAMP(#{lastDate})
+        </if>
+        ORDER BY lastDate DESC 
+    </select>
+    
+    <select id="statBeaconPresenceCount" parameterType="core.wms.stat.domain.StatBeaconSearchParam" resultType="Integer">
+		SELECT COUNT(*) FROM TB_BEACON A, TB_CONTENTS_MAPPING B  
+		WHERE A.beaconNum = B.refNum  
+		AND A.comNum = #{comNum}  
+		AND B.refType = 'BC' 
+		AND B.conNum IN ( 
+			SELECT conNum 
+			FROM TB_CONTENTS  
+			WHERE conType = 'PRE' 
+			AND comNum=#{comNum} 
+		)
+    </select>
+</mapper>

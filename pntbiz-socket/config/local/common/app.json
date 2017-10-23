@@ -1,0 +1,9 @@
+{
+    "ssl": false,
+    "port": 8501,
+    "domain": "localhost",
+    "socketURL": "http://localhost:8501",
+    "nodeCluster": false,
+    "redisCluster": false,
+    "log": true
+}

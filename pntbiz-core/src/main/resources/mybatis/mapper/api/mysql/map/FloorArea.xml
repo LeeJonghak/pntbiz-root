@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.map.dao.FloorAresDao">
+
+	<resultMap id="floorAreaConfigResult" type="core.api.map.domain.FloorAreaConfig">
+		<result property="floorNum"   column="floorNum" />
+		<result property="comNum"     column="comNum" />
+		<result property="width"      column="width" />
+		<result property="height"  	  column="height" />
+	</resultMap>
+
+	<resultMap id="floorAreaInfoResult" type="core.api.map.domain.FloorAreaInfo">
+		<result property="floorNum"   column="floorNum" />
+		<result property="comNum"     column="comNum" />
+		<result property="axisX"      column="axisX" />
+		<result property="axisY"      column="axisY" />
+		<result property="field1"  	  column="field1" />
+		<result property="field2"  	  column="field2" />
+		<result property="field3"  	  column="field3" />
+		<result property="field4"  	  column="field4" />
+		<result property="field5"  	  column="field5" />
+		<result property="field6"  	  column="field6" />
+		<result property="field7"  	  column="field7" />
+		<result property="field8"  	  column="field8" />
+		<result property="field9"  	  column="field9" />
+		<result property="field10" 	  column="field10" />
+	</resultMap>
+
+	<select id="getFloorAreaConfigList" parameterType="Integer" resultMap="floorAreaConfigResult">
+		SELECT		floorNum,
+					comNum,
+					WIDTH,
+					HEIGHT
+		  FROM TB_FLOOR_AREA_CONFIG
+		 WHERE comNum = #{comNum}
+		ORDER BY floorNum DESC
+	</select>
+	<select id="getFloorAreaInfoList" parameterType="core.api.map.domain.FloorAreaConfig" resultMap="floorAreaInfoResult">
+		SELECT		floorNum,
+					comNum,
+					axisX,
+					axisY,
+					field,
+					field2,
+					field3,
+					field4,
+					field5,
+					field6,
+					field7,
+					field8,
+					field9,
+					field10
+		FROM TB_FLOOR_AREA_INFO
+		WHERE comNum = #{comNum}
+		AND floorNum = #{floorNum}
+		ORDER BY floorNum DESC
+	</select>
+
+
+</mapper>

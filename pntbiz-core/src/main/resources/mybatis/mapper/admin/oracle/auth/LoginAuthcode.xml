@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.auth.dao.LoginAuthcodeDao">
+
+	<resultMap id="cntResult" type="Integer">
+		<result property="cnt" column="CNT" />
+	</resultMap>
+
+	<resultMap id="loginAuthcodeResult" type="core.admin.auth.domain.LoginAuthcode">
+		<result property="authNum" 	column="AUTH_NUM" />
+		<result property="authCode" column="AUTH_CODE" />
+		<result property="authName" column="AUTH_NAME" />
+		<result property="regDate" 	column="REG_DATE" />
+	</resultMap>
+
+	<!--
+	역할 및 권한 테이블 관련(LoginRole)
+	2014-11-14 nohsoo
+	-->
+	<select id="getLoginAuthcodeCheck" parameterType="core.admin.auth.domain.LoginAuthcode" resultMap="cntResult">
+		SELECT COUNT(1) CNT
+		  FROM TB_LOGIN_AUTHCODE
+		 WHERE AUTH_CODE = #{authCode}
+	</select>
+
+	<select id="getLoginAuthcodeCount" parameterType="framework.web.util.PagingParam" resultMap="cntResult">
+		SELECT COUNT(AUTH_NUM) CNT
+		  FROM TB_LOGIN_AUTHCODE
+	</select>
+
+	<select id="getLoginAuthcodeList" parameterType="framework.web.util.PagingParam" resultMap="loginAuthcodeResult">
+		SELECT *
+   		  FROM (
+			SELECT AUTH_NUM, AUTH_CODE, AUTH_NAME, REG_DATE
+			     , ROWNUM AS RNUM
+		  	  FROM TB_LOGIN_AUTHCODE
+		  ) TB
+		 WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+	</select>
+
+	<select id="getLoginAuthcodeListAll" resultMap="loginAuthcodeResult">
+		SELECT AUTH_NUM, AUTH_CODE, AUTH_NAME, REG_DATE
+		  FROM TB_LOGIN_AUTHCODE
+	</select>
+
+	<select id="getLoginAuthcodeInfo" parameterType="core.admin.auth.domain.LoginAuthcode" resultMap="loginAuthcodeResult">
+		SELECT AUTH_NUM, AUTH_CODE, AUTH_NAME, REG_DATE
+		  FROM TB_LOGIN_AUTHCODE
+		 WHERE AUTH_NUM = #{authNum}
+	</select>
+
+	<insert id="insertLoginAuthcode" parameterType="core.admin.auth.domain.LoginAuthcode">
+        INSERT INTO TB_LOGIN_AUTHCODE
+        ( AUTH_NUM
+        , AUTH_CODE
+        , AUTH_NAME
+        , REG_DATE
+        )VALUES
+        ( SEQ_LA_AUTH_NUM.nextval
+        , #{authCode}
+        , #{authName}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateLoginAuthcode" parameterType="core.admin.auth.domain.LoginAuthcode">
+        UPDATE TB_LOGIN_AUTHCODE
+        <set>
+	        <if test="authCode != '' and authCode != null">AUTH_CODE = #{authCode},</if>
+	        <if test="authName != '' and authName != null">AUTH_NAME = #{authName},</if>
+        </set>
+         WHERE AUTH_NUM = #{authNum}
+    </update>
+
+    <delete id="deleteLoginAuthcode" parameterType="core.admin.auth.domain.LoginAuthcode">
+        DELETE
+          FROM TB_LOGIN_AUTHCODE
+         WHERE AUTH_NUM = #{authNum}
+    </delete>
+
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.map.dao.FloorDao">
+
+	<resultMap id="floorResult" type="core.api.map.domain.Floor">
+		<result property="UUID" column="UUID" />
+		<result property="floorNum"   column="FLOOR_NUM" />
+		<result property="comNum"     column="COM_NUM" />
+		<result property="floor"      column="FLOOR" />
+		<result property="floorName"  column="FLOOR_NAME" />
+		<result property="swLat"      column="SW_LAT" />
+		<result property="swLng"      column="SW_LNG" />
+		<result property="neLat"      column="NE_LAT" />
+		<result property="neLng"      column="NE_LNG" />
+		<result property="deg"        column="DEG" />
+		<result property="imgSrc"     column="IMG_SRC" />
+		<result property="modDate"    column="MOD_DATE" />
+		<result property="regDate"    column="REG_DATE" />
+	</resultMap>
+
+	<select id="getFloorList" parameterType="core.api.map.domain.Floor" resultMap="floorResult">
+		SELECT A.FLOOR_NUM, A.COM_NUM, A.FLOOR, A.FLOOR_NAME, A.SW_LAT
+		     , A.SW_LNG, A.NE_LAT, A.NE_LNG, A.DEG, A.IMG_SRC
+		     , A.MOD_DATE, A.REG_DATE
+		     , B.UUID
+		  FROM TB_FLOOR A
+		     , TB_COMPANY B
+		 WHERE A.COM_NUM = B.COM_NUM
+		   AND B.UUID = #{UUID}
+		<if test="floor != '' and floor != null">AND FLOOR = #{floor}</if>
+		ORDER BY REPLACE(LPAD(floor, 4, '0'), 'B', '-') DESC
+	</select>
+</mapper>

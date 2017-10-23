@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.sync.dao.SyncDao">
+	
+	<resultMap id="syncResult" type="core.admin.sync.domain.Sync">
+		<result property="comNum" column="comNum" />
+		<result property="syncType" column="syncType" />
+		<result property="modDate" column="modDate" />		
+	</resultMap>
+	
+	<select id="getSyncInfo" parameterType="core.admin.sync.domain.Sync" resultMap="syncResult">
+		SELECT comNum, syncType, modDate 
+		FROM TB_SYNC 
+		WHERE comNum = #{comNum} 
+        AND syncType = #{syncType} 
+	</select>
+	
+	<select id="getSyncList" parameterType="core.admin.sync.domain.Sync" resultMap="syncResult">
+		SELECT comNum, syncType, modDate
+		FROM TB_SYNC 
+		WHERE comNum = #{comNum} 
+	</select>
+	
+	<insert id="insertSync" parameterType="core.admin.sync.domain.Sync">
+        INSERT INTO TB_SYNC
+        (comNum, syncType, modDate)
+        VALUES
+        (#{comNum}, #{syncType}, UNIX_TIMESTAMP())
+    </insert>
+	
+	<update id="updateSync" parameterType="core.admin.sync.domain.Sync">
+        UPDATE TB_SYNC 
+        SET modDate = UNIX_TIMESTAMP()  
+        WHERE comNum = #{comNum}
+        AND syncType = #{syncType}
+    </update>
+	
+</mapper>

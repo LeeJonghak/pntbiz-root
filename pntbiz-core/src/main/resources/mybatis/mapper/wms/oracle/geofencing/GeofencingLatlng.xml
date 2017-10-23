@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.geofencing.dao.GeofencingLatlngDao">
+
+    <resultMap id="geofencingLatlngResult" type="core.wms.geofencing.domain.GeofencingLatlng">
+        <result property="fcNum"       column="FC_NUM"/>
+        <result property="lat"         column="LAT"/>
+        <result property="lng"         column="LNG"/>
+        <result property="radius"      column="RADIUS"/>
+        <result property="orderSeq"    column="ORDER_SEQ"/>
+    </resultMap>
+    <!--
+        모든 지오펜스 좌표 정보 - 펜스 배치도에서 사용
+        @author nohsoo 2015-03-11
+    -->
+    <select id="getGeofencingLatlngAll" parameterType="java.util.HashMap" resultMap="geofencingLatlngResult">
+        SELECT *
+          FROM TB_GEOFENCING_LATLNG TGL
+         INNER JOIN TB_GEOFENCING TG ON TG.FC_NUM = TGL.FC_NUM
+        <where>
+            <if test="comNum!=null">
+                AND TG.COM_NUM = #{comNum}
+            </if>
+            <if test="floor!=null">
+                AND TG.floor = #{floor}
+            </if>
+        </where>
+         ORDER BY TGL.FC_NUM, TGL.ORDER_SEQ ASC
+    </select>
+
+    <select id="getGeofencingLatlngList" parameterType="java.util.HashMap" resultMap="geofencingLatlngResult">
+        SELECT *
+          FROM TB_GEOFENCING_LATLNG
+         WHERE FC_NUM  = #{fcNum}
+    </select>
+
+    <insert id="insertGeofencingLatlng" parameterType="core.wms.geofencing.domain.GeofencingLatlng" useGeneratedKeys="false">
+        INSERT INTO TB_GEOFENCING_LATLNG
+        ( FC_NUM
+        , LAT
+        , LNG
+        <if test="radius != null and radius!= ''">, RADIUS</if>
+        , ORDER_SEQ
+        )VALUES
+        ( #{fcNum}
+        , #{lat}
+        , #{lng}
+        <if test="radius != null and radius!= ''">, #{radius}</if>
+        , #{orderSeq})
+    </insert>
+
+    <delete id="deleteGeofencingLatlng" parameterType="java.util.HashMap">
+        DELETE
+          FROM TB_GEOFENCING_LATLNG
+         WHERE FC_NUM = #{fcNum}
+    </delete>
+</mapper>

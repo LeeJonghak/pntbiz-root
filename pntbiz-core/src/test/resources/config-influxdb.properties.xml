@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>config</comment>
+
+    <!-- <entry key="log.db.type">influxDB</entry> -->
+    <entry key="influxdb.url">http://localhost:8086</entry>
+    <entry key="influxdb.database">indoor_statistics</entry>
+    <entry key="influxdb.username">admin</entry>
+    <entry key="influxdb.password">admin1*</entry>
+
+</properties>

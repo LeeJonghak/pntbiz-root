@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.PushEventDao">
+
+    <select id="callCmsServicePushStageList" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        { CALL SP_CMS_SERVICE_GET_PUSH_STAGE_LIST('BP', #{firstItemNo}, #{pageSize}, NULL, NULL, #{TOT_CNT, mode=OUT, jdbcType=INTEGER}, #{O_RET_CODE, mode=OUT, jdbcType=VARCHAR}, #{O_RET_MSG, mode=OUT, jdbcType=VARCHAR})}
+    </select>
+
+    <select id="callCmsServiceSetBeaconPushSrInfo" statementType="CALLABLE" parameterType="java.util.HashMap">
+        { CALL SP_CMS_SERVICE_SET_BEACON_PUSH_SR_INFO(${pnsStageSeqNo},0, #{O_PNS_ID, mode=OUT, jdbcType=INTEGER}, #{RET_CODE, mode=OUT, jdbcType=VARCHAR}, #{RET_MSG, mode=OUT, jdbcType=VARCHAR}) }
+    </select>
+
+    <select id="getPnsSrInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT *
+        FROM TB_PNS_SR_INFO
+        <where>
+            PNS_ID=#{PNS_ID}
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <setting name="cacheEnabled" value="false" />
+        <setting name="useGeneratedKeys" value="true" />
+        <setting name="defaultExecutorType" value="REUSE" />
+    </settings>
+
+    <typeAliases>
+    	<typeAlias alias="PagingParam" type="framework.web.util.PagingParam" />
+
+		<typeAlias alias="Login" type="auth.domain.Login" />
+		<typeAlias alias="LoginRole" type="auth.domain.LoginRole" />
+		<typeAlias alias="LoginAuthcode" type="auth.domain.LoginAuthcode" />
+		<typeAlias alias="LoginRoleAuthorities" type="auth.domain.LoginRoleAuthorities" />
+		<typeAlias alias="LoginOtp" type="auth.domain.LoginOtp" />
+
+		<typeAlias alias="Code" type="core.admin.code.domain.Code" />
+		<typeAlias alias="Sync" type="core.sync.domain.Sync" />
+
+		<typeAlias alias="Company" type="core.admin.company.domain.Company" />
+
+		<typeAlias alias="AdminLog" type="core.admin.log.domain.AdminLog" />
+
+        <typeAlias alias="Beacon" type="core.beacon.domain.Beacon" />
+        <typeAlias alias="BeaconState" type="core.beacon.domain.BeaconState" />
+        <typeAlias alias="BeaconStateSearchParam" type="core.beacon.domain.BeaconStateSearchParam" />
+        <typeAlias alias="BeaconGroup" type="core.beacon.domain.BeaconGroup" />
+        <typeAlias alias="BeaconGroupSearchParam" type="core.beacon.domain.BeaconGroupSearchParam" />
+        <typeAlias alias="BeaconGroupMapping" type="core.beacon.domain.BeaconGroupMapping" />
+        <typeAlias alias="BeaconSearchParam" type="core.beacon.domain.BeaconSearchParam" />
+
+        <typeAlias alias="Scanner" type="core.scanner.domain.Scanner" />
+        <typeAlias alias="ScannerSearchParam" type="core.scanner.domain.ScannerSearchParam" />
+        <typeAlias alias="ScannerPos" type="core.scanner.domain.ScannerPos" />
+        <typeAlias alias="ScannerNode" type="core.scanner.domain.ScannerNode" />
+        <typeAlias alias="ScannerEdge" type="core.scanner.domain.ScannerEdge" />
+        <typeAlias alias="ScannerBeaconPos" type="core.scanner.domain.ScannerBeaconPos" />
+        <typeAlias alias="ScannerBeaconNode" type="core.scanner.domain.ScannerBeaconNode" />
+        <typeAlias alias="ScannerBeaconEdge" type="core.scanner.domain.ScannerBeaconEdge" />
+        <typeAlias alias="ScannerGeofence" type="core.scanner.domain.ScannerGeofence" />
+        <typeAlias alias="ScannerGeofenceLatlng" type="core.scanner.domain.ScannerGeofenceLatlng" />
+        <typeAlias alias="ScannerMaterials" type="core.scanner.domain.ScannerMaterials" />
+        <typeAlias alias="ScannerContents" type="core.scanner.domain.ScannerContents" />
+        <typeAlias alias="ScannerGate" type="core.scanner.domain.ScannerGate" />
+        <typeAlias alias="ScannerFloor" type="core.scanner.domain.ScannerFloor" />
+        <typeAlias alias="ScannerServer" type="core.scanner.domain.ScannerServer" />
+        <typeAlias alias="ScannerDeploy" type="core.scanner.domain.ScannerDeploy" />
+
+        <typeAlias alias="PresenceSetmap" type="core.tracking.domain.PresenceSetmap" />
+		<typeAlias alias="PresenceLog" type="core.tracking.domain.PresenceLog" />
+		<typeAlias alias="PresenceLogSearchParam" type="core.tracking.domain.PresenceLogSearchParam" />
+		<typeAlias alias="PresenceTargetSearchParam" type="core.tracking.domain.PresenceTargetSearchParam" />
+		<typeAlias alias="PresenceGfLog" type="core.tracking.domain.PresenceGfLog" />
+		<typeAlias alias="PresenceGfLogSearchParam" type="core.tracking.domain.PresenceGfLogSearchParam" />
+		<typeAlias alias="PresenceIoLog" type="core.tracking.domain.PresenceIoLog" />
+		<typeAlias alias="PresenceIoLogSearchParam" type="core.tracking.domain.PresenceIoLogSearchParam" />
+		<typeAlias alias="PresenceBeaconLog" type="core.tracking.domain.PresenceBeaconLog" />
+		<typeAlias alias="PresenceBeaconLogSearchParam" type="core.tracking.domain.PresenceBeaconLogSearchParam" />
+		<typeAlias alias="PresenceBeaconTargetSearchParam" type="core.tracking.domain.PresenceBeaconTargetSearchParam" />
+
+        <typeAlias alias="Floor" type="core.map.domain.Floor" />
+
+        <typeAlias alias="Geofencing" type="core.geofencing.domain.Geofencing" />
+        <typeAlias alias="GeofencingGroup" type="core.geofencing.domain.GeofencingGroup" />
+        <typeAlias alias="GeofencingGroupSearchParam" type="core.geofencing.domain.GeofencingGroupSearchParam" />
+        <typeAlias alias="GeofencingGroupMapping" type="core.geofencing.domain.GeofencingGroupMapping" />
+
+        <typeAlias alias="Contents" type="core.contents.domain.Contents" />
+        <typeAlias alias="ContentsSearchParam" type="core.contents.domain.ContentsSearchParam" />
+        <typeAlias alias="ContentsMapping" type="core.contents.domain.ContentsMapping" />
+        <typeAlias alias="ContentsMappingSearchParam" type="core.contents.domain.ContentsMappingSearchParam" />
+        <typeAlias alias="ContentsType" type="core.contents.domain.ContentsType" />
+        <typeAlias alias="ContentsTypeSearchParam" type="core.contents.domain.ContentsTypeSearchParam" />
+        <typeAlias alias="ContentsTypeComponent" type="core.contents.domain.ContentsTypeComponent" />
+
+        <typeAlias alias="AdvertCompany" type="core.info.domain.AdvertCompany" />
+        <typeAlias alias="AdvertCompanySearchParam" type="core.info.domain.AdvertCompanySearchParam" />
+        <typeAlias alias="CodeAction" type="core.info.domain.CodeAction" />
+        <typeAlias alias="CodeActionSearchParam" type="core.info.domain.CodeActionSearchParam" />
+        <typeAlias alias="LocationInquiry" type="core.info.domain.LocationInquiry" />
+        <typeAlias alias="LocationInquirySearchParam" type="core.info.domain.LocationInquirySearchParam" />
+        <typeAlias alias="LocationRecord" type="core.info.domain.LocationRecord" />
+        <typeAlias alias="LocationRecordSearchParam" type="core.info.domain.LocationRecordSearchParam" />
+
+        <typeAlias alias="Attendance" type="core.service.domain.Attendance" />
+        <typeAlias alias="AttendanceSearchParam" type="core.service.domain.AttendanceSearchParam" />
+
+        <typeAlias alias="StatBeaconSearchParam" type="core.stat.domain.StatBeaconSearchParam" />
+
+        <typeAlias alias="EventSearchParam" type="core.event.domain.EventSearchParam" />
+	</typeAliases>
+
+</configuration>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                        http://www.springframework.org/schema/security/oauth2
+                        http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+    <!--
+    <security:http auto-config="true">
+        <security:intercept-url pattern="/beacon/ssl/*" requires-channel="https" />
+    </security:http>
+    <security:authentication-manager></security:authentication-manager>
+    -->
+
+	<!--<bean id="webSecurityExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+		<property name="defaultRolePrefix" value="" />
+	</bean>-->
+    <sec:http pattern="^(.(?!oauth)).*" create-session="never" request-matcher="regex" use-expressions="true" entry-point-ref="oauthAuthenticationEntryPoint">
+        <sec:anonymous enabled="true" />
+        <sec:csrf disabled="true"/>
+
+
+
+		<!-- 테스트 중 -->
+        <!--<sec:intercept-url pattern="/beacon.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/contents.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/geofencing.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/floor.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/attendance.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/tracking.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/log.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/company.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/sync.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />
+        <sec:intercept-url pattern="/calibration.*" access="#oauth2.isClient() and #oauth2.hasScope('beacon')" />-->
+
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+        <sec:expression-handler ref="oauth2WebSecurityExpressionHandler" />
+    </sec:http>
+
+    <sec:http pattern="/oauth/authorize.*" auto-config="true" use-expressions="true" request-matcher="regex" authentication-manager-ref="userAuthenticationManager" >
+        <sec:intercept-url pattern="/oauth/authorize.*" method="GET" access="hasRole('ROLE_USER')" />
+    </sec:http>
+
+    <sec:http pattern="/oauth/token" entry-point-ref="clientAuthenticationEntryPoint" create-session="stateless" authentication-manager-ref="clientAuthenticationManager">
+        <sec:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
+        <sec:anonymous enabled="false" />
+        <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+
+    <oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices" >
+        <oauth:authorization-code authorization-code-services-ref="authorizationCodeServices" />
+        <oauth:implicit />
+        <oauth:refresh-token />
+        <oauth:client-credentials />
+        <oauth:password authentication-manager-ref="userAuthenticationManager" />
+    </oauth:authorization-server>
+
+    <bean id="authorizationCodeServices" class="org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices" />
+    <!--<bean id="authorizationCodeServices" class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
+        <constructor-arg ref="dataSource" />
+        <property name="selectAuthenticationSql" value="SELECT CODE, AUTHENTICATION FROM TB_OAUTH_CODE WHERE code = ?" />
+        <property name="insertAuthenticationSql" value="INSERT INTO TB_OAUTH_CODE (code, authentication, regDate) VALUES (?, ?, UNIX_TIMESTAMP())" />
+        <property name="deleteAuthenticationSql" value="DELETE FROM TB_OAUTH_CODE WHERE code = ?" />
+    </bean>-->
+
+    <sec:authentication-manager  alias="clientAuthenticationManager">
+        <sec:authentication-provider user-service-ref="clientDetailsUserService" />
+    </sec:authentication-manager>
+
+    <sec:authentication-manager id="userAuthenticationManager" alias="userAuthenticationManager">
+        <sec:authentication-provider user-service-ref="userDetailsJdbcDaoImpl">
+            <!--<sec:user-service>
+                <sec:user name="admin" password="pntbiz1234" authorities="ROLE_ADMIN" />
+            </sec:user-service>-->
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+    <bean id="userDetailsJdbcDaoImpl" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+        <property name="dataSource" ref="dataSource" />
+        <property name="usersByUsernameQuery" value="SELECT userID as username, userPW as password, if(state='1', true, false) as enabled FROM TB_LOGIN WHERE userID = ?" />
+        <property name="authoritiesByUsernameQuery" value="SELECT userID as username, role as authorities FROM TB_LOGIN WHERE userID = ?" />
+        <property name="usernameBasedPrimaryKey" value="true" />
+        <property name="enableAuthorities" value="true" />
+        <property name="enableGroups" value="false" />
+    </bean>
+
+    <oauth:resource-server id="resourceServerFilter" resource-id="beacon_api" token-services-ref="tokenServices"  />
+
+    <!--access-decision-manager-ref="accessDecisionManager"-->
+
+    <!--<bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" />-->
+    <!--<bean id="accessTokenKeyGenerator" class="framework.oauth.AccessTokenKeyGenerator" />-->
+    <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore" >
+        <constructor-arg ref="dataSource" />
+
+
+        <property name="insertAccessTokenSql" value="INSERT INTO TB_OAUTH_ACCESS_TOKEN (tokenID, token, authenticationID, userID, clientID, authentication, refreshToken, regDate) VALUES (?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())" />
+        <property name="deleteAccessTokenSql" value="DELETE FROM TB_OAUTH_ACCESS_TOKEN WHERE tokenID = ?" />
+        <property name="deleteAccessTokenFromRefreshTokenSql" value="DELETE FROM TB_OAUTH_ACCESS_TOKEN WHERE refreshToken = ?" />
+        <property name="selectAccessTokenSql" value="SELECT tokenID as token_id, token as token FROM TB_OAUTH_ACCESS_TOKEN WHERE tokenID = ?" />
+        <property name="selectAccessTokenAuthenticationSql" value="SELECT tokenID as token_id, authentication from TB_OAUTH_ACCESS_TOKEN WHERE tokenID = ?" />
+        <property name="selectAccessTokenFromAuthenticationSql" value="SELECT tokenID as token_id, token as token FROM TB_OAUTH_ACCESS_TOKEN WHERE authenticationID = ?" />
+        <property name="insertRefreshTokenSql" value="INSERT INTO TB_OAUTH_REFRESH_TOKEN (tokenID, token, authentication, regDate) values (?, ?, ?, UNIX_TIMESTAMP())" />
+        <property name="deleteRefreshTokenSql" value="DELETE FROM TB_OAUTH_REFRESH_TOKEN WHERE tokenID = ?" />
+        <property name="selectRefreshTokenSql" value="SELECT tokenID as token_id, token as token FROM TB_OAUTH_REFRESH_TOKEN WHERE tokenID = ?" />
+        <property name="selectRefreshTokenAuthenticationSql" value="SELECT tokenID as token_id, authentication as authentication FROM TB_OAUTH_REFRESH_TOKEN WHERE tokenID = ?" />
+    </bean>
+
+
+    <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <property name="tokenStore" ref="tokenStore" />
+        <property name="supportRefreshToken" value="true" />
+        <property name="clientDetailsService" ref="clientDetails" />
+        <property name="reuseRefreshToken" value="false" />
+    </bean>
+
+    <!--<bean id="userApprovalHandler" class="org.springframework.security.oauth2.provider.approval.TokenServicesUserApprovalHandler">
+        <property name="tokenServices" ref="tokenServices" />
+    </bean>-->
+
+	<bean id="oAuth2RequestFactory" class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
+		<constructor-arg ref="clientDetails"/>
+	</bean>
+	<bean id="userApprovalHandler" class="org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler">
+		<property name="tokenStore" ref="tokenStore"/>
+		<property name="requestFactory" ref="oAuth2RequestFactory"/>
+	</bean>
+
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter" />
+                <bean class="org.springframework.security.access.vote.RoleVoter" />
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+        <property name="realmName" value="Beacon API Server" />
+    </bean>
+
+    <bean id="clientAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+        <property name="realmName" value="Beacon API" />
+        <property name="typeName" value="Bearer" />
+    </bean>
+
+    <bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="clientAuthenticationManager" />
+    </bean>
+
+    <!--<bean id="clientDetails" class="org.springframework.security.oauth2.provider.JdbcClientDetailsService">
+        <constructor-arg ref="dataSource" />
+        <property name="findClientDetailsSql" value="SELECT clientID as client_id, clientSecret as client_secret, scope as scope, grantTypes as authorized_grant_types, redirectUri as web_server_redirect_uri, authorities, accessTokenValidity access_token_validity,refreshTokenValidity as refresh_token_validity, additionalInformation as additional_information FROM TB_OAUTH_CLIENT WHERE clientID = ?" />
+        <property name="selectClientDetailsSql" value="SELECT clientID as client_id, clientSecret as client_secret, resourceIDs as resource_ids, scope as scope, grantTypes as authorized_grant_types, redirectUri as web_server_redirect_uri, authorities, accessTokenValidity access_token_validity,refreshTokenValidity as refresh_token_validity, additionalInformation as additional_information FROM TB_OAUTH_CLIENT WHERE clientID = ?" />
+    </bean>-->
+    <bean id="clientDetails" class="framework.oauth.OauthClientDetailsService">
+        <property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+    </bean>
+
+    <bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <constructor-arg ref="clientDetails" />
+    </bean>
+
+    <bean id="oauthAccessDeniedHandler" class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
+
+    <sec:global-method-security access-decision-manager-ref="accessDecisionManager" pre-post-annotations="enabled" proxy-target-class="true" authentication-manager-ref="clientAuthenticationManager">
+        <sec:expression-handler ref="oauthExpressionHandler" />
+    </sec:global-method-security>
+
+    <oauth:expression-handler id="oauthExpressionHandler" />
+    <!--<oauth:web-expression-handler id="oauthWebExpressionHandler" />-->
+    <bean id="oauth2WebSecurityExpressionHandler" class="org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler" />
+
+</beans>

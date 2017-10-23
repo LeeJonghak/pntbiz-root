@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.event.dao.EventDao">
+
+    <!--
+        이벤트 추가
+        create: nohsoo 2015-04-17
+    -->
+    <insert id="insertEvent" parameterType="core.wms.event.domain.Event" useGeneratedKeys="true" keyColumn="evtNum" keyProperty="evtNum">
+        INSERT INTO TB_EVENT(evtTypeCode, comNum, evtName, evtDesc, regDate)
+        VALUES(#{evtTypeCode}, #{comNum}, #{evtName}, #{evtDesc}, UNIX_TIMESTAMP());
+    </insert>
+
+    <!--
+        이벤트 정보 수정
+        create: nohsoo 2015-04-20
+    -->
+    <update id="updateEvent" parameterType="core.wms.event.domain.Event">
+        UPDATE TB_EVENT
+        SET evtName=#{evtName}, evtDesc=#{evtDesc}, evtTypeCode=#{evtTypeCode}
+        WHERE evtNum=#{evtNum}
+    </update>
+
+    <!--
+        이벤트 삭제
+        create: nohsoo 2015-04-20
+    -->
+    <delete id="deleteEvent" parameterType="core.wms.event.domain.Event">
+        DELETE FROM TB_EVENT
+        WHERE evtNum=#{evtNum}
+    </delete>
+
+    <!--
+        이벤트 정보(단건)
+        create: nohsoo 2015-04-17
+    -->
+    <select id="getEventInfo" parameterType="core.wms.event.domain.Event" resultType="core.wms.event.domain.Event">
+        SELECT *
+        FROM TB_EVENT
+        WHERE evtNum=#{evtNum}
+    </select>
+
+    <!--
+        이벤트 조회
+        create: nohsoo 2015-04-17
+    -->
+    <select id="getEventList" parameterType="core.wms.event.domain.EventSearchParam" resultType="core.wms.event.domain.Event">
+        SELECT *
+        FROM TB_EVENT
+        WHERE 1
+        <if test="comNum!=null">
+            and comNum=#{comNum}
+        </if>
+        <if test="evtTypeCode!=null">
+            and evtTypeCode=#{evtTypeCode}
+        </if>
+        <if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+            AND evtName LIKE CONCAT(#{keyword}, '%')
+        </if>
+        ORDER BY evtNum DESC
+        <if test="pageSize > 0">
+            LIMIT #{firstItemNo}, #{pageSize}
+        </if>
+    </select>
+    <select id="getEventCount" parameterType="core.wms.event.domain.EventSearchParam" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+        FROM TB_EVENT
+        WHERE 1
+        <if test="comNum!=null">
+            and comNum=#{comNum}
+        </if>
+        <if test="evtTypeCode!=null">
+            and evtTypeCode=#{evtTypeCode}
+        </if>
+        <if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+            AND evtName LIKE CONCAT(#{keyword}, '%')
+        </if>
+    </select>
+
+    <!--
+        이벤트 컬럼 값 조회
+        create: nohsoo 2015-04-20
+    -->
+    <select id="getEventValues" parameterType="core.wms.event.domain.EventValues" resultType="core.wms.event.domain.EventValues">
+        SELECT *
+        FROM TB_EVENT_VALUES
+        WHERE evtNum=#{evtNum}
+    </select>
+
+    <!--
+        이벤트 컬럼 값 조회(단건)
+        create: nohsoo 2015-04-20
+    -->
+    <select id="getEventValueInfo" parameterType="core.wms.event.domain.EventValues" resultType="core.wms.event.domain.EventValues">
+        SELECT *
+        FROM TB_EVENT_VALUES
+        WHERE evtNum=#{evtNum}
+            <if test="evtValueNum!=null and evtValueNum>0">
+                AND evtValueNum=#{evtValueNum}
+            </if>
+            <if test="evtColNum!=null and evtColNum>0">
+                AND evtColNum=#{evtColNum}
+            </if>
+    </select>
+
+    <!--
+        이벤트 컬럼값 추가
+        create: nohsoo 2015-04-17
+    -->
+    <insert id="insertEventValues" parameterType="core.wms.event.domain.EventValues">
+        INSERT INTO TB_EVENT_VALUES(evtNum, evtColNum, beginValue, endValue)
+        VALUES(#{evtNum}, #{evtColNum}, #{beginValue}, #{endValue})
+    </insert>
+
+    <!--
+        이벤트 컬럼값 수정
+        create: nohsoo 2015-04-20
+    -->
+    <update id="modifyEventValues" parameterType="core.wms.event.domain.EventValues">
+        UPDATE TB_EVENT_VALUES
+        SET beginValue=#{beginValue}, endValue=#{endValue}
+        WHERE evtNum=#{evtNum} AND evtColNum=#{evtColNum}
+    </update>
+
+    <!--
+        이벤트 컬럼값 삭제
+        create: nohsoo 2015-04-20
+    -->
+    <delete id="deleteEventValues" parameterType="core.wms.event.domain.EventValues">
+        DELETE FROM TB_EVENT_VALUES
+        WHERE evtNum=#{evtNum}
+        <if test="evtValueNum!=null and evtValueNum>0">
+            AND evtValueNum=#{evtValueNum}
+        </if>
+        <if test="evtColNum!=null and evtColNum>0">
+            AND evtColNum=#{evtColNum}
+        </if>
+    </delete>
+
+    <!--
+        이벤트 유형 추가
+        create: nohsoo 2015-04-16
+    -->
+    <insert id="insertEventType" parameterType="core.wms.event.domain.EventType">
+        INSERT INTO TB_EVENT_TYPE(comNum, evtTypeCode, evtTypeName)
+        VALUES(#{comNum}, #{evtTypeCode}, #{evtTypeName});
+    </insert>
+
+    <!--
+        이벤트 유형 수정
+        create: nohsoo 2015-04-20
+    -->
+    <update id="modifyEventType" parameterType="core.wms.event.domain.EventType">
+        UPDATE TB_EVENT_TYPE
+        SET evtTypeName=#{evtTypeName}
+        WHERE evtTypeCode=#{evtTypeCode}
+    </update>
+
+    <!--
+        이벤트 유형 삭제
+        create: nohsoo 2015-04-20
+    -->
+    <delete id="deleteEventType" parameterType="core.wms.event.domain.EventType">
+        DELETE FROM TB_EVENT_TYPE
+        WHERE comNum=#{comNum} AND evtTypeCode=#{evtTypeCode}
+    </delete>
+
+    <!--
+        이벤트 유형 컬럼 정보 조회
+        create: nohsoo 2015-04-20
+    -->
+    <select id="getEventTypeColumnInfo" parameterType="core.wms.event.domain.EventTypeColumns" resultType="core.wms.event.domain.EventTypeColumns">
+        SELECT *
+        FROM TB_EVENT_TYPE_COLUMNS
+        WHERE evtTypeCode=#{evtTypeCode} AND evtColNum=#{evtColNum}
+    </select>
+
+    <!--
+        이벤트 유형 컬럼 조회
+        create: nohsoo 2015-04-17
+    -->
+    <select id="getEventTypeColumnList" parameterType="core.wms.event.domain.EventTypeColumns" resultType="core.wms.event.domain.EventTypeColumns">
+        SELECT *
+        FROM TB_EVENT_TYPE_COLUMNS
+        WHERE evtTypeCode=#{evtTypeCode}
+    </select>
+
+    <!--
+        이벤트 유형 컬럼 추가
+        create: nohsoo 2015-04-17
+    -->
+    <insert id="insertEventTypeColumns" parameterType="core.wms.event.domain.EventTypeColumns">
+        INSERT INTO TB_EVENT_TYPE_COLUMNS(evtTypeCode, evtColID, evtColType, evtColName, evtColItems)
+        VALUES(#{evtTypeCode}, #{evtColID}, #{evtColType}, #{evtColName}, #{evtColItems});
+    </insert>
+
+    <!--
+        이벤트 유형 컬럼 수정
+        create: nohsoo 2015-04-20
+    -->
+    <update id="modifyEventTypeColumns" parameterType="core.wms.event.domain.EventTypeColumns">
+        UPDATE TB_EVENT_TYPE_COLUMNS
+        SET evtColID=#{evtColID},
+            evtColName=#{evtColName},
+            evtColType=#{evtColType},
+            evtColItems=#{evtColItems}
+        WHERE evtColNum=#{evtColNum}
+    </update>
+
+    <delete id="deleteEventTypeColumns" parameterType="core.wms.event.domain.EventTypeColumns">
+        DELETE FROM TB_EVENT_TYPE_COLUMNS
+        WHERE evtTypeCode=#{evtTypeCode}
+    </delete>
+
+    <!--
+        이벤트 유형 정보(단건)
+        create: nohsoo 2015-04-20
+    -->
+    <select id="getEventTypeInfo" parameterType="core.wms.event.domain.EventType" resultType="core.wms.event.domain.EventType">
+        SELECT *
+        FROM TB_EVENT_TYPE
+        WHERE evtTypeCode=#{evtTypeCode}
+    </select>
+
+    <!--
+        이벤트 유형 조회
+        create: nohsoo 2015-04-20
+    -->
+    <select id="getEventTypeList" parameterType="java.util.HashMap" resultType="core.wms.event.domain.EventType">
+        SELECT *
+        FROM TB_EVENT_TYPE
+        WHERE comNum=#{comNum}
+        <if test="firstItemNo!=null and pageSize!=null">
+            LIMIT #{firstItemNo}, #{pageSize}
+        </if>
+    </select>
+    <select id="getEventTypeCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+        FROM TB_EVENT_TYPE
+        WHERE comNum=#{comNum}
+    </select>
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.common.beacon.dao.BeaconExternalDao">
+
+	<resultMap id="BeaconExternalWidthRestrictedZone" type="core.common.beacon.domain.BeaconExternalWidthRestrictedZone">
+		<id column="beaconNum" property="beaconNum" />
+		<result column="comNum" property="comNum" />
+		<result column="UUID" property="UUID" />
+		<result column="majorVer" property="majorVer" />
+		<result column="minorVer" property="minorVer" />
+		<result column="floor" property="floor" />
+		<result column="externalId" property="externalId" />
+		<result column="barcode" property="barcode" />
+		<result column="externalAttributeRaw" property="externalAttributeRaw" />
+		<result column="restrictedZonePermitted" property="restrictedZonePermitted" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<collection property="restrictedZone" ofType="core.common.beacon.domain.BeaconRestrictedZone" notNullColumn="zoneId">
+			<result column="beaconNum" property="beaconNum" />
+			<result column="zoneType" property="zoneType"  typeHandler="framework.database.ValueEnumTypeHandler" />
+			<result column="zoneId" property="zoneId" />
+			<result column="additionalAttributeRaw" property="additionalAttributeRaw" />
+			<result column="permitted" property="permitted"  typeHandler="framework.database.ValueEnumTypeHandler" />
+			<result column="startDate" property="startDate" />
+			<result column="endDate" property="endDate" />
+			<result column="modDate" property="modDate" />
+			<result column="regDate" property="regDate" />
+		</collection>
+	</resultMap>
+
+	<resultMap id="BeaconExternal" type="core.common.beacon.domain.BeaconExternal">
+		<id column="beaconNum" property="beaconNum" />
+		<result column="comNum" property="comNum" />
+		<result column="UUID" property="UUID" />
+		<result column="majorVer" property="majorVer" />
+		<result column="minorVer" property="minorVer" />
+		<result column="floor" property="floor" />
+		<result column="externalId" property="externalId" />
+		<result column="barcode" property="barcode" />
+		<result column="externalAttributeRaw" property="externalAttributeRaw" />
+		<result column="restrictedZonePermitted" property="restrictedZonePermitted" typeHandler="framework.database.ValueEnumTypeHandler" />
+	</resultMap>
+
+	<select id="getBeaconExternalInfo"
+			parameterType="core.common.beacon.domain.BeaconExternal"
+			resultMap="BeaconExternal">
+
+		SELECT beaconNum, comNum, UUID, majorVer, minorVer, floor, externalId, barcode
+			, externalAttribute AS externalAttributeRaw, restrictedZonePermitted
+		FROM TB_BEACON
+		<where>
+			<if test="beaconNum!=null">beaconNum=#{beaconNum}</if>
+			<if test="beaconNum==null">UUID=#{UUID} AND majorVer=#{majorVer} AND minorVer=#{minorVer}</if>
+		</where>
+
+	</select>
+
+	<update id="updateBeaconExternalInfo" parameterType="core.common.beacon.domain.BeaconExternal">
+
+		UPDATE TB_BEACON
+		<set>
+			externalId = #{externalId}, barcode=#{barcode}, externalAttribute = #{externalAttributeRaw}
+			, restrictedZonePermitted = #{restrictedZonePermitted, typeHandler=framework.database.ValueEnumTypeHandler}
+		</set>
+		<where>
+			<if test="beaconNum!=null">beaconNum=#{beaconNum}</if>
+			<if test="beaconNum==null">UUID=#{UUID} AND majorVer=#{majorVer} AND minorVer=#{minorVer}</if>
+		</where>
+
+	</update>
+
+
+	<select id="getBeaconExternalList"
+			parameterType="core.common.beacon.domain.BeaconExternal"
+			resultMap="BeaconExternal">
+
+		SELECT beaconNum, comNum, UUID, majorVer, minorVer, floor, externalId, barcode
+			, externalAttribute AS externalAttributeRaw, restrictedZonePermitted
+		FROM TB_BEACON
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="UUID!=null">AND UUID=#{UUID}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+		</trim>
+
+	</select>
+
+	<select id="getBeaconExternalWidthRestrictedZoneList"
+			parameterType="core.common.beacon.domain.BeaconExternal"
+			resultMap="BeaconExternalWidthRestrictedZone">
+
+		SELECT 	BEACON.beaconNum,
+		BEACON.comNum,
+		BEACON.UUID,
+		BEACON.majorVer,
+		BEACON.minorVer,
+		BEACON.floor,
+		BEACON.externalId,
+		BEACON.barcode,
+		BEACON.externalAttribute AS externalAttributeRaw,
+		BEACON.restrictedZonePermitted,
+		ZONE.zoneId,
+		ZONE.zoneType,
+		ZONE.permitted,
+		ZONE.additionalAttribute AS additionalAttributeRaw,
+		ZONE.startDate,
+		ZONE.endDate,
+		ZONE.modDate,
+		ZONE.regDate
+		FROM 	TB_BEACON BEACON
+		LEFT JOIN TB_BEACON_RESTRICTED_ZONE ZONE ON(BEACON.beaconNum=ZONE.beaconNum)
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="beaconNum!=null">AND BEACON.beaconNum=#{beaconNum}</if>
+			<if test="UUID!=null">AND BEACON.UUID=#{UUID}</if>
+			<if test="majorVer!=null">AND BEACON.majorVer=#{majorVer}</if>
+			<if test="minorVer!=null">AND BEACON.minorVer=#{minorVer}</if>
+			<if test="floor!=null">AND BEACON.floor=#{floor}</if>
+		</trim>
+
+	</select>
+
+</mapper>

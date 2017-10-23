@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.common.code.dao.CodeDao">
+
+	<resultMap id="cntResult" type="Integer">
+		<result property="cnt" column="CNT" />
+	</resultMap>
+
+	<resultMap id="codeResult" type="core.common.code.domain.Code">
+		<result property="gCD" column="G_CD" />
+		<result property="sCD" column="S_CD" />
+		<result property="gName" column="G_NAME" />
+		<result property="sName" column="S_NAME" />
+		<result property="langCode" column="LANG_CODE" />
+	</resultMap>
+
+
+	<sql id="sqlCodeListSearch">
+		<if test="keyword != '' and keyword  != null">
+			<where>
+				<choose>
+					<when test="opt == 'gCD'">G_CD LIKE CONCAT(#{keyword}, '%') </when>
+					<when test="opt == 'sCD'">S_CD LIKE CONCAT(#{keyword}, '%') </when>
+					<when test="opt == 'gName'">G_NAME LIKE CONCAT(#{keyword}, '%') </when>
+					<when test="opt == 'sName'">S_NAME LIKE CONCAT(#{keyword}, '%') </when>
+					<otherwise>
+						(G_CD LIKE CONCAT(#{keyword}, '%') OR S_CD LIKE CONCAT(#{keyword}, '%') OR G_NAME LIKE CONCAT(#{keyword}, '%') OR S_NAME LIKE CONCAT(#{keyword}, '%'))
+					</otherwise>
+				</choose>
+			</where>
+		</if>
+	</sql>
+
+	<select id="getCodeCount" parameterType="core.common.code.domain.CodeSearchParam" resultMap="cntResult">
+		SELECT COUNT(G_CD) CNT
+		FROM TB_CODE
+		<include refid="sqlCodeListSearch"/>
+	</select>
+
+	<select id="getCodeList" parameterType="core.common.code.domain.CodeSearchParam" resultMap="codeResult">
+		SELECT *
+		FROM (
+		SELECT G_CD, S_CD, G_NAME, S_NAME
+		, ROWNUM AS RNUM
+		FROM TB_CODE
+		<include refid="sqlCodeListSearch"/>
+
+		ORDER BY G_CD, S_CD DESC
+		) TB
+		WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+	</select>
+
+
+	<select id="getCodeListByCD" parameterType="core.common.code.domain.Code" resultMap="codeResult">
+		SELECT G_CD, S_CD, G_NAME, S_NAME, LANG_CODE
+		  FROM TB_CODE
+		<where>
+			<if test="gCD != '' and gCD != null">AND G_CD = #{gCD}</if>
+			<if test="sCD != '' and sCD != null">AND S_CD = #{sCD}</if>
+		</where>
+	</select>
+
+	<select id="getCodeCheck" parameterType="core.common.code.domain.Code" resultMap="cntResult">
+		SELECT COUNT(1) CNT
+		  FROM TB_CODE
+		 WHERE G_CD = #{gCD}
+		   AND S_CD = #{sCD}
+	</select>
+
+	<select id="getCodeInfo" parameterType="core.common.code.domain.Code" resultMap="codeResult">
+		SELECT G_CD, S_CD, G_NAME, S_NAME, LANG_CODE
+		  FROM TB_CODE
+         WHERE G_CD = #{gCD}
+           AND S_CD = #{sCD}
+    </select>
+
+    <insert id="insertCode" parameterType="core.common.code.domain.Code">
+        INSERT INTO TB_CODE
+        (G_CD, S_CD, G_NAME, S_NAME)
+        VALUES
+        (#{gCD}, #{sCD}, #{gName}, #{sName})
+    </insert>
+
+    <update id="updateCode" parameterType="core.common.code.domain.Code">
+        UPDATE TB_CODE
+        <set>
+            <if test="gCD != ''">G_CD = #{gCD},</if>
+            <if test="sCD != ''">S_CD = #{sCD},</if>
+            <if test="gName != ''">G_NAME = #{gName},</if>
+            <if test="sName != ''">S_NAME = #{sName},</if>
+        </set>
+         WHERE G_CD = #{pgCD}
+           AND S_CD = #{psCD}
+    </update>
+
+    <delete id="deleteCode" parameterType="core.common.code.domain.Code">
+        DELETE
+          FROM TB_CODE
+         WHERE G_CD = #{gCD}
+           AND S_CD = #{sCD}
+    </delete>
+</mapper>

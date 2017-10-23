@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.geofencing.dao.GeofencingDao">
+
+    <resultMap id="geofencingResult" type="core.common.geofencing.domain.Geofencing">
+        <result property="fcNum" column="fcNum" />
+        <result property="comNum" column="comNum" />
+        <result property="fcType" column="fcType" />
+        <result property="fcShape" column="fcShape" />
+        <result property="fcName" column="fcName" />
+        <result property="floor" column="floor" />
+        <result property="evtEnter" column="evtEnter" />
+        <result property="evtLeave" column="evtLeave" />
+        <result property="evtStay" column="evtStay" />
+        <result property="numEnter" column="numEnter" />
+        <result property="numLeave" column="numLeave" />
+        <result property="numStay" column="numStay" />
+        <result property="userID" column="userID" />
+        <result property="field1" column="field1" />
+        <result property="field2" column="field2" />
+        <result property="field3" column="field3" />
+        <result property="field4" column="field4" />
+        <result property="field5" column="field5" />
+        <result property="modDate" column="modDate" />
+        <result property="regDate" column="regDate" />
+    </resultMap>
+
+    <resultMap id="geofencingLatlngResult" type="core.api.geofencing.domain.GeofencingLatlng">
+        <result property="lat"      column="lat"/>
+        <result property="lng"      column="lng"/>
+    </resultMap>
+
+    <select id="getGeofencing" parameterType="core.common.geofencing.domain.Geofencing" resultMap="geofencingResult">
+        SELECT fcNum, comNum, fcType, fcShape, fcName, floor, evtEnter, evtLeave, evtStay,
+        numEnter, numLeave, numStay, userID, field1, field2, field3, field4, field5, modDate, regDate
+        FROM TB_GEOFENCING
+        <where>
+            AND fcNum=#{fcNum}
+            <if test="comNum!=null">
+                AND comNum=#{comNum}
+            </if>
+        </where>
+    </select>
+
+    <select id="getGeofencingZone" parameterType="core.api.geofencing.domain.GeofencingZone" resultType="core.api.geofencing.domain.GeofencingZone">
+        SELECT b.*, a.*
+        FROM TB_GEOFENCING_LATLNG AS a
+        INNER JOIN TB_GEOFENCING AS b ON(a.fcNum=b.fcNum)
+        <where>
+            AND b.fcNum=#{fcNum}
+            <if test="floor!=null and floor!=''">
+                and b.floor=#{floor}
+            </if>
+        </where>
+        ORDER BY a.orderSeq ASC
+    </select>
+
+    <select id="getGeofencingLatlngs" parameterType="core.common.geofencing.domain.Geofencing" resultMap="geofencingLatlngResult">
+        SELECT a.lat, a.lng
+        FROM TB_GEOFENCING_LATLNG a
+        INNER JOIN TB_GEOFENCING b
+        ON a.fcNum=b.fcNum
+        <where>
+            AND b.fcNum=#{fcNum}
+        </where>
+        ORDER BY a.orderSeq ASC
+    </select>
+
+    <select id="getGeofencingList" parameterType="java.util.HashMap" resultType="core.common.geofencing.domain.Geofencing">
+        SELECT  A.comNum, A.fcNum, A.fcType, A.fcShape, A.fcName, A.floor, A.evtEnter, A.evtLeave, A.evtStay, A.numEnter,
+        A.numLeave, A.numStay, A.field1, A.field2, A.field3, A.field4, A.field5, A.isNodeEnable, A.userID, A.modDate, A.regDate,
+        C.fcGroupNum, C.fcGroupName
+        FROM    TB_GEOFENCING A
+                INNER JOIN TB_COMPANY B ON A.comNum = B.comNum
+                LEFT OUTER JOIN TB_GEOFENCING_GROUP_MAPPING D ON A.fcNum = D.fcNum
+                LEFT OUTER JOIN TB_GEOFENCING_GROUP C ON D.fcGroupNum = C.fcGroupNum
+        <where>
+            <if test="UUID!=null and UUID!=''">
+                AND B.UUID = #{UUID}
+            </if>
+            <if test="floor!=null and floor!=''">
+                AND A.floor=#{floor}
+            </if>
+        </where>
+        ORDER BY A.fcNum ASC
+    </select>
+
+    <select id="getGeofencingListByAll" parameterType="java.util.HashMap" resultType="core.api.geofencing.domain.GeofencingZone">
+
+        SELECT b.*, a.*
+        FROM TB_GEOFENCING_LATLNG AS a
+        INNER JOIN TB_GEOFENCING AS b ON(a.fcNum=b.fcNum)
+        INNER JOIN TB_COMPANY AS c ON(b.comNum=c.comNum)
+        <where>
+            c.UUID=#{UUID}
+            <if test="floor!=null and floor!=''">
+                and b.floor=#{floor}
+            </if>
+            <if test="fcNum!=null">
+                and b.fcNum=#{fcNum}
+            </if>
+        </where>
+        ORDER BY a.fcNum ASC, a.orderSeq ASC
+
+    </select>
+
+    <select id="getGeofencingListByCache" parameterType="java.lang.String" resultType="core.api.geofencing.domain.GeofencingZone">
+
+        SELECT b.*, a.*
+        FROM TB_GEOFENCING_LATLNG AS a
+        INNER JOIN TB_GEOFENCING AS b ON(a.fcNum=b.fcNum)
+        INNER JOIN TB_COMPANY AS c ON(b.comNum=c.comNum)
+        <where>
+            c.UUID=#{UUID}
+        </where>
+        ORDER BY a.fcNum ASC, a.orderSeq ASC
+
+    </select>
+
+    <select id="getGeofencingContentsList" parameterType="java.util.HashMap" resultType="core.api.contents.domain.Contents">
+        SELECT a.*, b.*, c.*
+        FROM TB_CONTENTS AS a INNER JOIN TB_CONTENTS_DETAIL AS b ON(a.conNum=b.conNum)
+        INNER JOIN TB_CONTENTS_MAPPING AS c ON(a.conNum=c.conNum AND c.refType='GF')
+        INNER JOIN TB_GEOFENCING AS d ON(d.fcNum=c.refNum)
+        INNER JOIN TB_COMPANY AS e ON(a.comNum=e.comNum)
+        <where>
+            e.UUID=#{UUID}
+            <if test="floor!=null and floor!=''">
+                and d.floor=#{floor}
+            </if>
+        </where>
+        ORDER BY d.fcNum ASC, a.conNum ASC
+
+    </select>
+
+    <select id="getGeofencingActionList" parameterType="java.util.HashMap" resultType="core.api.geofencing.domain.CodeAction">
+
+        SELECT a.*, c.*
+        FROM TB_CODE_ACTION AS a
+        INNER JOIN TB_CODE_ACTION_MAPPING AS c ON(a.codeNum=c.codeNum AND c.refType='GF')
+        INNER JOIN TB_GEOFENCING AS d ON(d.fcNum=c.refNum)
+        INNER JOIN TB_COMPANY AS e ON(a.comNum=e.comNum)
+        <where>
+            e.UUID=#{UUID}
+            <if test="floor!=null and floor!=''">
+                and d.floor=#{floor}
+            </if>
+            <if test="fcNum!=null">
+                and d.fcNum=#{fcNum}
+            </if>
+        </where>
+        ORDER BY d.fcNum ASC, a.codeNum ASC
+
+    </select>
+
+    <select id="getGeofencingFloorCodeList" parameterType="java.util.HashMap" resultType="core.api.geofencing.domain.GeofencingZone">
+        SELECT b.*, a.*
+        FROM TB_GEOFENCING_LATLNG AS a
+        INNER JOIN TB_GEOFENCING AS b ON(a.fcNum=b.fcNum)
+        INNER JOIN TB_COMPANY AS c ON(b.comNum=c.comNum)
+        <where>
+            c.UUID=#{UUID}
+            <if test="floorCodeList != null">
+                AND b.floor IN
+                <foreach item="item" index="index" collection="floorCodeList" open="(" separator="," close=")">#{item.nodeId}</foreach>
+            </if>
+        </where>
+        ORDER BY a.fcNum ASC, a.orderSeq ASC
+    </select>
+
+    <update id="updateGeofencing" parameterType="core.common.geofencing.domain.Geofencing">
+        UPDATE TB_GEOFENCING
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fcName!=null">fcName=#{fcName},</if>
+            <if test="floor!=null">floor=#{floor},</if>
+            <if test="evtEnter!=null">evtEnter=#{evtEnter},</if>
+            <if test="evtLeave!=null">evtLeave=#{evtLeave},</if>
+            <if test="evtStay!=null">evtStay=#{evtStay},</if>
+            <if test="numEnter!=null">numEnter=#{numEnter},</if>
+            <if test="numLeave!=null">numLeave=#{numLeave},</if>
+            <if test="numStay!=null">numStay=#{numStay},</if>
+            <if test="field1!=null">field1=#{field1},</if>
+            <if test="field2!=null">field2=#{field2},</if>
+            <if test="field3!=null">field3=#{field3},</if>
+            <if test="field4!=null">field4=#{field4},</if>
+            <if test="field5!=null">field5#{field5},</if>
+            modDate=UNIX_TIMESTAMP(),
+        </trim>
+        <where>
+            fcNum=#{fcNum}
+            <if test="comNum!=null">
+                and comNum=#{comNum}
+            </if>
+        </where>
+    </update>
+
+</mapper>

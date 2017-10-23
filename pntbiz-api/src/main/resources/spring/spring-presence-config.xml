@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+	<!-- Presence Process Beacon Model Bean -->
+	<bean id="beaconPresenceTaskExecutorChain" class="api.presence.bo.PresenceTaskExecutor" scope="prototype">
+		<property name="taskExecutorName" value="Beacon Data Validator"/>
+		<property name="presenceTask">
+			<bean class="api.presence.bo.domain.PresenceTask">
+				<property name="strategy">
+					<bean class="api.presence.bo.strategy.validator.ScannerRequestDataValidator"/>
+				</property>
+				<property name="postEventHandler">
+					<bean class="api.presence.bo.handler.BeaconValidatorPostHandler"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- 2. Presence Process Beacon Model Bean -->
+	<!-- 2.1. Start Validator  -->
+	<bean id="scannerPresenceTaskExecutorChain" class="api.presence.bo.PresenceTaskExecutor" scope="prototype">
+		<property name="taskExecutorName" value="Scanner Data Validator"/>
+		<property name="presenceTask">
+			<bean class="api.presence.bo.domain.PresenceTask">
+				<property name="strategy">
+					<bean class="api.presence.bo.strategy.validator.ScannerRequestDataValidator"/>
+				</property>
+				<property name="postEventHandler">
+					<bean class="api.presence.bo.handler.ScannerValidatorPostHandler"/>
+				</property>
+			</bean>
+		</property>
+		<property name="nextPresenceTaskExcutor" ref="scannerDataPreparer"/>
+	</bean>
+
+	<!-- 2.2. Data Initializer  -->
+	<bean id="scannerDataPreparer" class="api.presence.bo.PresenceTaskExecutor" scope="prototype">
+		<property name="taskExecutorName" value="Prepare Scanner Initializing Data"/>
+		<property name="presenceTask">
+			<bean class="api.presence.bo.domain.PresenceTask">
+				<property name="strategy">
+					<bean class="api.presence.bo.strategy.initializer.ScannerDataPrepareStrategy"/>
+				</property>
+				<property name="postEventHandler">
+					<bean class="api.presence.bo.handler.ScannerDataPreparePostHandler"/>
+				</property>
+			</bean>
+		</property>
+		<property name="nextPresenceTaskExcutor" ref="scannerFloorProcessor"/>
+	</bean>
+
+	<!-- 2.3. Handle Floor In/Out   -->
+	<bean id="scannerFloorProcessor" class="api.presence.bo.PresenceTaskExecutor" scope="prototype">
+		<property name="taskExecutorName" value="Scanner Floor Processor"/>
+		<property name="presenceTask">
+			<bean class="api.presence.bo.domain.PresenceTask">
+				<property name="strategy">
+					<bean class="api.presence.bo.strategy.floor.FloorCommonStrategy"/>
+				</property>
+				<property name="postEventHandler">
+					<bean class="api.presence.bo.handler.FloorInOutPostHandler"/>
+				</property>
+			</bean>
+		</property>
+		<property name="nextPresenceTaskExcutor" ref="scannerGeofenceProcessor"/>
+	</bean>
+
+	<bean id="scannerGeofenceProcessor" class="api.presence.bo.PresenceTaskExecutor" scope="prototype">
+		<property name="taskExecutorName" value="Scanner Geofencing Processor"/>
+		<property name="presenceTask">
+			<bean class="api.presence.bo.domain.PresenceTask">
+				<property name="strategy">
+					<bean class="api.presence.bo.strategy.geofence.GeofenceCommonStrategy"/>
+				</property>
+				<property name="postEventHandler">
+					<bean class="api.presence.bo.handler.GeofenceInOutPostHandler"/>
+				</property>
+			</bean>
+		</property>
+		<property name="nextPresenceTaskExcutor" ref="scannerRestrictedZoneProcessor"/>
+	</bean>
+
+	<bean id="scannerRestrictedZoneProcessor" class="api.presence.bo.PresenceTaskExecutor" scope="prototype">
+		<property name="taskExecutorName" value="Scanner Restricted Zone Processor"/>
+		<property name="presenceTask">
+			<bean class="api.presence.bo.domain.PresenceTask">
+				<property name="strategy">
+					<bean class="api.presence.bo.strategy.restriction.RestrictionZoneStrategy"/>
+				</property>
+				<property name="postEventHandler">
+					<bean class="api.presence.bo.handler.RestrictionPostHandler"/>
+				</property>
+			</bean>
+		</property>
+		<property name="nextPresenceTaskExcutor" ref="scannerLogWriter"/>
+	</bean>
+
+
+	<bean id="scannerLogWriter" class="api.presence.bo.PresenceTaskExecutor" scope="prototype">
+		<property name="taskExecutorName" value="Scanner Log Writer Processor"/>
+		<property name="presenceTask">
+			<bean class="api.presence.bo.domain.PresenceTask">
+				<property name="strategy">
+					<bean class="api.presence.bo.strategy.logger.ScannerLogPresenceStrategy"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+ 		http://www.springframework.org/schema/jms
+ 		http://www.springframework.org/schema/jms/spring-jms-4.3.xsd
+ 		http://activemq.apache.org/schema/core
+ 		http://activemq.apache.org/schema/core/activemq-core-5.7.0.xsd
+">
+
+    <!-- active mq 설정 -->
+    <bean id="activemqService" class="api.common.service.ActivemqServiceImpl" />
+    <bean id="jmsExceptionListener" class="framework.exception.JmsExceptionListener" />
+    <bean id="activemqJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="activemqJmsConnectionFactory"/>
+    </bean>
+    <amq:connectionFactory id="activemqConnectionFactory" brokerURL="${activemq.url}" userName="${activemq.username}" password="${activemq.password}" />
+    <bean id="activemqJmsConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <constructor-arg ref="activemqConnectionFactory" />
+        <property name="exceptionListener" ref="jmsExceptionListener" />
+        <property name="sessionCacheSize" value="${activemq.session.cache.size}" />
+    </bean>
+    <!--
+    <jms:listener-container concurrency="10" connection-factory="activemqJmsConnectionFactory" acknowledge="auto">
+        <jms:listener id="activemqJmsMessageListener" destination="${activemq.destination}" ref="activemqMessageListener" />
+    </jms:listener-container>
+    -->
+    <jms:listener-container concurrency="10" connection-factory="activemqJmsConnectionFactory" acknowledge="auto" destination-type="topic">
+        <jms:listener id="activemqJmsMessageListener" destination="${activemq.topic.destination}" ref="activemqMessageListener" />
+    </jms:listener-container>
+    <bean id="activemqMessageListener" class="framework.activemq.ActivemqMessageListener">
+        <constructor-arg ref="hanwhatechwinActivemqService" />
+    </bean>
+    <bean id="hanwhatechwinActivemqService" class="custom.Hanwhatechwin.intersyslink.service.HanwhatechwinActivemqServiceImpl" />
+    <!--
+
+    <jms:listener-container concurrency="10" connection-factory="activemqJmsConnectionFactory" destination-type="topic" acknowledge="auto">
+        <jms:listener id="activemqJmsTopicMessageListener" destination="${activemq.topic.destination}" ref="activemqTopicMessageListener"/>
+    </jms:listener-container>
+    <bean id="activemqTopicMessageListener" class="framework.activemq.ActivemqTopicMessageListener">
+        <constructor-arg ref="hanwhatechwinActivemqTopicService" />
+    </bean>
+
+    <bean id="hanwhatechwinActivemqTopicService" class="custom.Hanwhatechwin.intersyslink.service.HanwhatechwinActivemqTopicServiceImpl" />
+    -->
+    <!--<bean id="hanwhatechwinService" class="custom.Hanwhatechwin.intersyslink.service.HanwhatechwinServiceImpl" />-->
+    <!--
+    <bean id="hanwhatechwinServletContextListener" class="custom.Hanwhatechwin.intersyslink.service.HanwhatechwinServletContextListener">
+        <constructor-arg ref="hanwhatechwinService"/>
+    </bean>
+    -->
+
+</beans>

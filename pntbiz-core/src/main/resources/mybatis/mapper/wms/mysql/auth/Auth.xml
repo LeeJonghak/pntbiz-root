@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.auth.dao.LoginDao">
+	<!--
+	로그인 계정 조회 값
+	2014-11-14 nohsoo
+	-->
+	<resultMap id="authLoginResult" type="core.wms.auth.domain.Login">
+		<result property="userID"	column="userID" />
+		<result property="userPW"	column="userPW" />
+		<result property="userName"  column="userName" />
+		<result property="roleNum"   column="roleNum" />
+		<result property="roleName"  column="roleName" />
+		<result property="comNum"	column="comNum" />
+		<result property="comName"   column="comName" />
+		<result property="groupNum"   column="groupNum" />
+		<result property="groupName"   column="groupName" />
+		<result property="regDate"   column="regDate" />
+		<result property="userStatus" column="userStatus" />
+		<result property="userEmail" column="userEmail" />
+		<result property="loginFailCnt" column="loginFailCnt" />
+		<result property="loginDate" column="loginDate" />
+		<result property="userPhoneNum" column="userPhoneNum" />
+		<result property="pwModDate" column="pwModDate" />
+	</resultMap>
+	<!-- end -->
+	
+	<resultMap id="loginOtpResult" type="core.wms.auth.domain.LoginOtp">
+		<result property="userID" column="userID" />
+		<result property="otpNum" column="otpNum" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<select id="getLoginCheck" parameterType="map" resultType="Integer">
+		SELECT COUNT(userID) AS CNT 
+		FROM TB_LOGIN 
+		WHERE userID = #{userID} 
+		AND userPW = #{userPW}
+	</select>
+
+	<!--
+	로그인 계정 조회
+	2014-11-14 nohsoo
+	-->
+	<select id="getLogin" parameterType="map" resultMap="authLoginResult">
+		SELECT l.userID, l.userPW, l.userName, l.roleNum, r.roleName, l.comNum, l.comName,
+		l.groupNum, l.groupName, l.regDate, 
+		l.userStatus, l.userEmail, l.loginFailCnt, l.loginDate, l.userPhoneNum, l.pwModDate  
+		FROM TB_LOGIN as l inner join TB_LOGIN_ROLE as r ON l.roleNum=r.roleNum
+		WHERE l.userID = #{userID} 
+		AND l.comNum != 0
+	</select>
+	<!-- end -->
+
+	<select id="getLoginInfo" parameterType="core.wms.auth.domain.Login" resultMap="authLoginResult">
+		SELECT l.userID, l.userPW, l.userName, l.roleNum, r.roleName, l.comNum, l.comName,
+		l.groupNum, l.groupName, l.regDate, 
+		l.userStatus, l.userEmail, l.loginFailCnt, l.loginDate, l.userPhoneNum, l.pwModDate  
+		FROM TB_LOGIN as l inner join TB_LOGIN_ROLE as r ON l.roleNum=r.roleNum
+		WHERE l.userID = #{userID} 
+	</select>
+	
+	<update id="updateLogin" parameterType="core.wms.auth.domain.Login">
+        UPDATE TB_LOGIN
+        <set>
+            <if test="userPW != '' and userPW != null">userPW = #{userPW},</if>
+            <if test="userName != '' and userName != null">userName = #{userName},</if>
+            <if test="roleNum != '' and roleNum != null">roleNum = #{roleNum},</if>
+            <if test="comNum != '' and comNum != null">comNum = #{comNum},</if>
+            <if test="comName != '' and comName != null">comName = #{comName},</if>
+            <if test="groupNum != '' and groupNum != null">groupNum = #{groupNum},</if>
+            <if test="groupName != '' and groupName != null">groupName = #{groupName},</if>
+            <if test="userStatus != null">userStatus = #{userStatus},</if>
+            <if test="userEmail != '' and userEmail != null">userEmail = #{userEmail},</if>
+            <if test="loginFailCnt != null">loginFailCnt = #{loginFailCnt},</if>
+            <if test="loginDate != '' and loginDate != null">loginDate = UNIX_TIMESTAMP(),</if>
+            <if test="userPhoneNum != '' and userPhoneNum != null">userPhoneNum = #{userPhoneNum},</if>
+            <if test="pwModDate != '' and pwModDate != null">pwModDate = UNIX_TIMESTAMP(),</if>
+        </set>
+        WHERE userID = #{userID}
+    </update>
+	
+	<update id="updateLoginFail" parameterType="core.wms.auth.domain.Login">
+		UPDATE TB_LOGIN
+		<set>
+			<if test="userStatus != null and userStatus != 0">userStatus = 9,</if>
+			<if test="loginFailCnt != null">loginFailCnt = loginFailCnt + 1,</if>
+		</set>
+		WHERE userID = #{userID}
+	</update>
+	
+	<select id="getLoginOtp" parameterType="core.wms.auth.domain.LoginOtp" resultType="core.wms.auth.domain.LoginOtp">
+		SELECT userID, otpNum, regDate 
+		FROM TB_LOGIN_OTP 
+		WHERE 1 
+		AND userID = #{userID}
+	</select>
+	
+	<insert id="insertLoginOtp" parameterType="core.wms.auth.domain.LoginOtp">
+		INSERT INTO TB_LOGIN_OTP
+		(userID, otpNum, regDate)
+		VALUES
+		(#{userID}, #{otpNum}, UNIX_TIMESTAMP())
+	</insert>
+	
+	<update id="updateLoginOtp" parameterType="core.wms.auth.domain.LoginOtp">
+		UPDATE TB_LOGIN_OTP
+		<set>
+			<!--
+			<choose>
+				<when test="otpNum != null">otpNum = #{otpNum},</when>
+				<when test="otpNum == ''">otpNum = '',</when>
+			</choose>
+			-->
+			<if test="otpNum != null">otpNum = #{otpNum},</if> 
+			regDate = UNIX_TIMESTAMP(),
+		</set>
+		WHERE userID = #{userID}
+	</update>
+
+</mapper>

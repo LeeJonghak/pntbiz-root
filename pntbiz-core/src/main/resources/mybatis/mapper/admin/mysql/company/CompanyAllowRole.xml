@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.company.CompanyAllowRoleDao">
+
+    <resultMap id="cntResult" type="Integer">
+        <result property="cnt" column="CNT" />
+    </resultMap>
+
+    <resultMap id="companyAllowRoleResult" type="core.admin.company.domain.CompanyAllowRole">
+        <result property="comAllowRoleNum" column="comAllowRoleNum" />
+        <result property="comNum" column="comNum" />
+        <result property="roleNum" column="roleNum" />
+        <result property="roleName" column="roleName" />
+        <result property="regDate" column="regDate" />
+    </resultMap>
+
+    <select id="getCompanyAllowRoleCount" parameterType="core.admin.company.domain.CompanyAllowRoleSearchParam" resultMap="cntResult">
+        SELECT COUNT(1) CNT
+        FROM TB_COMPANY_ALLOW_ROLE 
+        WHERE 1 
+        <if test="comNum != '' and comNum != null">AND comNum=#{comNum}</if>
+    </select>
+
+    <select id="getCompanyAllowRoleList" parameterType="core.admin.company.domain.CompanyAllowRoleSearchParam" resultMap="companyAllowRoleResult">
+        SELECT a.comAllowRoleNum as comAllowRoleNum, a.comNum as comNum, a.roleNum as roleNum,
+        b.roleName as roleName, a.regDate as regDate
+        FROM TB_COMPANY_ALLOW_ROLE as a INNER JOIN TB_LOGIN_ROLE b ON a.roleNum=b.roleNum 
+        WHERE 1 
+        <if test="comNum != '' and comNum != null">AND comNum=#{comNum}</if>
+        ORDER BY a.comAllowRoleNum DESC
+        LIMIT ${firstItemNo}, ${pageSize}
+    </select>
+
+    <select id="getCompanyAllowRoleInfo" parameterType="core.admin.company.domain.CompanyAllowRole" resultMap="companyAllowRoleResult">
+        SELECT a.comAllowRoleNum as comAllowRoleNum, a.comNum as comNum, a.roleNum as roleNum,
+                b.roleName as roleName, a.regDate as regDate
+        FROM TB_COMPANY_ALLOW_ROLE as a INNER JOIN TB_LOGIN_ROLE b ON a.roleNum=b.roleNum
+        WHERE a.comAllowRoleNum = #{comAllowRoleNum}
+    </select>
+
+    <insert id="insertCompanyAllowRole" parameterType="core.admin.company.domain.CompanyAllowRole">
+        INSERT INTO TB_COMPANY_ALLOW_ROLE
+        (comNum, roleNum, regDate)
+        VALUES
+        (#{comNum}, #{roleNum}, UNIX_TIMESTAMP())
+    </insert>
+
+    <update id="updateCompanyAllowRole" parameterType="core.admin.company.domain.CompanyAllowRole">
+        UPDATE TB_COMPANY_ALLOW_ROLE 
+        <set>
+        	<if test="comNum != ''">comNum = #{comNum},</if>
+        	<if test="roleNum != ''">roleNum = #{roleNum},</if>
+        </set>
+        WHERE comAllowRoleNum = #{comAllowRoleNum}
+    </update>
+
+    <delete id="deleteCompanyAllowRole" parameterType="core.admin.company.domain.CompanyAllowRole">
+        DELETE
+        FROM TB_COMPANY_ALLOW_ROLE
+        WHERE comAllowRoleNum = #{comAllowRoleNum}
+    </delete>
+
+    <delete id="deleteCompanyAllowRoleAll" parameterType="core.admin.company.domain.CompanyAllowRole">
+        DELETE
+        FROM TB_COMPANY_ALLOW_ROLE
+        WHERE comNum = #{comNum}
+    </delete>
+
+    <select id="getCompanyAllowRoleListAll" parameterType="core.admin.company.domain.CompanyAllowRole" resultMap="companyAllowRoleResult">
+        SELECT a.comAllowRoleNum as comAllowRoleNum, a.comNum as comNum, a.roleNum as roleNum,
+                b.roleName as roleName, a.regDate as regDate
+        FROM TB_COMPANY_ALLOW_ROLE as a INNER JOIN TB_LOGIN_ROLE b ON a.roleNum=b.roleNum
+        WHERE 1
+        <if test="comNum != '' and comNum != null">AND a.comNum=#{comNum}</if>
+        ORDER BY comAllowRoleNum DESC
+    </select>
+</mapper>

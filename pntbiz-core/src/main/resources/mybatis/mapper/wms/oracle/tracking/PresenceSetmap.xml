@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.tracking.dao.PresenceSetmapDao">
+
+	<resultMap id="presenceSetmapResult" type="core.wms.tracking.domain.PresenceSetmap">
+		<result property="comNum"             column="COM_NUM" />
+		<result property="mapType"            column="MAP_TYPE" />
+		<result property="initZoom"           column="INIT_ZOOM" />
+		<result property="initFloor"          column="INIT_FLOOR" />
+		<result property="checkTimeInterval"  column="CHECK_TIME_INTERVAL" />
+		<result property="removeTimeInterval" column="REMOVE_TIME_INTERVAL" />
+		<result property="moveTimeInterval"   column="MOVE_TIME_INTERVAL" />
+		<result property="moveUnit"           column="MOVE_UNIT" />
+		<result property="modDate"            column="MOD_DATE" />
+		<result property="regDate"            column="REG_DATE" />
+	</resultMap>
+
+	<select id="getPresenceSetmapInfo" parameterType="core.wms.tracking.domain.PresenceSetmap" resultMap="presenceSetmapResult">
+		SELECT COM_NUM, MAP_TYPE, INIT_ZOOM, INIT_FLOOR, CHECK_TIME_INTERVAL
+		     , REMOVE_TIME_INTERVAL, MOVE_TIME_INTERVAL, MOVE_UNIT, MOD_DATE, REG_DATE
+		  FROM TB_PRESENCE_SETMAP
+		 WHERE COM_NUM = #{comNum}
+	</select>
+
+    <insert id="insertPresenceSetmap" parameterType="core.wms.tracking.domain.PresenceSetmap">
+        INSERT INTO TB_PRESENCE_SETMAP
+        ( COM_NUM
+        , MAP_TYPE
+        , MOD_DATE
+        , REG_DATE
+        )VALUES
+        ( #{comNum}
+        , #{mapType}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updatePresenceSetmap" parameterType="core.wms.tracking.domain.PresenceSetmap">
+        UPDATE TB_PRESENCE_SETMAP
+           SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+           <if test="initZoom != '' and initZoom != null">,INIT_ZOOM = #{initZoom}</if>
+           <if test="initFloor != '' and initFloor != null">,INIT_FLOOR = #{initFloor}</if>
+           <if test="checkTimeInterval != '' and checkTimeInterval != null">,CHECK_TIME_INTERVAL = #{checkTimeInterval}</if>
+           <if test="removeTimeInterval != '' and removeTimeInterval != null">,REMOVE_TIME_INTERVAL = #{removeTimeInterval}</if>
+           <if test="moveTimeInterval != '' and moveTimeInterval != null">,MOVE_TIME_INTERVAL = #{moveTimeInterval}</if>
+           <if test="moveUnit != '' and moveUnit != null">,MOVE_UNIT = #{moveUnit}</if>
+        WHERE COM_NUM = #{comNum}
+    </update>
+
+</mapper>

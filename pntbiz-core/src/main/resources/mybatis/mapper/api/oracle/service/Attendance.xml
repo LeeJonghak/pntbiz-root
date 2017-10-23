@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.service.AttendanceDao">
+    <resultMap id="attendanceResult" type="core.api.service.domain.Attendance">
+        <result property="logNum"       column="LOG_NUM" />
+        <result property="UUID"         column="UUID" />
+        <result property="sidNum"       column="SID_NUM" />
+        <result property="sName"        column="S_NAME" />
+        <result property="subject"      column="SUBJECT" />
+        <result property="sPhoneNumber" column="S_PHONE_NUMBER" />
+        <result property="attdDate"     column="ATTD_DATE" />
+        <result property="regDate"      column="REG_DATE" />
+        <result property="modDate"      column="MOD_DATE" />
+    </resultMap>
+
+	<select id="getAttendanceCount" parameterType="core.api.service.domain.Attendance" resultType="Integer">
+		SELECT COUNT(1) CNT
+		  FROM TB_ATTENDANCE
+		 WHERE UUID = #{UUID}
+		   AND SID_NUM = #{sidNum}
+		   AND SUBJECT = #{subject}
+		   AND ATTD_DATE = #{attdDate}
+	</select>
+
+	<select id="getAttendanceInfoBySidnum" parameterType="core.api.service.domain.Attendance" resultMap="attendanceResult">
+		SELECT SID_NUM, S_NAME, SUBJECT, S_PHONE_NUMBER, ATTD_DATE, REG_DATE, MOD_DATE
+		  FROM TB_ATTENDANCE
+		 WHERE UUID = #{UUID}
+		   AND SUBJECT = #{subject}
+		   AND ATTD_DATE = #{attdDate}
+	</select>
+
+	<insert id="insertAttendance" parameterType="core.api.service.domain.Attendance">
+		INSERT INTO TB_ATTENDANCE
+		( LOG_NUM
+		, UUID
+		, SID_NUM
+		, S_NAME
+		, SUBJECT
+		, S_PHONE_NUMBER
+		, ATTD_DATE
+		, REG_DATE
+		, MOD_DATE
+		)VALUES
+		( SEQ_ATTENDANCE_LOG_NUM.nextval
+		, #{UUID}
+		, #{sidNum}
+		, #{sName}
+		, #{subject}
+		, #{sPhoneNumber}
+		, #{attdDate}
+		, FN_UNIX_TIMESTEMP(SYSDATE)
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateAttendance" parameterType="core.api.service.domain.Attendance">
+		UPDATE TB_ATTENDANCE
+		     , MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+		 WHERE UUID = #{UUID}
+		   AND SID_NUM = #{sidNum}
+		   AND SUBJECT = #{subject}
+		   AND ATTD_DATE = #{attdDate}
+    </update>
+
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.scanner.dao.ScannerDao">
+
+	<resultMap id="scannerResult" type="core.wms.scanner.domain.Scanner">
+		<result property="scannerNum" column="scannerNum" />
+		<result property="comNum" column="comNum" />
+		<result property="macAddr" column="macAddr" />
+		<result property="majorVer" column="majorVer" />
+		<result property="scannerName" column="scannerName" />
+		<result property="sid" column="sid" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="rssi" column="rssi" />
+		<result property="srssi" column="srssi" />
+		<result property="mrssi" column="mrssi" />
+		<result property="drssi" column="drssi" />
+		<result property="exMeter" column="exMeter" />
+		<result property="calPoint" column="calPoint" />
+		<result property="maxSig" column="maxSig" />
+		<result property="maxBuf" column="maxBuf" />
+		<result property="fwVer" column="fwVer" />
+		<result property="floor" column="floor" />
+		<result property="modDate" column="modDate" />
+		<result property="regDate" column="regDate" />
+		<result property="UUID" column="UUID" />
+	</resultMap>
+
+	<select id="checkScannerDuplication" parameterType="core.wms.scanner.domain.Scanner" resultType="Integer">
+		SELECT COUNT(comNum) CNT
+		FROM TB_SCANNER
+		WHERE macAddr = #{macAddr}
+		<if test="comNum != '' and comNum != null">AND A.comNum = #{comNum}</if>
+	</select>
+
+	<select id="checkScanner" parameterType="core.wms.scanner.domain.Scanner" resultType="Integer">
+		SELECT COUNT(scannerNum) CNT
+		FROM TB_SCANNER
+		WHERE 1
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+		<if test="macAddr != '' and macAddr != null">AND macAddr = #{macAddr}</if>
+	</select>
+
+	<select id="getScannerInfo" parameterType="core.wms.scanner.domain.Scanner" resultMap="scannerResult">
+		SELECT macAddr, scannerName
+		FROM TB_SCANNER
+		WHERE macAddr = #{macAddr}
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+	</select>
+
+	<select id="getScannerInfoByNum" parameterType="core.wms.scanner.domain.Scanner" resultMap="scannerResult">
+		SELECT scannerNum, comNum, macAddr, majorVer, scannerName, sid, lat, lng,
+		rssi, srssi, mrssi, drssi, exMeter, calPoint, maxSig, maxBuf, fwVer, floor, modDate, regDate
+		FROM TB_SCANNER
+		WHERE scannerNum = #{scannerNum}
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+	</select>
+
+    <!--
+        스캐너 목록
+        edit: nohsoo 2015-04-23 floor 조건 추가
+    -->
+
+    <sql id="selectScannerSearch">
+    	<where>
+            <if test="comNum != '' and comNum != null">TS.comNum = #{comNum}</if>
+            <if test="floor != '' and floor!=null">AND TS.floor=#{floor}</if>
+
+            <if test="keyword != '' and keyword  != null">
+                <choose>
+                    <when test="opt == 'scannerName'">
+                        AND TS.scannerName LIKE CONCAT(#{keyword}, '%')
+                    </when>
+                    <when test="opt == 'macAddr'">
+                        AND TS.macAddr LIKE CONCAT(#{keyword}, '%')
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+            </if>
+         </where>
+    </sql>
+	<select id="getScannerCount" parameterType="core.wms.scanner.domain.ScannerSearchParam" resultType="Integer">
+		SELECT COUNT(scannerNum) CNT
+		FROM TB_SCANNER TS
+		<include refid="selectScannerSearch"/>
+	</select>
+
+    <!--
+        스캐너 목록
+        edit: nohsoo 2015-04-23 firstItemNo, pageSize 조건 NULL 체크, floor 조건 추가
+    -->
+	<select id="getScannerList" parameterType="core.wms.scanner.domain.ScannerSearchParam" resultMap="scannerResult">
+        SELECT TS.scannerNum, TS.comNum, TS.macAddr, TS.majorVer, TS.scannerName
+             , TS.sid, TS.lat, TS.lng, TS.rssi, TS.srssi
+             , TS.mrssi, TS.drssi, TS.exMeter, TS.calPoint, TS.maxSig
+             , TS.maxBuf, TS.fwVer, TS.modDate, TS.regDate
+             , TF.floorName AS FLOOR
+         FROM TB_SCANNER TS
+         LEFT OUTER JOIN (SELECT TF.floor, TFC.nodeName AS floorName
+                            FROM TB_FLOOR TF
+                           INNER JOIN TB_FLOOR_CODE TFC
+                              ON TF.floor = TFC.nodeId
+                             AND TFC.comNum = #{comNum}
+                            WHERE TF.comNum = #{comNum}
+                            ) TF ON TS.FLOOR = TF.floor
+		<include refid="selectScannerSearch"/>
+
+		ORDER BY TS.scannerNum DESC
+        <if test="firstItemNo!=null and pageSize!=null and firstItemNo>=0 and pageSize>0">
+            LIMIT #{firstItemNo}, #{pageSize}
+        </if>
+	</select>
+
+	<insert id="insertScanner" parameterType="core.wms.scanner.domain.Scanner">
+		INSERT INTO TB_SCANNER
+		(comNum,  macAddr, majorVer, scannerName, sid, lat, lng,
+		rssi, srssi, mrssi, drssi, exMeter, calPoint, maxSig, maxBuf,
+		fwVer, floor, modDate, regDate)
+		VALUES
+		(#{comNum}, #{macAddr}, #{majorVer}, #{scannerName}, #{sid}, #{lat}, #{lng},
+		#{rssi}, #{srssi}, #{mrssi}, #{drssi}, #{exMeter}, #{calPoint}, #{maxSig}, #{maxBuf},
+		#{fwVer}, #{floor}, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
+    </insert>
+
+    <update id="updateScanner" parameterType="core.wms.scanner.domain.Scanner">
+        UPDATE TB_SCANNER
+		<set>
+			<if test="macAddr != null">macAddr = #{macAddr},</if>
+			<if test="majorVer != null">majorVer = #{majorVer},</if>
+			<if test="scannerName != null">scannerName = #{scannerName},</if>
+			<if test="sid != null">sid = #{sid},</if>
+			<if test="lat != null">lat = #{lat},</if>
+			<if test="lng != null">lng = #{lng},</if>
+			<if test="rssi != null">rssi = #{rssi},</if>
+			<if test="srssi != null">srssi = #{srssi},</if>
+			<if test="mrssi != null">mrssi = #{mrssi},</if>
+			<if test="drssi != null">drssi = #{drssi},</if>
+			<if test="exMeter != null">exMeter = #{exMeter},</if>
+			<if test="calPoint != null">calPoint = #{calPoint},</if>
+			<if test="maxSig != null">maxSig = #{maxSig},</if>
+			<if test="maxBuf != null">maxBuf = #{maxBuf},</if>
+			<if test="fwVer != null">fwVer = #{fwVer},</if>
+			<if test="floor != null">floor = #{floor},</if>
+			modDate = UNIX_TIMESTAMP(),
+        </set>
+        WHERE scannerNum = #{scannerNum}
+        <if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+    </update>
+
+    <delete id="deleteScanner" parameterType="core.wms.scanner.domain.Scanner">
+    	DELETE
+    	FROM TB_SCANNER
+		WHERE scannerNum = #{scannerNum}
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+    </delete>
+
+    <update id="batchScanner" parameterType="core.wms.scanner.domain.Scanner">
+        UPDATE TB_SCANNER
+		<set>
+			<if test="rssi != '' and rssi != null">rssi = #{rssi},</if>
+			<if test="srssi != '' and srssi != null">srssi = #{srssi},</if>
+			<if test="mrssi != '' and mrssi != null">mrssi = #{mrssi},</if>
+			<if test="drssi != '' and drssi != null">drssi = #{drssi},</if>
+			<if test="exMeter != '' and exMeter != null">exMeter = #{exMeter},</if>
+			<if test="calPoint != '' and calPoint != null">calPoint = #{calPoint},</if>
+			<if test="maxSig != '' and maxSig != null">maxSig = #{maxSig},</if>
+			<if test="maxBuf != '' and maxBuf != null">maxBuf = #{maxBuf},</if>
+			<if test="fwVer != '' and fwVer != null">fwVer = #{fwVer},</if>
+			modDate = UNIX_TIMESTAMP(),
+        </set>
+        WHERE comNum = #{comNum}
+    </update>
+
+</mapper>

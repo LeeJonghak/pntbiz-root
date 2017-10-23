@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.calibration.CalibrationDao">
+
+	<resultMap id="cntResult" type="Integer">
+		<result property="cnt" column="CNT" />
+	</resultMap>
+
+	<resultMap id="calibrationResult" type="core.admin.calibration.domain.Calibration">
+        <result property="calNum"       column="CAL_NUM" />
+        <result property="maker"        column="MAKER" />
+        <result property="telecom"      column="TELECOM" />
+        <result property="modelName"    column="MODEL_NAME" />
+        <result property="deviceName"   column="DEVICE_NAME" />
+        <result property="os"           column="OS" />
+        <result property="rssi"         column="RSSI" />
+        <result property="modDate"      column="MOD_DATE" />
+        <result property="regDate"      column="REG_DATE" />
+	</resultMap>
+
+
+    <sql id="sqlCalibrationListSearch">
+        <where>
+            <if test="maker != '' and maker != null">LOWER(MAKER) = LOWER(#{maker})</if>
+            <if test="telecom != '' and telecom != null">AND LOWER(TELECOM) = LOWER(#{telecom})</if>
+            <if test="keyword != '' and keyword  != null">
+                <choose>
+                    <when test="opt == 'modelName'">AND MODEL_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt == 'deviceName'">AND DEVICE_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt == 'os'">AND OS LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt == 'rssi'">AND RSSI LIKE CONCAT(#{keyword}, '%')</when>
+                    <otherwise>
+                        AND (MODEL_NAME LIKE CONCAT(#{keyword}, '%')
+                            OR DEVICE_NAME LIKE CONCAT(#{keyword}, '%')
+                            OR OS LIKE CONCAT(#{keyword}, '%')
+                            OR RSSI LIKE CONCAT(#{keyword}, '%'))
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </sql>
+	<select id="getCalibrationCount" parameterType="core.admin.calibration.domain.CalibrationSearchParam" resultMap="cntResult">
+		SELECT COUNT(1) CNT
+		  FROM TB_CALIBRATION
+          <include refid="sqlCalibrationListSearch"/>
+	</select>
+
+	<select id="getCalibrationList" parameterType="core.admin.calibration.domain.CalibrationSearchParam" resultMap="calibrationResult">
+		SELECT *
+          FROM (
+			SELECT CAL_NUM, MAKER, TELECOM, MODEL_NAME, DEVICE_NAME, OS, RSSI, MOD_DATE, REG_DATE
+			     , ROWNUM AS RNUM
+			  FROM TB_CALIBRATION
+             <include refid="sqlCalibrationListSearch"/>
+			 ORDER BY CAL_NUM DESC
+          ) TB
+         WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+	</select>
+
+	<select id="getCalibrationInfo" parameterType="core.admin.calibration.domain.Calibration" resultMap="calibrationResult">
+		SELECT CAL_NUM, MAKER, TELECOM, MODEL_NAME, DEVICE_NAME, OS, RSSI, MOD_DATE, REG_DATE
+		  FROM TB_CALIBRATION
+		 WHERE CAL_NUM = #{calNum}
+	</select>
+
+	<insert id="insertCalibration" parameterType="core.admin.calibration.domain.Calibration">
+        INSERT INTO TB_CALIBRATION
+        ( CAL_NUM
+        , MAKER
+        , TELECOM
+        , MODEL_NAME
+        , DEVICE_NAME
+        , OS
+        , RSSI
+        , MOD_DATE
+        , REG_DATE
+        )VALUES
+        ( SEQ_CALIBRATION_CAL_NUM.nextval
+        , #{maker}
+        , #{telecom}
+        , #{modelName}
+        , #{deviceName}
+        , #{os}
+        , #{rssi}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateCalibration" parameterType="core.admin.calibration.domain.Calibration">
+        UPDATE TB_CALIBRATION
+           SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+			<if test="maker != ''">, MAKER = #{maker}</if>
+			<if test="telecom != ''">, TELECOM = #{telecom}</if>
+			<if test="modelName != ''">, MODEL_NAME = #{modelName}</if>
+			<if test="deviceName != ''">, DEVICE_NAME = #{deviceName}</if>
+			<if test="os != ''">, OS = #{os}</if>
+			<if test="rssi != ''">, RSSI = #{rssi}</if>
+         WHERE CAL_NUM = #{calNum}
+    </update>
+
+    <delete id="deleteCalibration" parameterType="core.admin.calibration.domain.Calibration">
+        DELETE
+          FROM TB_CALIBRATION
+         WHERE CAL_NUM = #{calNum}
+    </delete>
+
+</mapper>

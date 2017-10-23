@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.common.beacon.dao.BeaconExternalLogDao">
+
+	<resultMap id="BeaconExternalLog" type="core.common.beacon.domain.BeaconExternalLog">
+		<id column="logNum" property="logNum" />
+		<result column="type" property="type" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result column="beaconNum" property="beaconNum" />
+		<result column="externalId" property="externalId" />
+		<result column="barcode" property="barcode" />
+		<result column="externalAttribute" property="externalAttributeRaw" />
+		<result column="restrictedZonePermitted" property="restrictedZonePermitted" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result column="regDate" property="regDate" />
+	</resultMap>
+
+	<insert id="insertBeaconExternalLog"
+			parameterType="core.common.beacon.domain.BeaconExternalLog"
+			useGeneratedKeys="true" keyColumn="logNum" keyProperty="logNum">
+
+		INSERT INTO TB_BEACON_EXTERNAL_LOG(beaconNum, type, externalId, barcode, externalAttribute, restrictedZonePermitted, regDate)
+		SELECT beaconNum, #{type, typeHandler=framework.database.ValueEnumTypeHandler}, externalId, barcode, externalAttribute, restrictedZonePermitted, UNIX_TIMESTAMP()
+		FROM TB_BEACON
+		WHERE beaconNum=#{beaconNum}
+
+	</insert>
+
+	<select id="listBeaconExternalLog"
+			parameterType="core.common.beacon.domain.BeaconExternalLog"
+			resultMap="BeaconExternalLog">
+
+		SELECT logNum, type, beaconNum, externalId, barcode, externalAttribute, restrictedZonePermitted, regDate
+		FROM TB_BEACON_EXTERNAL_LOG
+		WHERE beaconNum=#{beaconNum}
+		<if test="type!=null">AND type=#{type, typeHandler=framework.database.ValueEnumTypeHandler}</if>
+	</select>
+
+</mapper>

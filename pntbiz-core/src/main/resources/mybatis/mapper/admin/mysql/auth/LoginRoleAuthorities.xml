@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.auth.dao.LoginRoleAuthoritiesDao">
+
+	<resultMap id="loginRoleAuthoritiesResult" type="core.admin.auth.domain.LoginRoleAuthorities">
+		<result property="roleNum" column="roleNum" />
+		<result property="authNum" column="authNum" />
+		<result property="authCode" column="authCode" />
+		<result property="authName" column="authName" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+	
+	<!--
+	역할 및 권한 테이블 관련(LoginRole)
+	2014-11-14 nohsoo 
+	-->	
+	<select id="getLoginRoleAuthoritiesCount" parameterType="framework.web.util.PagingParam" resultType="Integer">
+		SELECT COUNT(1) CNT
+		FROM TB_LOGIN_ROLE_AUTHORITIES 
+		WHERE 1 
+	</select>
+	
+	<select id="getLoginRoleAuthoritiesList" parameterType="framework.web.util.PagingParam" resultMap="loginRoleAuthoritiesResult">
+		SELECt roleNum, authNum, authCode, authName, regDate
+		FROM TB_LOGIN_ROLE_AUTHORITIES 
+		WHERE 1
+		LIMIT ${firstItemNo}, ${pageSize}
+	</select>
+	
+	<select id="getLoginRoleAuthoritiesInfo" parameterType="core.admin.auth.domain.LoginRoleAuthorities" resultMap="loginRoleAuthoritiesResult">
+		SELECT roleNum, authNum, authCode, authName, regDate 
+		FROM TB_LOGIN_ROLE_AUTHORITIES 
+		WHERE roleNum = #{roleNum} and authNum = #{authNum} 
+	</select>
+	
+	<insert id="insertLoginRoleAuthorities" parameterType="core.admin.auth.domain.LoginRoleAuthorities">
+        INSERT INTO TB_LOGIN_ROLE_AUTHORITIES
+        (roleNum, authNum, authCode, authName, regDate)
+        VALUES
+        (#{roleNum}, #{authNum}, #{authCode}, #{authName}, UNIX_TIMESTAMP())
+    </insert>
+    
+    <update id="updateLoginRoleAuthorities" parameterType="core.admin.auth.domain.LoginRoleAuthorities">
+        UPDATE TB_LOGIN_ROLE_AUTHORITIES 
+        <set>
+        	<if test="authCode != '' and authCode != null">authCode = #{authCode},</if>
+        	<if test="authName != '' and authName != null">authName = #{authName},</if>
+        </set>
+        WHERE roleNum = #{roleNum} and authNum = #{authNum} 
+    </update>
+
+	<update id="updateLoginRoleAuthoritiesAll" parameterType="core.admin.auth.domain.LoginAuthcode">
+		UPDATE TB_LOGIN_ROLE_AUTHORITIES 
+		<set>
+			<if test="authCode != '' and authCode != null">authCode = #{authCode},</if>
+        	<if test="authName != '' and authName != null">authName = #{authName},</if>
+		</set>
+		WHERE authNum = #{authNum}
+	</update>
+    
+    <delete id="deleteLoginRoleAuthorities" parameterType="core.admin.auth.domain.LoginRoleAuthorities">
+        DELETE 
+        FROM TB_LOGIN_ROLE_AUTHORITIES
+        WHERE roleNum = #{roleNum} and authNum = #{authNum}
+    </delete>
+
+	<delete id="deleteLoginRoleAuthoritiesAll" parameterType="core.admin.auth.domain.LoginAuthcode">
+		DELETE
+		FROM TB_LOGIN_ROLE_AUTHORITIES
+		WHERE authNum = #{authNum}
+	</delete>
+
+	<delete id="clearLoginRoleAuthorities" parameterType="core.admin.auth.domain.LoginRole">
+		DELETE
+		FROM TB_LOGIN_ROLE_AUTHORITIES
+		WHERE roleNum = #{roleNum}
+	</delete>
+    
+    <select id="getLoginRoleAuthorities" parameterType="core.admin.auth.domain.LoginRoleAuthorities" resultMap="loginRoleAuthoritiesResult">
+		SELECt roleNum, authNum, authCode, authName, regDate
+		FROM TB_LOGIN_ROLE_AUTHORITIES 
+		WHERE roleNum=#{roleNum}
+	</select>
+	
+</mapper>

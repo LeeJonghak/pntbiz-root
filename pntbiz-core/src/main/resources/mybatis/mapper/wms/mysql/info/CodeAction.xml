@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.info.dao.CodeActionDao">
+
+	<resultMap id="codeActionResult" type="core.wms.info.domain.CodeAction">
+		<result property="comNum" column="comNum" />
+		<result property="codeNum" column="codeNum" />
+		<result property="codeType" column="codeType" />
+		<result property="code" column="code" />
+		<result property="codeName" column="codeName" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<sql id="sqlCodeActionSearch">
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+		<if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+			<choose>
+				<when test="opt == 'code'"> AND code LIKE CONCAT(#{keyword}, '%') </when>
+				<when test="opt == 'codeName'">AND codeName LIKE CONCAT(#{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+	</sql>
+	<select id="getCodeActionCount" parameterType="core.wms.info.domain.CodeActionSearchParam" resultType="Integer">
+		SELECT COUNT(comNum) CNT
+		FROM TB_CODE_ACTION
+		WHERE 1
+		<include refid="sqlCodeActionSearch"/>
+	</select>
+
+	<select id="getCodeActionList" parameterType="core.wms.info.domain.CodeActionSearchParam" resultMap="codeActionResult">
+		SELECT comNum, codeNum, codeType, code, codeName, modDate, regDate
+		FROM TB_CODE_ACTION
+		WHERE 1
+		<include refid="sqlCodeActionSearch"/>
+
+		ORDER BY codeNum DESC
+		LIMIT #{firstItemNo}, #{pageSize}
+	</select>
+
+	<select id="getCodeActionListByAll" parameterType="core.wms.info.domain.CodeActionSearchParam" resultMap="codeActionResult">
+		SELECT comNum, codeNum, codeType, code, codeName, modDate, regDate
+		FROM TB_CODE_ACTION
+		WHERE 1
+		<include refid="sqlCodeActionSearch"/>
+	</select>
+
+    <!--
+        모든 코드액션(태스크) 목록 반환
+        @author nohsoo 2015-03-12 비콘, 지오펜스 배치도에서 사용하기 위해서 추가
+    -->
+    <select id="getCodeActionAll" parameterType="java.util.HashMap" resultMap="codeActionResult">
+        SELECT comNum, codeNum, codeType, code, codeName, modDate, regDate
+		FROM TB_CODE_ACTION
+		<trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="comNum!=null">
+                and comNum=#{comNum}
+            </if>
+		</trim>
+    </select>
+
+	<select id="getCodeActionInfo" parameterType="core.wms.info.domain.CodeAction" resultMap="codeActionResult">
+		SELECT comNum, codeNum, codeType, code, codeName, modDate, regDate
+		FROM TB_CODE_ACTION
+		WHERE 1
+		AND codeNum = #{codeNum}
+	</select>
+
+	<insert id="insertCodeAction" parameterType="core.wms.info.domain.CodeAction">
+        INSERT INTO TB_CODE_ACTION
+        (comNum, codeType, code, codeName, modDate, regDate)
+        VALUES
+        (#{comNum}, #{codeType}, #{code}, #{codeName}, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+    </insert>
+
+    <update id="updateCodeAction" parameterType="core.wms.info.domain.CodeAction">
+        UPDATE TB_CODE_ACTION
+        <set>
+        	<if test="codeType != '' and codeType != null">codeType = #{codeType},</if>
+        	<if test="code != '' and code != null">code = #{code},</if>
+        	<if test="codeName != '' and codeName != null">codeName = #{codeName},</if>
+        	modDate = UNIX_TIMESTAMP(),
+        </set>
+        WHERE codeNum = #{codeNum}
+    </update>
+
+    <delete id="deleteCodeAction" parameterType="core.wms.info.domain.CodeAction">
+        DELETE
+        FROM TB_CODE_ACTION
+        WHERE codeNum = #{codeNum}
+    </delete>
+
+    <insert id="insertCodeActionMapping" parameterType="core.wms.info.domain.CodeActionMapping">
+        INSERT INTO TB_CODE_ACTION_MAPPING(codeNum, refType, refSubType, refNum)
+        VALUES(#{codeNum}, #{refType}, #{refSubType}, #{refNum})
+    </insert>
+
+    <delete id="deleteCodeActionMapping" parameterType="java.util.HashMap">
+        DELETE FROM TB_CODE_ACTION_MAPPING
+        <where>
+            refType=#{refType}
+            <if test="codeNum!=null">
+                AND codeNum=#{codeNum}
+            </if>
+            <if test="refNum!=null">
+                AND refNum=#{refNum}
+            </if>
+            <if test="refSubType!=null">
+                AND refSubType=#{refSubType}
+            </if>
+        </where>
+    </delete>
+
+    <!--
+        지오펜스에 할당된 코드액션 목록
+        @author nohsoo 2015-03-12
+    -->
+    <select id="getMyGeofencingCodeActionList" parameterType="java.util.HashMap" resultType="core.wms.info.domain.CodeAction">
+        SELECT a.*,  c.refNum, c.refType, c.refSubType
+        FROM TB_CODE_ACTION AS a INNER JOIN TB_CODE_ACTION_MAPPING AS c ON(a.codeNum=c.codeNum AND c.refType='GF')
+        INNER JOIN TB_GEOFENCING AS d ON(c.refNum=d.fcNum)
+        WHERE a.comNum=#{comNum}
+        <if test="fcNum!=null">
+            AND d.fcNum=#{fcNum}
+        </if>
+    </select>
+
+    <!--
+        비콘에 할당된 코드액션 목록
+        @author nohsoo 2015-03-12
+    -->
+    <select id="getMyBeaconCodeActionList" parameterType="java.util.HashMap" resultType="core.wms.info.domain.CodeAction">
+        SELECT a.*,  c.refNum, c.refType, c.refSubType
+        FROM TB_CODE_ACTION AS a INNER JOIN TB_CODE_ACTION_MAPPING AS c ON(a.codeNum=c.codeNum AND c.refType='BC')
+            INNER JOIN TB_BEACON AS d ON(c.refNum=d.beaconNum)
+        WHERE a.comNum=#{comNum}
+        <if test="beaconNum!=null">
+            AND d.beaconNum=#{beaconNum}
+        </if>
+    </select>
+
+</mapper>

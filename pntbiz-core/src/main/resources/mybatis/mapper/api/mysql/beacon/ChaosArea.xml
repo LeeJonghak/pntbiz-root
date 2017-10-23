@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ChaosAreaDao">
+
+    <select id="getChaosAreaListAll" parameterType="core.api.beacon.domain.ChaosArea" resultType="core.api.beacon.domain.ChaosArea">
+        SELECT a.*, b.UUID AS companyUUID
+        FROM TB_CHAOS_AREA AS a INNER JOIN TB_COMPANY AS b on(a.comNum=b.comNum)
+        WHERE b.UUID=#{companyUUID}
+        <if test="floor!=null">
+            AND a.floor=#{floor}
+        </if>
+    </select>
+
+</mapper>

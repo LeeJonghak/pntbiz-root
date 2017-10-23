@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.company.CompanyAllowRoleDao">
+
+    <resultMap id="cntResult" type="Integer">
+        <result property="cnt" column="CNT" />
+    </resultMap>
+
+    <resultMap id="companyAllowRoleResult" type="core.admin.company.domain.CompanyAllowRole">
+        <result property="comAllowRoleNum"  column="COM_ALLOW_ROLE_NUM" />
+        <result property="comNum"           column="COM_NUM" />
+        <result property="roleNum"          column="ROLE_NUM" />
+        <result property="roleName"         column="ROLE_NAME" />
+        <result property="regDate"          column="REG_DATE" />
+    </resultMap>
+
+    <select id="getCompanyAllowRoleCount" parameterType="core.admin.company.domain.CompanyAllowRoleSearchParam" resultMap="cntResult">
+        SELECT COUNT(COM_ALLOW_ROLE_NUM) CNT
+        FROM TB_COMPANY_ALLOW_ROLE
+
+        <if test="comNum != '' and comNum != null">WHERE comNum=#{comNum}</if>
+    </select>
+
+    <select id="getCompanyAllowRoleList" parameterType="core.admin.company.domain.CompanyAllowRoleSearchParam" resultMap="companyAllowRoleResult">
+    	SELECT *
+   		  FROM (
+	        SELECT TCA.COM_ALLOW_ROLE_NUM, TCA.COM_NUM AS COM_NUM, TCA.ROLE_NUM AS ROLE_NUM, TCA.REG_DATE AS REG_DATE
+	        	 , TLR.ROLE_NAME AS ROLE_NAME
+	        	 , ROWNUM AS RNUM
+	          FROM TB_COMPANY_ALLOW_ROLE TCA
+	         INNER JOIN TB_LOGIN_ROLE TLR ON TCA.ROLE_NUM = TLR.ROLE_NUM
+
+	        <if test="comNum != '' and comNum != null">WHERE COM_NUM = #{comNum}</if>
+	        ORDER BY TCA.COM_ALLOW_ROLE_NUM DESC
+	      ) TB
+	    <if test="pageSize > 0">
+		 WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+		</if>
+    </select>
+
+    <select id="getCompanyAllowRoleInfo" parameterType="core.admin.company.domain.CompanyAllowRole" resultMap="companyAllowRoleResult">
+        SELECT TCA.COM_ALLOW_ROLE_NUM AS COM_ALLOW_ROLE_NUM, TCA.COM_NUM AS COM_NUM, TCA.ROLE_NUM AS ROLE_NUM, TCA.REG_DATE AS REG_DATE
+			 , TLR.ROLE_NAME AS ROLE_NAME
+          FROM TB_COMPANY_ALLOW_ROLE TCA
+         INNER JOIN TB_LOGIN_ROLE TLR ON TCA.ROLE_NUM = TLR.ROLE_NUM
+         WHERE TCA.COM_ALLOW_ROLE_NUM = #{comAllowRoleNum}
+    </select>
+
+    <insert id="insertCompanyAllowRole" parameterType="core.admin.company.domain.CompanyAllowRole">
+        INSERT INTO TB_COMPANY_ALLOW_ROLE
+        ( COM_ALLOW_ROLE_NUM
+        , COM_NUM
+        , ROLE_NUM
+        , REG_DATE
+        )VALUES
+        ( SEQ_CAR_COM_ALLOW_ROLE_NUM.nextval
+        , #{comNum}
+        , #{roleNum}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateCompanyAllowRole" parameterType="core.admin.company.domain.CompanyAllowRole">
+        UPDATE TB_COMPANY_ALLOW_ROLE
+        <set>
+        	<if test="comNum != ''">COM_NUM = #{comNum},</if>
+        	<if test="roleNum != ''">ROLE_NUM = #{roleNum},</if>
+        </set>
+         WHERE COM_ALLOW_ROLE_NUM = #{comAllowRoleNum}
+    </update>
+
+    <delete id="deleteCompanyAllowRole" parameterType="core.admin.company.domain.CompanyAllowRole">
+        DELETE
+          FROM TB_COMPANY_ALLOW_ROLE
+         WHERE COM_ALLOW_ROLE_NUM = #{comAllowRoleNum}
+    </delete>
+
+    <delete id="deleteCompanyAllowRoleAll" parameterType="core.admin.company.domain.CompanyAllowRole">
+        DELETE
+          FROM TB_COMPANY_ALLOW_ROLE
+         WHERE COM_NUM = #{comNum}
+    </delete>
+
+    <select id="getCompanyAllowRoleListAll" parameterType="core.admin.company.domain.CompanyAllowRole" resultMap="companyAllowRoleResult">
+        SELECT TCA.COM_ALLOW_ROLE_NUM, TCA.COM_NUM, TCA.ROLE_NUM, TCA.REG_DATE
+             , TLR.ROLE_NAME
+          FROM TB_COMPANY_ALLOW_ROLE TCA
+         INNER JOIN TB_LOGIN_ROLE TLR ON TCA.ROLE_NUM = TLR.ROLE_NUM
+
+        <if test="comNum != '' and comNum != null">WHERE TCA.COM_NUM = #{comNum}</if>
+         ORDER BY COM_ALLOW_ROLE_NUM DESC
+    </select>
+</mapper>

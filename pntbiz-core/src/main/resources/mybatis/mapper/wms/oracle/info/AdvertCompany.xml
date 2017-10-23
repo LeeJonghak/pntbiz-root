@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.info.dao.AdvertCompanyDao">
+
+    <resultMap id="advertCompanyResult" type="core.wms.info.domain.AdvertCompany">
+        <result property="comNum" column="COM_NUM" />
+        <result property="acNum" column="AC_NUM" />
+        <result property="acName" column="AC_NAME" />
+        <result property="regDate" column="REG_DATE" />
+    </resultMap>
+
+    <sql id="sqlAdverCompanySearch">
+       <where>
+            <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+			<if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+                AND AC_NAME LIKE CONCAT(#{keyword}, '%')
+            </if>
+       </where>
+    </sql>
+    <select id="getAdvertCompanyCount" parameterType="core.wms.info.domain.AdvertCompanySearchParam" resultType="Integer">
+        SELECT COUNT(1) CNT
+          FROM TB_ADVERT_COMPANY
+         <include refid="sqlAdverCompanySearch"/>
+    </select>
+
+    <select id="getAdvertCompanyList" parameterType="core.wms.info.domain.AdvertCompanySearchParam" resultMap="advertCompanyResult">
+        SELECT *
+          FROM (
+            SELECT COM_NUM, AC_NUM, AC_NAME, REG_DATE
+                 , ROWNUM RNUM
+              FROM TB_ADVERT_COMPANY
+             <include refid="sqlAdverCompanySearch"/>
+            ORDER BY AC_NUM DESC
+          ) TB
+         WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+    </select>
+
+    <select id="getAdvertCompanyListByAll" parameterType="core.wms.info.domain.AdvertCompanySearchParam" resultMap="advertCompanyResult">
+        SELECT COM_NUM, AC_NUM, AC_NAME, REG_DATE
+          FROM TB_ADVERT_COMPANY
+         <include refid="sqlAdverCompanySearch"/>
+    </select>
+
+    <select id="getAdvertCompanyInfo" parameterType="core.wms.info.domain.AdvertCompany" resultMap="advertCompanyResult">
+        SELECT COM_NUM, AC_NUM, AC_NAME, REG_DATE
+          FROM TB_ADVERT_COMPANY
+         WHERE AC_NUM = #{acNum}
+    </select>
+
+    <insert id="insertAdvertCompany" parameterType="core.wms.info.domain.AdvertCompany">
+        INSERT INTO TB_ADVERT_COMPANY
+        ( COM_NUM
+        , AC_NUM
+        , AC_NAME
+        , REG_DATE
+        )VALUES
+        ( #{comNum}
+        , SEQ_AC_AC_NUM.nextval
+        , #{acName}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateAdvertCompany" parameterType="core.wms.info.domain.AdvertCompany">
+        UPDATE TB_ADVERT_COMPANY
+           SET REG_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+           <if test="acName != '' and acName != null">, AC_NAME = #{acName}</if>
+        WHERE AC_NUM = #{acNum}
+    </update>
+
+    <delete id="deleteAdvertCompany" parameterType="core.wms.info.domain.AdvertCompany">
+        DELETE
+          FROM TB_ADVERT_COMPANY
+         WHERE AC_NUM = #{acNum}
+    </delete>
+
+</mapper>

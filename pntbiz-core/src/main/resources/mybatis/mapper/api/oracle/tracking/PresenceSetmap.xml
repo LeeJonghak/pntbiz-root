@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.PresenceSetmapDao">
+
+	<resultMap id="presenceSetmapResult" type="core.api.presence.domain.PresenceSetmap">
+        <result property="comNum"             column="COM_NUM" />
+        <result property="mapType"            column="MAP_TYPE" />
+        <result property="initZoom"           column="INIT_ZOOM" />
+        <result property="initFloor"          column="INIT_FLOOR" />
+        <result property="checkTimeInterval"  column="CHECK_TIME_INTERVAL" />
+        <result property="removeTimeInterval" column="REMOVE_TIME_INTERVAL" />
+        <result property="moveTimeInterval"   column="MOVE_TIME_INTERVAL" />
+        <result property="moveUnit"           column="MOVE_UNIT" />
+        <result property="modDate"            column="MOD_DATE" />
+        <result property="regDate"            column="REG_DATE" />
+	</resultMap>
+
+	<select id="getPresenceSetmapInfo" parameterType="core.api.presence.domain.PresenceSetmap" resultMap="presenceSetmapResult">
+		SELECT COM_NUM, MAP_TYPE, INIT_ZOOM, INIT_FLOOR, CHECK_TIME_INTERVAL
+		     , REMOVE_TIME_INTERVAL, MOVE_TIME_INTERVAL, MOVE_UNIT, MOD_DATE, REG_DATE
+		  FROM TB_PRESENCE_SETMAP
+		 WHERE COM_NUM = #{comNum}
+		<if test="mapType != '' and mapType != null">AND MAP_TYPE = #{mapType}</if>
+	</select>
+</mapper>

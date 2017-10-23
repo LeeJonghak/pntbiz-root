@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FloorCodeDao">
+
+	<resultMap id="floorCodeResult" type="core.api.map.domain.FloorCode">
+		<result property="floorCodeNum" column="FLOOR_CODE_NUM"/>
+        <result property="comNum"       column="COM_NUM"/>
+        <result property="nodeId"       column="NODE_ID"/>
+        <result property="nodeName"    column="NODE_NAME"/>
+        <result property="nodeField"    column="NODE_FIELD"/>
+        <result property="typeCode"     column="TYPE_CODE"/>
+        <result property="upperNodeId"  column="UPPER_NODE_ID"/>
+        <result property="levelNo"      column="LEVEL_NO"/>
+        <result property="sortNo"       column="SORT_NO"/>
+        <result property="useFlag"      column="USE_FLAG"/>
+	</resultMap>
+
+    <select id="getFloorCodeInfo" parameterType="core.api.map.domain.FloorCode" resultMap="floorCodeResult">
+        SELECT A.FLOOR_CODE_NUM
+        , A.COM_NUM
+        , A.NODE_ID
+        , A.NODE_NAME
+        , A.NODE_FIELD
+        , A.TYPE_CODE
+        , A.UPPER_NODE_ID
+        , A.LEVEL_NO
+        , A.SORT_NO
+        , A.USE_FLAG
+        FROM TB_FLOOR_CODE A, TB_COMPANY B
+        WHERE B.UUID = #{UUID}
+        AND B.COM_NUM = A.COM_NUM
+        <if test="useFlag != null and useFlag != ''">AND USE_FLAG = #{useFlag}</if>
+        <choose>
+            <when test="floorCodeNum != null and floorCodeNum != ''">
+                AND FLOOR_CODE_NUM = #{floorCodeNum}
+            </when>
+            <otherwise>
+                AND NODE_ID= #{nodeId}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getFloorCodeList" parameterType="core.api.map.domain.FloorCode" resultMap="floorCodeResult">
+        SELECT A.FLOOR_CODE_NUM
+        , A.COM_NUM
+        , A.NODE_ID
+        , A.NODE_NAME
+        , A.NODE_FIELD
+        , A.TYPE_CODE
+        , A.UPPER_NODE_ID
+        , A.LEVEL_NO
+        , A.SORT_NO
+        , A.USE_FLAG
+        FROM TB_FLOOR_CODE A, TB_COMPANY B
+        WHERE B.UUID = #{UUID}
+        AND B.COM_NUM = A.COM_NUM
+        <if test="useFlag != null and useFlag != ''">AND USE_FLAG = #{useFlag}</if>
+        <if test="upperNodeId != null and upperNodeId != ''">AND UPPER_NODE_ID = #{upperNodeId}</if>
+    </select>
+
+    <select id="getFloorCodeLevelNoDescList" parameterType="core.api.map.domain.FloorCode" resultMap="floorCodeResult">
+        SELECT A.FLOOR_CODE_NUM
+        , A.COM_NUM
+        , A.NODE_ID
+        , A.NODE_NAME
+        , A.NODE_FIELD
+        , A.TYPE_CODE
+        , A.UPPER_NODE_ID
+        , A.LEVEL_NO
+        , A.SORT_NO
+        , A.USE_FLAG
+        FROM TB_FLOOR_CODE A, TB_COMPANY B
+        WHERE B.UUID = #{UUID}
+        AND B.COM_NUM = A.COM_NUM
+        <if test="useFlag != null and useFlag != ''">AND USE_FLAG = #{useFlag}</if>
+        <if test="levelNo != null and levelNo != ''">AND LEVEL_NO >= #{levelNo}</if>
+        ORDER BY A.LEVEL_NO DESC, A.UPPER_NODE_ID, A.SORT_NO
+    </select>
+
+    <select id="getFloorCodeLevelNoAscList" parameterType="core.api.map.domain.FloorCode" resultMap="floorCodeResult">
+        SELECT A.FLOOR_CODE_NUM
+        , A.COM_NUM
+        , A.NODE_ID
+        , A.NODE_NAME
+        , A.NODE_FIELD
+        , A.TYPE_CODE
+        , A.UPPER_NODE_ID
+        , A.LEVEL_NO
+        , A.SORT_NO
+        , A.USE_FLAG
+        FROM TB_FLOOR_CODE A, TB_COMPANY B
+        WHERE B.UUID = #{UUID}
+        AND B.COM_NUM = A.COM_NUM
+        <if test="useFlag != null and useFlag != ''">AND USE_FLAG = #{useFlag}</if>
+        <if test="levelNo != null and levelNo != ''">AND LEVEL_NO >= #{levelNo}</if>
+        ORDER BY A.LEVEL_NO, A.UPPER_NODE_ID, A.SORT_NO
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+

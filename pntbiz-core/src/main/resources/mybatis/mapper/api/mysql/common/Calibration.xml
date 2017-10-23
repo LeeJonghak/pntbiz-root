@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.common.CalibrationDao">
+	
+	<resultMap id="calibrationResult" type="core.api.common.domain.Calibration">
+		<result property="calNum" column="calNum" />
+		<result property="maker" column="maker" />
+		<result property="telecom" column="telecom" />
+		<result property="modelName" column="modelName" />	
+		<result property="deviceName" column="deviceName" />
+		<result property="os" column="os" />	
+		<result property="rssi" column="rssi" />
+		<result property="modDate" column="modDate" />
+		<result property="regDate" column="regDate" />
+	</resultMap>	
+	
+	<select id="getCalibrationInfo" parameterType="core.api.common.domain.Calibration" resultMap="calibrationResult">
+		SELECT calNum, maker, telecom, modelName, deviceName, os, rssi, modDate, regDate 
+		FROM TB_CALIBRATION 
+		WHERE modelName = #{modelName}
+	</select>
+	
+	<select id="getCalibrationInfoByNum" parameterType="core.api.common.domain.Calibration" resultMap="calibrationResult">
+		SELECT calNum, maker, telecom, modelName, deviceName, os, rssi, modDate, regDate 
+		FROM TB_CALIBRATION 
+		WHERE calNum = #{calNum}
+	</select>
+	
+	<insert id="insertCalibration" parameterType="core.api.common.domain.Calibration">
+		INSERT INTO TB_CALIBRATION 
+		(maker, telecom, modelName, deviceName, os, rssi, modDate, regDate)
+		VALUES
+		(#{maker}, #{telecom}, #{modelName}, #{deviceName}, #{os}, #{rssi}, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
+    </insert>
+    
+    <update id="updateCalibration" parameterType="core.api.common.domain.Calibration">
+		UPDATE TB_CALIBRATION
+		SET  maker = #{maker},
+		telecom = #{telecom},
+		deviceName = #{deviceName},
+		rssi = #{rssi},
+		modDate = UNIX_TIMESTAMP()
+		WHERE modelName = #{modelName} AND os=#{os}
+    </update>
+	
+</mapper>

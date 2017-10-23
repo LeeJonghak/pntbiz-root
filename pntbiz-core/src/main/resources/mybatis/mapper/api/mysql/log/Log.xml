@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="log.dao.LogDao">
+
+	<insert id="insertPresenceLog" parameterType="core.api.log.domain.PresenceLog">
+		INSERT INTO TB_LOG_PRESENCE
+		(SUUID, UUID, majorVer, minorVer, lat, lng, floor, 
+		beaconName, targetName, logDesc, regDate)
+		VALUES
+		(#{SUUID}, #{UUID}, #{majorVer}, #{minorVer}, #{lat}, #{lng}, #{floor},
+		#{beaconName}, #{targetName}, #{logDesc}, UNIX_TIMESTAMP())
+	</insert>
+
+	<insert id="insertPresenceBeaconLog" parameterType="core.api.log.domain.PresenceBeaconLog">
+        INSERT INTO TB_LOG_PRESENCE_BEACON(UUID, lat, lng, floor, deviceInfo, phoneNumber, fcNum, fcName, nodeID, regDate)
+        VALUES(#{UUID}, #{lat}, #{lng}, #{floor}, #{deviceInfo}, #{phoneNumber}, #{fcNum}, #{fcName}, #{nodeID}, UNIX_TIMESTAMP())
+    </insert>
+
+	<insert id="insertPresenceExhibitionLog" parameterType="core.api.log.domain.PresenceExhibitionLog">
+		INSERT INTO TB_LOG_PRESENCE_EXHIBITION  
+		(UUID, lat, lng, floor, conNum, fcNum, evtType, deviceInfo, phoneNumber, regDate)
+		VALUES
+		(#{UUID}, #{lat}, #{lng}, #{floor}, #{conNum}, #{fcNum}, #{evtType}, #{deviceInfo}, #{phoneNumber}, UNIX_TIMESTAMP());
+    </insert>
+
+	<insert id="insertPresenceInteractionLog" parameterType="core.api.log.domain.PresenceInteractionLog">
+		INSERT INTO TB_LOG_PRESENCE_INTERACTION  
+		(UUID, intType, deviceInfo, phoneNumber, regDate)
+		VALUES
+		(#{UUID}, #{intType}, #{deviceInfo}, #{phoneNumber}, UNIX_TIMESTAMP());
+    </insert>
+
+	<insert id="insertContentsInteractionLog" parameterType="core.api.log.domain.ContentsInteractionLog">
+		INSERT INTO TB_LOG_CONTENTS_INTERACTION
+		(UUID, conNum, deviceInfo, phoneNumber, regDate)
+		VALUES
+		(#{UUID}, #{conNum}, #{deviceInfo}, #{phoneNumber}, UNIX_TIMESTAMP());
+	</insert>
+
+	<insert id="insertBeaconSensorLog" parameterType="core.api.log.domain.BeaconSensorLog">
+		INSERT INTO TB_LOG_BEACON_SENSOR
+		(SUUID, UUID, collector, lat, lng, floor,
+		co2, o2, dust, temperature, humidity, battery, regDate)
+		VALUES
+		(#{SUUID}, #{UUID}, #{collector}, #{lat}, #{lng}, #{floor},
+		#{co2}, #{o2}, #{dust}, #{temperature}, #{humidity}, #{battery}, UNIX_TIMESTAMP());
+	</insert>
+
+	<insert id="insertGeofenceLog" parameterType="core.api.log.domain.GeofenceLog" keyProperty="logNum">
+		INSERT INTO TB_LOG_PRESENCE_GEOFENCE
+        ( SUUID
+        , UUID
+        , majorVer
+        , minorVer
+        , fcNum
+        , fcName
+        , floor
+        , beaconName
+        , targetName
+        , logDesc
+        , inDate
+        , outDate
+        , regDate
+        , permitted
+        ) VALUES
+        ( #{SUUID}
+        , #{UUID}
+        , #{majorVer}
+        , #{minorVer}
+        , #{fcNum}
+        , #{fcName}
+        , #{floor}
+        , #{beaconName}
+        , #{targetName}
+        , #{logDesc}
+        , #{inDate}
+        , #{outDate}
+        , UNIX_TIMESTAMP()
+        , #{permitted, typeHandler=framework.database.ValueEnumTypeHandler}
+        )
+	</insert>
+
+	<update id="updateGeofenceLog" parameterType="core.api.log.domain.GeofenceLog">
+		UPDATE TB_LOG_PRESENCE_GEOFENCE
+		SET
+		      outDate = #{outDate}
+              <if test="permitted!=null">, permitted = #{permitted, typeHandler=framework.database.ValueEnumTypeHandler}</if>
+		WHERE logNum = #{logNum}
+	</update>
+
+	<insert id="insertInterfaceLog" parameterType="core.api.log.domain.InterfaceLog" keyProperty="logNum">
+		INSERT INTO TB_LOG_INTERFACE (
+			interfaceNum,
+			comNum,
+			target,
+			requestMessage,
+			responseCode,
+			responseMessage,
+			regDate
+		)
+		VALUES
+		(
+			#{interfaceNum},
+			#{comNum},
+			#{target},
+			#{requestMessage},
+			#{responseCode},
+			#{responseMessage},
+			UNIX_TIMESTAMP()
+		)
+	</insert>
+
+	<insert id="insertFloorLog" parameterType="core.api.log.domain.FloorLog" keyProperty="logNum">
+		INSERT INTO TB_LOG_PRESENCE_FLOOR
+		( SUUID
+		, UUID
+		, majorVer
+		, minorVer
+		, floor
+		, beaconName
+		, targetName
+		, logDesc
+		, inDate
+		, outDate
+		, regDate
+		, permitted
+		) VALUES
+		( #{SUUID}
+		, #{UUID}
+		, #{majorVer}
+		, #{minorVer}
+		, #{floor}
+		, #{beaconName}
+		, #{targetName}
+		, #{logDesc}
+		, #{inDate}
+		, #{outDate}
+		, UNIX_TIMESTAMP()
+		, #{permitted, typeHandler=framework.database.ValueEnumTypeHandler}
+		)
+	</insert>
+
+	<update id="updateFloorLog" parameterType="core.api.log.domain.FloorLog">
+		UPDATE TB_LOG_PRESENCE_FLOOR
+		SET
+		outDate = #{outDate}
+		<if test="permitted!=null">, permitted = #{permitted, typeHandler=framework.database.ValueEnumTypeHandler}</if>
+		WHERE logNum = #{logNum}
+	</update>
+
+	<insert id="insertNotificationLog" parameterType="core.common.log.domain.NotificationLog" keyProperty="logNum">
+		INSERT INTO TB_LOG_NOTIFICATION
+		( comNum
+		, beaconNum
+		, interfaceCommandType
+		, beaconInfo
+		, eventZoneInOutState
+		, regDate
+		) VALUES
+		( #{comNum}
+		, #{beaconNum}
+		, #{interfaceCommandType, typeHandler=framework.database.ValueEnumTypeHandler}
+		, #{beaconInfo}
+		, #{eventZoneInOutState}
+		, UNIX_TIMESTAMP()
+		)
+	</insert>
+
+</mapper>
+

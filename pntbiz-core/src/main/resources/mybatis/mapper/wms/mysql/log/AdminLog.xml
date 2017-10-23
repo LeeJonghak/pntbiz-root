@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.AdminLogDao">
+	
+	<resultMap id="adminLogResult" type="core.wms.admin.log.domain.AdminLog">
+		<result property="logNum" column="logNum" />
+		<result property="adminID" column="adminID" />
+		<result property="tableName" column="tableName" />
+		<result property="crudType" column="crudType" />
+		<result property="pk" column="pk" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+	
+	<insert id="insertAdminLog" parameterType="core.wms.admin.log.domain.AdminLog">
+		INSERT INTO TB_LOG_ADMIN 
+		(adminID, tableName, crudType, pk, regDate)
+		VALUES
+		(#{adminID}, #{tableName}, #{crudType}, #{pk}, UNIX_TIMESTAMP())
+	</insert>
+   
+	
+</mapper>

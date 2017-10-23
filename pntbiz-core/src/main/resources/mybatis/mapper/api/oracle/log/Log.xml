@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="log.dao.LogDao">
+
+	<!-- 
+	<insert id="insertPresenceLog" parameterType="core.api.log.domain.PresenceLog">
+		INSERT INTO TB_LOG_PRESENCE
+		(LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, LAT, LNG, FLOOR, BEACON_NAME, TARGET_NAME, LOG_DESC, REG_DATE)
+		VALUES
+		(SEQ_LP_LOG_NUM.nextval, #{SUUID}, #{UUID}, #{majorVer}, #{minorVer}, #{lat}, #{lng}, #{floor},
+		#{beaconName}, #{targetName}, #{logDesc}, FN_UNIX_TIMESTEMP(SYSDATE))
+	</insert>
+	-->
+	
+	<!-- lgd -->
+	<insert id="insertPresenceLog" parameterType="core.api.log.domain.PresenceLog">
+		INSERT INTO TB_LOG_PRESENCE
+		(LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, LAT, LNG, FLOOR, 
+		BEACON_NAME, TARGET_NAME, LOG_DESC, REG_DATE)
+		VALUES
+		(SEQ_LP_LOG_NUM.nextval, #{SUUID}, #{UUID}, #{majorVer}, #{minorVer}, #{lat}, #{lng}, #{floor},
+		#{beaconName}, #{targetName}, #{logDesc}, FN_UNIX_TIMESTEMP(SYSDATE))
+	</insert>
+
+	<insert id="insertPresenceBeaconLog" parameterType="core.api.log.domain.PresenceBeaconLog">
+        INSERT INTO TB_LOG_PRESENCE_BEACON
+        ( LOG_NUM
+        , UUID
+        , LAT
+        , LNG
+        , FLOOR
+        , DEVICE_INFO
+        , PHONE_NUMBER
+        , FC_NUM
+        <if test="fcName != null">, FC_NAME</if>
+        , NODE_ID
+        , REG_DATE
+        ) VALUES
+        ( SEQ_LPB_LOG_NUM.nextval
+        , #{UUID}
+        , #{lat}
+        , #{lng}
+        , #{floor}
+        , #{deviceInfo}
+        , #{phoneNumber}
+        , #{fcNum}
+        <if test="fcName != null">, #{fcName}</if>
+        , #{nodeID}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+	<insert id="insertPresenceExhibitionLog" parameterType="core.api.log.domain.PresenceExhibitionLog">
+		INSERT INTO TB_LOG_PRESENCE_EXHIBITION
+		( LOG_NUM
+        , UUID
+		, LAT
+		, LNG
+		, FLOOR
+		, CON_NUM
+		, FC_NUM
+		, EVT_TYPE
+		, DEVICE_INFO
+		, PHONE_NUMBER
+		, REG_DATE
+		) VALUES
+		( SEQ_LPE_LOG_NUM.nextval
+		, #{UUID}
+		, #{lat}
+		, #{lng}
+		, #{floor}
+		, #{conNum}
+		, #{fcNum}
+		, #{evtType}
+		, #{deviceInfo}
+		, #{phoneNumber}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <insert id="insertPresenceInteractionLog" parameterType="core.api.log.domain.PresenceInteractionLog">
+		INSERT INTO TB_LOG_PRESENCE_INTERACTION
+		( LOG_NUM
+        , UUID
+        , INT_TYPE
+        , DEVICE_INFO
+        , PHONE_NUMBER
+        , REG_DATE
+        )VALUES
+		( SEQ_LPIT_LOG_NUM.nextval
+		, #{UUID}
+		, #{intType}
+		, #{deviceInfo}
+		, #{phoneNumber}
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <insert id="insertContentsInteractionLog" parameterType="core.api.log.domain.ContentsInteractionLog"  keyProperty="logNum">
+		INSERT INTO TB_LOG_CONTENTS_INTERACTION
+		( LOG_NUM
+		, UUID
+		, CON_NUM
+		, DEVICE_INFO
+		, PHONE_NUMBER
+		, REG_DATE
+		) VALUES
+		( SEQ_LCI_LOG_NUM.nextval
+		, #{UUID}
+		, #{conNum}
+		, #{deviceInfo}
+		, #{phoneNumber}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <insert id="insertBeaconSensorLog" parameterType="core.api.log.domain.BeaconSensorLog">
+		INSERT INTO TB_LOG_BEACON_SENSOR
+		( LOG_NUM
+		, SUUID
+		, UUID
+		, COLLECTOR
+		, LAT
+		, LNG
+		, FLOOR
+		, CO2
+		, O2
+		, DUST
+		, TEMPERATURE
+		, HUMIDITY
+		, BATTERY
+		, REG_DATE
+		)VALUES
+		( SEQ_LBSS_LOG_NUM.nextval
+		, #{SUUID}
+		, #{UUID}
+		, #{collector}
+		, #{lat}
+		, #{lng}
+		, #{floor}
+		, #{co2}
+		, #{o2}
+		, #{dust}
+		, #{temperature}
+		, #{humidity}
+		, #{battery}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+	<insert id="insertGeofenceLog" parameterType="core.api.log.domain.GeofenceLog">
+		INSERT INTO TB_LOG_PRESENCE_GEOFENCE
+		( LOG_NUM
+		, SUUID
+		, UUID
+		, MAJOR_VER
+		, MINOR_VER
+		, FC_NUM
+		, FC_NAME
+		, FLOOR
+		, BEACON_NAME
+		, TARGET_NAME
+		, LOG_DESC
+		, IN_DATE
+		, OUT_DATE
+		, REG_DATE
+		) VALUES
+		( SEQ_LPG_LOG_NUM.nextval
+		, #{SUUID}
+		, #{UUID}
+		, #{majorVer}
+		, #{minorVer}
+		, #{fcNum}
+		, #{fcName}
+		, #{floor}
+		, #{beaconName}
+		, #{targetName}
+		, #{logDesc}
+		, #{inDate}
+		, #{outDate}
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+
+		<selectKey keyProperty="logNum" resultType="Integer">
+			SELECT SEQ_LPG_LOG_NUM.currval FROM DUAL
+		</selectKey>
+	</insert>
+
+	<update id="updateGeofenceLog" parameterType="core.api.log.domain.GeofenceLog">
+		UPDATE TB_LOG_PRESENCE_GEOFENCE
+		SET OUT_DATE = #{outDate}
+		WHERE LOG_NUM = #{logNum}
+	</update>
+</mapper>

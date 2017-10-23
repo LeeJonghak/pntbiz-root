@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.ChaosAreaDao">
+
+    <resultMap id="chaosAreaResult" type="core.wms.map.domain.ChaosArea">
+        <result property="areaNum" column="AREA_NUM"/>
+        <result property="comNum"  column="COM_NUM "/>
+        <result property="floor"   column="FLOOR"/>
+        <result property="lat"     column="LAT"/>
+        <result property="lng"     column="LNG"/>
+        <result property="radius"  column="RADIUS"/>
+        <result property="regDate" column="REG_DATE" />
+    </resultMap>
+
+    <select id="getChaosAreaListAll" parameterType="core.wms.map.domain.ChaosArea" resultMap="chaosAreaResult">
+        SELECT *
+          FROM TB_CHAOS_AREA
+         WHERE COM_NUM=#{comNum}
+        <if test="floor!=null">
+            AND FLOOR=#{floor}
+        </if>
+    </select>
+
+    <insert id="insertChaosArea" parameterType="core.wms.map.domain.ChaosArea">
+        INSERT INTO TB_CHAOS_AREA
+        ( AREA_NUM
+        , COM_NUM
+        , FLOOR
+        , LAT
+        , LNG
+        , RADIUS
+        , REG_DATE
+        ) VALUES
+        ( SEQ_CA_AREA_NUM.nextval
+        , #{comNum}
+        , #{floor}
+        , #{lat}
+        , #{lng}
+        , #{radius}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+
+        <selectKey keyProperty="areaNum" resultType="Integer">
+            SELECT SEQ_CA_AREA_NUM.currval FROM DUAL
+        </selectKey>
+    </insert>
+
+    <update id="modifyChaosArea" parameterType="core.wms.map.domain.ChaosArea">
+        UPDATE TB_CHAOS_AREA
+           SET LAT=#{lat}
+             , LNG=#{lng}
+             , RADIUS=#{radius}
+         WHERE COM_NUM=#{comNum}
+           AND AREA_NUM=#{areaNum}
+    </update>
+
+    <delete id="deleteChaosArea" parameterType="core.wms.map.domain.ChaosArea">
+      DELETE FROM TB_CHAOS_AREA
+        WHERE COM_NUM=#{comNum}
+        <if test="floor!=null">
+            AND FLOOR=#{floor}
+        </if>
+        <if test="areaNum!=null">
+            AND AREA_NUM=#{areaNum}
+        </if>
+    </delete>
+
+</mapper>

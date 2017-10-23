@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+ 	<!--
+ 		로그인 처리를 위한 Spring Security 설정
+ 		2014-11-14 nohsoo
+ 	-->
+ 	<bean id="loginDao" class="core.wms.auth.dao.LoginDao">
+ 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+ 	</bean>
+ 	<bean id="loginRoleAuthoritiesDao" class="core.wms.auth.dao.LoginRoleAuthoritiesDao" >
+ 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+ 	</bean>
+ 	<bean id="companyDao" class="core.wms.admin.company.dao.CompanyDao">
+ 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+ 	</bean>
+ 	<bean id="loginDetailService" class="wms.component.auth.LoginDetailService">
+    	<property name="loginDao" ref="loginDao" />
+    	<property name="loginRoleAuthoritiesDao" ref="loginRoleAuthoritiesDao" />
+        <property name="companyDao" ref="companyDao" />
+    </bean>
+    <bean id="userAuthenticationSuccessHandler" class="wms.component.auth.UserAuthenticationSuccessHandler">
+    	<property name="loginDao" ref="loginDao" />
+    	<property name="userid" value="userid" />
+    	<property name="targetUrlParameter" value="loginRedirect" />
+    	<property name="useReferer" value="false" />
+    	<property name="defaultUrl" value="/dashboard/main.do" />
+    	<property name="lockedUrl" value="/auth/otp.do?failure=2" />
+    	<property name="expiredUrl" value="/auth/otp.do?failure=3" />
+    </bean>
+    <bean id="userAuthenticationFailureHandler" class="wms.component.auth.UserAuthenticationFailureHandler">
+        <property name="loginDao" ref="loginDao" />
+        <property name="userid" value="userid" />
+        <property name="userpw" value="userpw" />
+        <property name="inputname" value="userid" />
+        <property name="defaultFailureUrl" value="/auth/login.do?failure=1" />
+        <property name="lockedUrl" value="/auth/otp.do?failure=2" />
+        <property name="expiredUrl" value="/auth/otp.do?failure=3" />
+    </bean>
+
+    <security:authentication-manager id="authenticationManager" alias="authenticationManager">
+    	<security:authentication-provider user-service-ref="loginDetailService">
+    		<security:password-encoder base64="false" hash="sha-256"></security:password-encoder>
+    	</security:authentication-provider>
+    </security:authentication-manager>
+    <security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled" authentication-manager-ref="authenticationManager" />
+
+
+	<bean id="webSecurityExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+		<property name="defaultRolePrefix" value="" />
+	</bean>
+
+    <security:http auto-config="true" name="securityHttp" pattern="/**" use-expressions="true" realm="WMS Login" authentication-manager-ref="authenticationManager">
+		<security:headers disabled="true"/>
+		<security:csrf disabled="true"/>
+		<security:expression-handler ref="webSecurityExpressionHandler" />
+
+		<!--
+		<security:intercept-url pattern="/**" access="permitAll" requires-channel="https" />
+		-->
+
+		<!-- Local 에서 테스트하기 위해서 https 옵션 제거-->
+		<security:intercept-url pattern="/auth/*" access="permitAll" />
+
+		<!-- 모두 접근 가능 -->
+		<security:intercept-url pattern="/tracking/map.embed.do**" access="permitAll" />
+		<security:intercept-url pattern="/maptool/data/**" access="permitAll" />
+
+
+        <!-- URL별 접근권한 설정 권한 코드는 TB_LOGIN_AUTHCODE 테이블을 참고  -->
+        <security:intercept-url pattern="/dashboard/**" access="hasAnyRole('BF_DASHBOARD')" />
+        <security:intercept-url pattern="/beacon/info/**.do" access="hasAnyRole('BF_BEACON')" />
+        <security:intercept-url pattern="/beacon/monitor/**.do" access="hasAnyRole('BF_BEACON_STATE')" />
+        <security:intercept-url pattern="/map/bsplan.do" access="hasAnyRole('BF_BEACON_STATE')" />
+        <security:intercept-url pattern="/scanner/**.do" access="hasAnyRole('BF_SCANNER')" />
+        <security:intercept-url pattern="/scanner/**/**.do" access="hasAnyRole('BF_SCANNER')" />
+        <security:intercept-url pattern="/map/bplan.do" access="hasAnyRole('BF_BEACON_PLAN')" />
+        <security:intercept-url pattern="/map/map/*ChaosArea.do" access="hasAnyRole('BF_BEACON_PLAN')" />
+        <security:intercept-url pattern="/geofencing/info/**.do" access="hasAnyRole('BF_GEOFENCING')" />
+        <security:intercept-url pattern="/map/gplan.do" access="hasAnyRole('BF_GEOFENCING_PLAN')" />
+        <security:intercept-url pattern="/map/floor/**.do" access="hasAnyRole('BF_FLOOR')" />
+        <security:intercept-url pattern="/map/splan.do" access="hasAnyRole('BF_SCANNER')" />
+        <security:intercept-url pattern="/contents/**.do" access="hasAnyRole('BF_CONTENTS')" />
+        <security:intercept-url pattern="/contents/**/**.do" access="hasAnyRole('BF_CONTENTS')" />
+        <!--<security:intercept-url pattern="/service/event/**.do" access="hasAnyRole('BF_SERVICE_EVENT')" />-->
+        <security:intercept-url pattern="/event/*/**.do" access="hasAnyRole('BF_SERVICE_EVENT')" />
+        <security:intercept-url pattern="/service/seat/**.do" access="hasAnyRole('BF_SERVICE_SEAT')" />
+        <security:intercept-url pattern="/service/push/**/**.do" access="hasAnyRole('BF_SERVICE_PUSH')" />
+        <security:intercept-url pattern="/service/attendance/**.do" access="hasAnyRole('BF_SERVICE_ATTENDANCE')" />
+        <security:intercept-url pattern="/tracking/**.do" access="hasAnyRole('BF_TRACKING')" />
+        <security:intercept-url pattern="/tracking/**/**.do" access="hasAnyRole('BF_TRACKING')" />
+        <security:intercept-url pattern="/tracking/presence/beacon/*" access="hasAnyRole('BF_TRACKING_BEACON')" />
+        <security:intercept-url pattern="/stat/**.do" access="hasAnyRole('BF_STAT')" />
+        <security:intercept-url pattern="/stat/**/**.do" access="hasAnyRole('BF_STAT')" />
+        <security:intercept-url pattern="/info/company/**.do" access="hasAnyRole('BF_INFO_COMPANY')" />
+        <security:intercept-url pattern="/info/code/**.do" access="hasAnyRole('BF_INFO_CODE')" />
+        <security:intercept-url pattern="/info/ac/**.do" access="hasAnyRole('BF_INFO_ADVERT')" />
+        <security:intercept-url pattern="/info/location/**.do" access="hasAnyRole('BF_INFO_LOCATION')" />
+        <security:intercept-url pattern="/info/account/**.do" access="hasAnyRole('BF_INFO_ACCOUNT')" />
+        <security:intercept-url pattern="/info/interface/**.do" access="hasAnyRole('BF_INFO_INTERFACE')" />
+        <security:intercept-url pattern="/monitoring/**/**.do" access="hasAnyRole('BT_SERVER_MONITORING', 'BT_SCANNER_MONITORING')" />
+
+        <!-- 세미나 출입/퇴장 -->
+        <security:intercept-url pattern="/service/attendanceSeminar/**.do" access="hasAnyRole('BF_SERVICE_ATTENDANCE_SEMINAR')" />
+
+        <!-- nohsoo 2015-09-24: OAUTH 설정 -->
+        <security:intercept-url pattern="/oauth/client/**.do" access="hasAnyRole('BF_OAUTH')" />
+
+        <!-- end -->
+        <security:session-management session-fixation-protection="none"></security:session-management>
+
+        <!-- 로그인 폼 -->
+        <security:form-login login-page="/auth/login.do"
+        	login-processing-url="/auth/login"
+        	default-target-url="/dashboard/main.do"
+        	authentication-failure-url="/auth/login.do?failure=1"
+        	authentication-success-handler-ref="userAuthenticationSuccessHandler"
+            authentication-failure-handler-ref="userAuthenticationFailureHandler"
+        	username-parameter="userid"
+        	password-parameter="userpw"
+        	always-use-default-target="false" />
+        <!-- 로그아웃 처리 -->
+        <security:logout
+        	logout-url="/auth/logout"
+        	logout-success-url="/"
+        	delete-cookies="JSESSIONID" invalidate-session="true" />
+    </security:http>
+
+</beans>

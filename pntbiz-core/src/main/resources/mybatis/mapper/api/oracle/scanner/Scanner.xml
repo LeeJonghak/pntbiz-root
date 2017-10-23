@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.scanner.dao.ScannerDao">
+
+	<resultMap id="scannerResult" type="core.api.scanner.domain.Scanner">
+	    <result property="scannerNum"   column="SCANNER_NUM" />
+        <result property="comNum"       column="COM_NUM" />
+        <result property="macAddr"      column="MAC_ADDR" />
+        <result property="majorVer"     column="MAJOR_VER" />
+        <result property="scannerName"  column="SCANNER_NAME" />
+        <result property="lat"          column="LAT" />
+        <result property="lng"          column="LNG" />
+        <result property="rssi"         column="RSSI" />
+        <result property="floor"        column="FLOOR" />
+        <result property="modDate"      column="MOD_DATE" />
+        <result property="regDate"      column="REG_DATE" />
+        <result property="UUID"         column="UUID" />
+    </resultMap>
+
+	<select id="getScannerList" parameterType="core.api.scanner.domain.Scanner" resultMap="scannerResult">
+		SELECT SCANNER_NUM
+		     , COM_NUM
+		     , MAC_ADDR
+		     , MAJOR_VER
+		     , SCANNER_NAME
+		     , LAT
+		     , LNG
+		     , RSSI
+		     , FLOOR
+		     , MOD_DATE
+		     , REG_DATE
+		  FROM TB_SCANNER
+		WHERE 1=1
+		<if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+        <if test="floor != '' and floor!=null">AND FLOOR=#{floor}</if>
+	</select>
+
+</mapper>

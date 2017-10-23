@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.auth.dao.LoginAuthcodeDao">
+	
+	<resultMap id="cntResult" type="Integer">
+		<result property="cnt" column="CNT" />
+	</resultMap>
+	
+	<resultMap id="loginAuthcodeResult" type="core.wms.auth.domain.LoginAuthcode">
+		<result property="authNum" column="authNum" />
+		<result property="authCode" column="authCode" />
+		<result property="authName" column="authName" />
+		<result property="regDate" column="regDate" />
+	</resultMap>	
+
+	<!--
+	역할 및 권한 테이블 관련(LoginRole)
+	2014-11-14 nohsoo
+	-->
+	<select id="getLoginAuthcodeCheck" parameterType="core.wms.auth.domain.LoginAuthcode" resultMap="cntResult">
+		SELECT COUNT(1) CNT
+		FROM TB_LOGIN_AUTHCODE
+		WHERE authCode = #{authCode}
+	</select>
+	
+	<select id="getLoginAuthcodeInfo" parameterType="core.wms.auth.domain.LoginAuthcode" resultMap="loginAuthcodeResult">
+		SELECT authNum, authCode, authName, regDate 
+		FROM TB_LOGIN_AUTHCODE 
+		WHERE authNum = #{authNum}
+	</select>
+	
+</mapper>

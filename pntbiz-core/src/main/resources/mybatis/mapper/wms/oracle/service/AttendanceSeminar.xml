@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="api.core.wms.service.dao.AttendanceSeminarDao">
+
+    <resultMap id="attendanceSeminarResult" type="core.wms.service.domain.AttendanceSeminar">
+        <result property="logNum"      column="LOG_NUM"/>
+        <result property="UUID"        column="UUID"/>
+        <result property="majorVer"    column="MAJOR_VER"/>
+        <result property="minorVer"    column="MINOR_VER"/>
+        <result property="macAddr"     column="MAC_ADDR"/>
+        <result property="phoneNumber" column="PHONE_NUMBER"/>
+        <result property="deviceInfo"  column="DEVICE_INFO"/>
+        <result property="state"       column="STATE"/>
+        <result property="attdDate"    column="ATTD_DATE"/>
+        <result property="subject"     column="SUBJECT"/>
+        <result property="regDate"     column="REG_DATE"/>
+    </resultMap>
+
+
+    <sql id="selectAttendanceSeminarSearch">
+        <where>
+           <if test="UUID!=null">AND a.UUID=#{UUID}</if>
+           <if test="state!=null">AND a.STATE=#{state}</if>
+           <if test="attdDate!=null">
+                AND a.ATTD_DATE BETWEEN FN_UNIX_TIMESTEMP(TO_DATE(#{attdDate}, 'YYYYMMDD')) AND (FN_UNIX_TIMESTEMP(TO_DATE(#{attdDate}, 'YYYYMMDD')+1)-1)
+           </if>
+           <if test="phoneNumber!=null">AND a.PHONE_NUMBER=#{phoneNumber}</if>
+           <if test="keyword != '' and keyword  != null">
+                <choose>
+                    <when test="opt == 'phoneNumber'"> AND a.PHONE_NUMBER LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt == 'subject'">     AND b.SUBJECT LIKE CONCAT(#{keyword}, '%')</when>
+                    <otherwise></otherwise>
+                </choose>
+           </if>
+         </where>
+    </sql>
+	<select id="getAttendanceSeminarCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		 FROM TB_ATTENDANCE_SEMINAR a
+         LEFT JOIN TB_ATTENDANCE_SEMINAR_MGR b
+           ON a.UUID=b.UUID
+          AND a.MAJOR_VER=b.MAJOR_VER
+          AND a.MINOR_VER=b.MINOR_VER
+         <include refid="selectAttendanceSeminarSearch"/>
+	</select>
+
+	<select id="getAttendanceSeminarList" parameterType="java.util.Map" resultMap="attendanceSeminarResult">
+	   SELECT *
+          FROM (
+			SELECT a.LOG_NUM, a.UUID, a.MAJOR_VER, a.MINOR_VER, a.PHONE_NUMBER, a.DEVICE_INFO, a.STATE, a.ATTD_DATE, a.REG_DATE
+			     , b.SUBJECT
+                 , ROWNUM RNUM
+			  FROM TB_ATTENDANCE_SEMINAR a
+			  LEFT JOIN TB_ATTENDANCE_SEMINAR_MGR b
+			    ON a.UUID=b.UUID
+			   AND a.MAJOR_VER=b.MAJOR_VER
+			   AND a.MINOR_VER=b.MINOR_VER
+             <include refid="selectAttendanceSeminarSearch"/>
+			  ORDER BY a.LOG_NUM DESC
+          ) TB
+         <if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+	</select>
+
+	<insert id="insertAttendanceSeminar" parameterType="core.wms.service.domain.AttendanceSeminar">
+		INSERT INTO TB_ATTENDANCE_SEMINAR
+		( UUID
+		, PHONE_NUMBER
+		, STATE
+		, ATTD_DATE
+		, SUBJECT
+		, REG_DATE
+		)VALUES
+		( #{UUID}
+		, #{phoneNumber}
+		, #{state}
+		, #{attdDate}
+		, #{subject}
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <delete id="deleteAttendanceSeminar" parameterType="java.util.Map">
+        DELETE
+          FROM TB_ATTENDANCE_SEMINAR
+         WHERE UUID=#{UUID}
+           AND ATTD_DATE=#{attdDate}
+        <if test="logNum!=null">
+			AND LOG_NUM=#{logNum}
+		</if>
+    </delete>
+</mapper>

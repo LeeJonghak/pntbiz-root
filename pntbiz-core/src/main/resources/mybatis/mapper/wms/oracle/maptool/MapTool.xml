@@ -1,0 +1,921 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.maptool.dao.MapToolDao">
+
+    <resultMap id="floorResult" type="java.util.Map">
+        <result property="floorNum" column="FLOOR_NUM" />
+        <result property="comNum"   column="COM_NUM" />
+        <result property="floor"    column="FLOOR" />
+        <result property="floorName" column="FLOOR_NAME" />
+        <result property="swLat"    column="SW_LAT" />
+        <result property="swLng"    column="SW_LNG" />
+        <result property="neLat"    column="NE_LAT" />
+        <result property="neLng"    column="NE_LNG" />
+        <result property="deg"      column="DEG" />
+        <result property="imgSrc"   column="IMG_SRC" />
+        <result property="modDate"  column="MOD_DATE" />
+        <result property="regDate"  column="REG_DATE" />
+    </resultMap>
+
+    <resultMap id="geofencingResult" type="java.util.Map">
+        <result property="comNum"       column="COM_NUM" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="fcNum"        column="FC_NUM" javaType="java.math.BigInteger" jdbcType="NUMERIC"/>
+        <result property="fcType"       column="FC_TYPE" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="fcShape"      column="FC_SHAPE" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="fcName"       column="FC_NAME" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="floor"        column="FLOOR" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="evtEnter"     column="EVT_ENTER" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="evtLeave"     column="EVT_LEAVE" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="evtStay"      column="EVT_STAY" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="numEnter"     column="NUM_ENTER" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="numLeave"     column="NUM_LEAVE" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="numStay"      column="NUM_STAY" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="field1"       column="FIELD1" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="field2"       column="FIELD2" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="field3"       column="FIELD3" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="field4"       column="FIELD4" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="field5"       column="FIELD5" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="userID"       column="USERID" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="modDate"      column="MOD_DATE" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="regDate"      column="REG_DATE" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="fcGroupNum"   column="FC_GROUP_NUM" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="fcGroupName"  column="FC_GROUP_NAME" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <resultMap id="geofencingLatlngResult" type="java.util.Map">
+        <result property="fcNum"       column="FC_NUM" javaType="java.math.BigInteger" jdbcType="NUMERIC"/>
+        <result property="lat"         column="LAT" javaType="java.lang.Double" jdbcType="NUMERIC"/>
+        <result property="lng"         column="LNG" javaType="java.lang.Double" jdbcType="NUMERIC"/>
+        <result property="radius"      column="RADIUS" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+        <result property="orderSeq"    column="ORDER_SEQ" javaType="java.lang.Integer" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <resultMap id="geofencingGroupResult" type="java.util.Map">
+        <result property="comNum"       column="COM_NUM" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+        <result property="fcGroupNum"   column="FC_GROUP_NUM" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+        <result property="fcGroupName"  column="FC_GROUP_NAME" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="fcCount"      column="FC_COUNT"  javaType="java.lang.Integer" jdbcType="NUMERIC" />
+        <result property="modDate"      column="MOD_DATE" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+        <result property="regDate"      column="REG_DATE" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+    </resultMap>
+
+    <resultMap id="beaconResult" type="java.util.Map">
+        <result property="beaconNum"          column="BEACON_NUM"/>
+        <result property="comNum"             column="COM_NUM"/>
+        <result property="UUID"               column="UUID"/>
+        <result property="majorVer"           column="MAJOR_VER"/>
+        <result property="minorVer"           column="MINOR_VER"/>
+        <result property="macAddr"            column="MAC_ADDR"/>
+        <result property="txPower"            column="TX_POWER"/>
+        <result property="battery"            column="BATTERY"/>
+        <result property="beaconType"         column="BEACON_TYPE"/>
+        <result property="beaconTypeLangCode" column="BEACON_TYPE_LANG_CODE"/>
+        <result property="beaconName"         column="BEACON_NAME"/>
+        <result property="beaconDesc"         column="BEACON_DESC"/>
+        <result property="floor"              column="FLOOR"/>
+        <result property="lat"                column="LAT"/>
+        <result property="lng"                column="LNG"/>
+        <result property="state"              column="STATE"/>
+        <result property="stateReason"        column="STATE_REASON"/>
+        <result property="lastDate"           column="LAST_DATE"/>
+        <result property="modDate"            column="MOD_DATE"/>
+        <result property="regDate"            column="REG_DATE"/>
+        <result property="imgSrc"             column="IMG_SRC"/>
+        <result property="imgUrl"             column="IMG_URL"/>
+        <result property="field1"             column="FIELD1"/>
+        <result property="field2"             column="FIELD2"/>
+        <result property="field3"             column="FIELD3"/>
+        <result property="field4"             column="FIELD4"/>
+        <result property="field5"             column="FIELD5"/>
+        <result property="beaconGroupNum"     column="BEACON_GROUP_NUM"/>
+        <result property="beaconGroupName"    column="BEACON_GROUP_NAME"/>
+    </resultMap>
+
+    <resultMap id="beaconGroupResult" type="java.util.Map">
+        <result property="comNum"           column="COM_NUM" />
+        <result property="beaconGroupNum"   column="BEACON_GROUP_NUM" />
+        <result property="beaconGroupName"  column="BEACON_GROUP_NAME" />
+        <result property="beaconCount"      column="BEACON_COUNT" />
+        <result property="modDate"          column="MOD_DATE" />
+        <result property="regDate"          column="REG_DATE" />
+    </resultMap>
+
+    <resultMap id="scannerResult" type="java.util.Map">
+        <result property="scannerNum"   column="SCANNER_NUM" />
+        <result property="comNum"       column="COM_NUM" />
+        <result property="macAddr"      column="MAC_ADDR" />
+        <result property="majorVer"     column="MAJOR_VER" />
+        <result property="scannerName"  column="SCANNER_NAME" />
+        <result property="sid"          column="SID" />
+        <result property="lat"          column="LAT" />
+        <result property="lng"          column="LNG" />
+        <result property="rssi"         column="RSSI" />
+        <result property="srssi"        column="SRSSI" />
+        <result property="mrssi"        column="MRSSI" />
+        <result property="drssi"        column="DRSSI" />
+        <result property="exMeter"      column="EX_METER" />
+        <result property="calPoint"     column="CAL_POINT" />
+        <result property="maxSig"       column="MAX_SIG" />
+        <result property="maxBuf"       column="MAX_BUF" />
+        <result property="fwVer"        column="FW_VER" />
+        <result property="floor"        column="FLOOR" />
+        <result property="modDate"      column="MOD_DATE" />
+        <result property="regDate"      column="REG_DATE" />
+        <result property="UUID"         column="UUID" />
+    </resultMap>
+
+    <resultMap id="nodeResult" type="java.util.Map">
+        <result property="nodeNum"  column="NODE_NUM"/>
+        <result property="comNum"   column="COM_NUM" />
+        <result property="nodeID"   column="NODE_ID"/>
+        <result property="floor"    column="FLOOR"/>
+        <result property="nodeName" column="NODE_NAME"/>
+        <result property="lat"      column="LAT"/>
+        <result property="lng"      column="LNG"/>
+        <result property="cate"     column="CATE"/>
+        <result property="jointName" column="JOINT_NAME"/>
+        <result property="type"     column="TYPE"/>
+    </resultMap>
+
+     <resultMap id="nodeEdgeResult" type="java.util.Map">
+        <result property="edgeNum"   column="EDGE_NUM" />
+        <result property="comNum"     column="COM_NUM" />
+        <result property="floor"     column="FLOOR" />
+        <result property="startPoint" column="START_POINT" />
+        <result property="endPoint"   column="END_POINT" />
+        <result property="type"       column="TYPE" />
+    </resultMap>
+
+   <resultMap id="contentsResult" type="java.util.Map">
+        <result property="comNum"  column="COM_NUM" />
+        <result property="conNum"  column="CON_NUM" />
+        <result property="typeNum"  column="TYPE_NUM" />
+        <result property="conType" column="CON_TYPE" />
+        <result property="conName" column="CON_NAME" />
+        <result property="userID"  column="USER_ID" />
+        <result property="acNum"   column="AC_NUM" />
+        <result property="expFlag" column="EXP_FLAG" />
+        <result property="rssi"    column="RSSI" />
+        <result property="conDesc" column="CON_DESC" />
+        <result property="sDate"   column="S_DATE" />
+        <result property="eDate"   column="E_DATE" />
+        <result property="modDate" column="MOD_DATE" />
+        <result property="regDate" column="REG_DATE" />
+    </resultMap>
+
+    <resultMap id="contentsMappingResult" type="java.util.Map">
+        <result property="conNum"     column="CON_NUM" />
+        <result property="refType"    column="REF_TYPE" />
+        <result property="refSubType" column="REF_SUB_TYPE" />
+        <result property="refNum" column="REF_NUM" />
+        <result property="evtNum" column="EVT_NUM" />
+        <result property="conType" column="CON_TYPE" />
+        <result property="conName" column="CON_NAME" />
+        <result property="refName" column="REF_NAME" />
+        <result property="floor" column="FLOOR" />
+        <result property="beaconName" column="BEACON_NAME" />
+        <result property="fcName" column="FC_NAME" />
+    </resultMap>
+
+    <resultMap id="presenceLogResult" type="java.util.Map">
+        <result property="logNum" column="LOG_NUM" />
+        <result property="suuid" column="SUUID" />
+        <result property="uuid" column="UUID" />
+        <result property="majorVer" column="MAJOR_VER" />
+        <result property="minorVer" column="MINOR_VER" />
+        <result property="lat" column="LAT" />
+        <result property="lng" column="LNG" />
+        <result property="floor" column="FLOOR" />
+        <result property="regDate" column="REG_DATE" />
+    </resultMap>
+
+	<resultMap id="presenceBeaconLogResult" type="java.util.Map">
+		<result property="logNum" column="LOG_NUM" />
+		<result property="uuid" column="UUID" />
+		<result property="deviceInfo" column="DEVICE_INFO" />
+		<result property="phoneNumber" column="PHONE_NUMBER" />
+		<result property="fcNum" column="FC_NUM" />
+		<result property="fcName" column="FC_NAME" />
+		<result property="lat" column="LAT" />
+		<result property="lng" column="LNG" />
+		<result property="floor" column="FLOOR" />
+		<result property="regDate" column="REG_DATE" />
+	</resultMap>
+
+	<resultMap id="codeResult" type="java.util.Map">
+		<result property="gCD" column="G_CD" />
+		<result property="sCD" column="S_CD" />
+		<result property="gName" column="G_NAME" />
+		<result property="sName" column="S_NAME" />
+		<result property="langCode" column="LANG_CODE" />
+	</resultMap>
+
+<!--
+2017.03.23 yuchoi
+Area 테이블 존재여부 확인
+ -->
+    <select id="maptool-getAreaList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT *
+          FROM TB_AREA
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getAreaLatlngList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT LATLNG.NUM, LATLNG.AREA_NUM, LATLNG.LAT, LATLNG.LNG, LATLNG.ORDER_SEQ
+          FROM TB_AREA_LATLNG LATLNG
+         INNER JOIN TB_AREA AREA
+            ON LATLNG.AREA_NUM=AREA.AREA_NUM
+         INNER JOIN TB_COMPANY COM
+            ON AREA.COM_NUM=COM.COM_NUM
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND COM.COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND AREA.FLOOR=#{floor}</if>
+			<if test="areaNum!=null">AND AREA.AREA_NUM=#{areaNum}</if>
+		</trim>
+    </select>
+
+    <select id="maptool-getFloorList" parameterType="java.util.Map" resultMap="floorResult">
+		SELECT FLOOR.FLOOR_NUM, FLOOR.COM_NUM, FLOOR.FLOOR, CODE.NODE_NAME FLOOR_NAME,
+              FLOOR.SW_LAT, FLOOR.SW_LNG, FLOOR.NE_LAT, FLOOR.NE_LNG, FLOOR.DEG, FLOOR.IMG_SRC,
+              FLOOR.MOD_DATE, FLOOR.REG_DATE
+		  FROM TB_FLOOR FLOOR LEFT JOIN TB_FLOOR_CODE CODE
+            ON(FLOOR.FLOOR=CODE.NODE_ID)
+		<trim prefix="WHERE" prefixOverrides="AND">
+           <if test="comNum!=null">AND FLOOR.COM_NUM=#{comNum}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getGeofenceList" parameterType="java.util.Map" resultMap="geofencingResult">
+        SELECT *
+          FROM TB_GEOFENCING
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND FLOOR=#{floor}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getGeofenceLatlngList" parameterType="java.util.Map" resultMap="geofencingLatlngResult">
+        SELECT LATLNG.*
+          FROM TB_GEOFENCING_LATLNG LATLNG
+         INNER JOIN TB_GEOFENCING FENCE
+            ON LATLNG.FC_NUM = FENCE.FC_NUM
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND FENCE.COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND FENCE.FLOOR=#{floor}</if>
+			<if test="fcNum!=null">AND FENCE.FC_NUM=#{fcNum}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getBeaconList" parameterType="java.util.Map" resultMap="beaconResult">
+        SELECT *
+          FROM TB_BEACON
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND FLOOR=#{floor}</if>
+        </trim>
+    </select>
+
+	<select id="maptool-getBeaconGroupList" parameterType="java.util.Map" resultMap="beaconGroupResult">
+		SELECT *
+		  FROM TB_BEACON_GROUP
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+		</trim>
+	</select>
+
+	<select id="maptool-getBeaconGroupMappingList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT MAP.BEACON_GROUP_NUM   AS beaconGroupNum
+		     , MAP.BEACON_NUM         AS beaconNum
+		     , GR.BEACON_GROUP_NAME   AS beaconGroupName
+		  FROM TB_BEACON_GROUP_MAPPING MAP
+		 INNER JOIN TB_BEACON BC       ON(MAP.BEACON_NUM=BC.BEACON_NUM)
+		 INNER JOIN TB_BEACON_GROUP GR ON(MAP.BEACON_GROUP_NUM=GR.BEACON_GROUP_NUM)
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND BC.COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND BC.FLOOR=#{floor}</if>
+			<if test="beaconNum!=null">AND BC.BEACON_NUM=#{beaconNum}</if>
+		</trim>
+	</select>
+
+	<insert id="maptool-insertBeaconGroupMapping" parameterType="java.util.Map">
+		INSERT INTO TB_BEACON_GROUP_MAPPING
+		( BEACON_GROUP_NUM
+		, BEACON_NUM
+		)VALUES
+		( #{beaconGroupNum}
+		, #{beaconNum})
+	</insert>
+
+	<delete id="maptool-deleteBeaconGroupMapping" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_BEACON_GROUP_MAPPING
+		 WHERE BEACON_NUM=#{beaconNum}
+		<if test="beaconGroupNum!=null">
+			AND BEACON_GROUP_NUM=#{beaconGroupNum}
+		</if>
+	</delete>
+
+    <select id="maptool-getScannerList" parameterType="java.util.Map" resultMap="scannerResult">
+        SELECT *
+          FROM TB_SCANNER
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+        </trim>
+    </select>
+
+
+    <select id="maptool-getNodeList" parameterType="java.util.Map" resultMap="nodeResult">
+        SELECT *
+          FROM TB_NODE
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND FLOOR=#{floor}</if>
+			<if test="type!=null">AND TYPE=#{type}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getNodeEdgeList" parameterType="java.util.Map" resultMap="nodeEdgeResult">
+        SELECT *
+          FROM TB_NODE_EDGE
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND FLOOR=#{floor}</if>
+			<if test="type!=null">AND TYPE=#{type}</if>
+        </trim>
+    </select>
+
+
+
+
+
+
+	<select id="maptool-getBeaconInfo" parameterType="java.util.Map" resultMap="beaconResult">
+		SELECT *
+		  FROM TB_BEACON
+		 WHERE BEACON_NUM=#{beaconNum}
+	</select>
+
+	<insert id="maptool-insertBeacon" parameterType="java.util.Map">
+		INSERT INTO TB_BEACON
+		( BEACON_NUM
+		, UUID
+        , COM_NUM
+        , MAJOR_VER
+        , MINOR_VER
+        , TX_POWER
+        , BEACON_TYPE
+        , BEACON_NAME
+        , BEACON_DESC
+        , FLOOR
+        , LAT
+        , LNG
+		, FIELD1, FIELD2, FIELD3, FIELD4, FIELD5
+		, LAST_DATE
+		, MOD_DATE
+		, REG_DATE
+		)VALUES
+		( SEQ_BEACON_BEACON_NUM.NEXTVAL
+		, #{UUID}
+		, #{comNum}
+		, #{majorVer}
+		, #{minorVer}
+		, #{txPower}
+		, #{beaconType}
+		, #{beaconName}
+		, #{beaconDesc}
+		, #{floor}
+		, #{lat}
+		, #{lng}
+		, #{field1}, #{field2}, #{field3}, #{field4}, #{field5}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+
+        <selectKey keyProperty="beaconNum" resultType="Long">
+            SELECT SEQ_BEACON_BEACON_NUM.currval FROM DUAL
+        </selectKey>
+	</insert>
+
+	<update id="maptool-modifyBeacon" parameterType="java.util.Map">
+		UPDATE TB_BEACON
+		   SET UUID=#{UUID}
+		     , MAJOR_VER=#{majorVer}
+		     , MINOR_VER=#{minorVer}
+		     , BEACON_NAME=#{beaconName}
+		     , BEACON_TYPE=#{beaconType}
+		     , BEACON_DESC=#{beaconDesc}
+		     , LAT=#{lat}
+		     , LNG=#{lng}
+		     , TX_POWER=#{txPower}
+		     , MOD_DATE=FN_UNIX_TIMESTEMP(SYSDATE)
+		 WHERE BEACON_NUM=#{beaconNum}
+		<if test="floor!=null">AND FLOOR=#{floor}</if>
+	</update>
+
+	<delete id="maptool-deleteBeacon" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_BEACON
+		 WHERE BEACON_NUM=#{beaconNum}
+	</delete>
+
+
+
+	<select id="maptool-getScannerInfo" parameterType="java.util.Map" resultMap="scannerResult">
+		SELECT *
+		  FROM TB_SCANNER
+		 WHERE SCANNER_NUM=#{scannerNum}
+	</select>
+
+	<insert id="maptool-insertScanner" parameterType="java.util.Map">
+		INSERT INTO TB_SCANNER
+		( SCANNER_NUM
+        , COM_NUM
+        , MAC_ADDR
+        , MAJOR_VER
+        , SCANNER_NAME
+        , SID
+        , LAT
+        , LNG
+        , RSSI
+        , SRSSI
+        , MRSSI
+        , DRSSI
+        , EX_METER
+        , CAL_POINT
+        , MAX_SIG
+        , MAX_BUF
+        , FW_VER
+        , FLOOR
+        , MOD_DATE
+        , REG_DATE
+		)VALUES
+        ( SEQ_SCANNER_SCANNER_NUM.NEXTVAL
+        , #{comNum}
+        , #{macAddr}
+        , #{majorVer}
+        , #{scannerName}
+        , #{sid}
+        , #{lat}
+        , #{lng}
+        , #{rssi}
+        , #{srssi}
+        , #{mrssi}
+        , #{drssi}
+        , #{exMeter}
+        , #{calPoint}
+        , #{maxSig}
+        , #{maxBuf}
+        , #{fwVer}
+        , #{floor}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+
+		<selectKey keyProperty="scannerNum" resultType="int">
+            SELECT SEQ_SCANNER_SCANNER_NUM.currval FROM DUAL
+        </selectKey>
+	</insert>
+
+	<update id="maptool-modifyScanner" parameterType="java.util.Map">
+		UPDATE TB_SCANNER
+		   SET MAC_ADDR    = #{macAddr},
+			MAJOR_VER     = #{majorVer},
+			SCANNER_NAME = #{scannerName},
+			SID       = #{sid},
+			LAT       = #{lat},
+			LNG       = #{lng},
+			RSSI      = #{rssi},
+			SRSSI     = #{srssi},
+			MRSSI     = #{mrssi},
+			DRSSI     = #{drssi},
+			EX_METER  = #{exMeter},
+			CAL_POINT = #{calPoint},
+			MAX_SIG   = #{maxSig},
+			MAX_BUF   = #{maxBuf},
+			FW_VER    = #{fwVer},
+			FLOOR     = #{floor},
+			MOD_DATE  = FN_UNIX_TIMESTEMP(SYSDATE)
+		WHERE SCANNER_NUM = #{scannerNum}
+	</update>
+
+	<delete id="maptool-deleteScanner" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_SCANNER
+		 WHERE SCANNER_NUM=#{scannerNum}
+	</delete>
+
+
+
+	<select id="maptool-getGeofencingGroupList" parameterType="java.util.Map" resultMap="geofencingGroupResult">
+		SELECT *
+		  FROM TB_GEOFENCING_GROUP
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+		</trim>
+	</select>
+
+	<select id="maptool-getGeofencingGroupMappingList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT MAP.FC_GROUP_NUM AS fcGroupNum
+		     , MAP.FC_NUM       AS fcNum
+		     , GR.FC_GROUP_NAME AS fcGroupName
+		  FROM TB_GEOFENCING_GROUP_MAPPING MAP
+		 INNER JOIN TB_GEOFENCING BC       ON(MAP.FC_NUM=BC.FC_NUM)
+		 INNER JOIN TB_GEOFENCING_GROUP GR ON(MAP.FC_GROUP_NUM=GR.FC_GROUP_NUM)
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND BC.COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND BC.FLOOR=#{floor}</if>
+			<if test="fcNum!=null">AND BC.FC_NUM=#{fcNum}</if>
+		</trim>
+	</select>
+
+	<insert id="maptool-insertGeofencingGroupMapping" parameterType="java.util.Map">
+		INSERT INTO TB_GEOFENCING_GROUP_MAPPING
+		( FC_GROUP_NUM
+		, FC_NUM
+		)VALUES
+		( #{fcGroupNum}
+		, #{fcNum})
+	</insert>
+
+	<delete id="maptool-deleteGeofencingGroupMapping" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_GEOFENCING_GROUP_MAPPING
+		 WHERE FC_NUM=#{fcNum}
+		<if test="fcGroupNum!=null">
+			AND FC_GROUP_NUM=#{fcGroupNum}
+		</if>
+	</delete>
+
+
+	<select id="maptool-getGeofenceInfo" parameterType="java.util.Map" resultMap="geofencingResult">
+		SELECT *
+		  FROM TB_GEOFENCING
+		 WHERE FC_NUM=#{fcNum}
+	</select>
+
+	<insert id="maptool-insertGeofence" parameterType="java.util.Map">
+		INSERT INTO TB_GEOFENCING
+		( COM_NUM
+		, FC_NUM
+		, FC_TYPE
+		, FC_SHAPE
+		, FC_NAME
+		, FLOOR
+		, EVT_ENTER
+		, EVT_LEAVE
+		, EVT_STAY
+		, NUM_ENTER
+		, NUM_LEAVE
+		, NUM_STAY
+		, FIELD1, FIELD2, FIELD3, FIELD4, FIELD5
+		, USERID
+		, MOD_DATE
+		, REG_DATE
+		) VALUES
+		( #{comNum}
+		, SEQ_GEOFENCING_FC_NUM.nextval
+		, #{fcType}
+		, #{fcShape}
+		, #{fcName}
+		, #{floor}
+		, #{evtEnter}
+		, #{evtLeave}
+		, #{evtStay}
+		, #{numEnter}
+		, #{numLeave}
+		, #{numStay}
+		, #{field1}, #{field2}, #{field3}, #{field4}, #{field5}
+		, #{userID}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+
+        <selectKey keyProperty="fcNum" keyColumn="FC_NUM" resultType="Long">
+            SELECT SEQ_GEOFENCING_FC_NUM.currval FROM DUAL
+        </selectKey>
+	</insert>
+
+	<insert id="maptool-insertGeofenceLatlng" parameterType="java.util.Map" useGeneratedKeys="false">
+		INSERT INTO TB_GEOFENCING_LATLNG
+		( FC_NUM
+		, LAT
+		, LNG
+		, RADIUS
+		, ORDER_SEQ
+		)VALUES
+		( #{fcNum}
+		, #{lat}
+		, #{lng}
+		, #{radius}
+		, #{orderSeq})
+	</insert>
+
+	<update id="maptool-modifyGeofence" parameterType="java.util.Map">
+		UPDATE TB_GEOFENCING
+		   SET FC_NAME=#{fcName}
+		     , FC_SHAPE=#{fcShape}
+		     , MOD_DATE=FN_UNIX_TIMESTEMP(SYSDATE)
+			<if test="evtEnter!=null">,EVT_ENTER=#{evtEnter}</if>
+			<if test="evtLeave!=null">,EVT_LEAVE=#{evtLeave}</if>
+			<if test="evtStay!=null">,EVT_STAY=#{evtStay}</if>
+			<if test="numEnter!=null">,NUM_ENTER=#{numEnter}</if>
+			<if test="numLeave!=null">,NUM_LEAVE=#{numLeave}</if>
+			<if test="numStay!=null">,NUM_STAY=#{numStay}</if>
+			<if test="field1!=null">,FIELD1=#{field1}</if>
+			<if test="field2!=null">,FIELD2=#{field2}</if>
+			<if test="field3!=null">,FIELD3=#{field3}</if>
+			<if test="field4!=null">,FIELD4=#{field4}</if>
+			<if test="field5!=null">,FIELD4=#{field5}</if>
+		WHERE FC_NUM=#{fcNum}
+	</update>
+
+	<delete id="maptool-deleteGeofence" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_GEOFENCING
+		 WHERE FC_NUM=#{fcNum}
+	</delete>
+
+	<delete id="maptool-deleteGeofenceLatlng" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_GEOFENCING_LATLNG
+		 WHERE FC_NUM=#{fcNum}
+	</delete>
+
+
+
+	<select id="maptool-getAreaInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		<!-- SELECT *
+		  FROM TB_AREA
+		 WHERE AREA_NUM=#{areaNum} -->
+	</select>
+
+	<delete id="maptool-deleteArea" parameterType="java.util.Map">
+		<!-- DELETE FROM TB_AREA WHERE AREA_NUM=#{areaNum} -->
+	</delete>
+
+	<insert id="maptool-insertArea" parameterType="java.util.Map">
+		<!-- INSERT INTO TB_AREA
+		( com_num
+		, floor
+		, area_name
+		, reg_date
+		)VALUES
+		( #{comNum}
+		, #{floor}
+		, #{areaName}
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+
+		<selectKey resultType="int" keyProperty="areaNum" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey> -->
+	</insert>
+
+	<insert id="maptool-insertAreaLatlng" parameterType="java.util.Map">
+		<!-- INSERT INTO TB_AREA_LATLNG
+		( AREA_NUM
+		, LAT
+		, LNG
+		, ORDER_SEQ
+		)VALUES
+		( #{areaNum}
+		, #{lat}
+		, #{lng}
+		,  #{orderSeq}) -->
+	</insert>
+
+	<update id="maptool-modifyArea" parameterType="java.util.Map">
+		<!-- UPDATE TB_AREA
+		   SET AREA_NAME=#{areaName}
+		 WHERE AREA_NUM=#{areaNum} -->
+	</update>
+
+
+	<delete id="maptool-deleteAreaLatlng" parameterType="java.util.Map">
+		<!-- DELETE
+		  FROM TB_AREA_LATLNG
+		 WHERE AREA_NUM=#{areaNum} -->
+	</delete>
+
+
+
+	<select id="maptool-getNodeInfo" parameterType="java.util.Map" resultMap="nodeResult">
+		SELECT *
+		  FROM TB_NODE
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="nodeNum!=null">AND NODE_NUM=#{nodeNum}</if>
+			<if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+			<if test="nodeID!=null">AND NODE_ID=#{nodeID}</if>
+		</trim>
+	</select>
+
+	<insert id="maptool-insertNode" parameterType="java.util.Map">
+		<selectKey keyProperty="nodeID" resultType="java.lang.Integer" order="BEFORE">
+		select CASE WHEN nodeMin.nodeID is null or nodeMin.nodeID>10000 THEN 10000 ELSE node.nodeID END nodeID
+          from (select min(NODE_ID) as nodeID
+                  from TB_NODE
+                 where COM_NUM=#{comNum}
+                   and NODE_ID>0
+                ) nodeMin
+             , (select min(NODE_ID)+1 as nodeID
+                  from TB_NODE
+                 where COM_NUM=#{comNum}
+                   and NODE_ID>0
+                   and NODE_ID+1 not in (select NODE_ID
+                                          from TB_NODE
+                                         where COM_NUM=#{comNum}
+                                           and NODE_ID>0)
+                ) node
+		</selectKey>
+
+		insert into TB_NODE
+		( NODE_NUM
+        , COM_NUM
+        , NODE_ID
+        , FLOOR
+        , NODE_NAME
+        , LAT
+        , LNG
+        <if test="type!=null">, TYPE</if>
+		values
+		( SEQ_NODE_NODE_NUM.NEXTVAL
+		, #{comNum}
+		, #{nodeID}
+		, #{floor}
+		, #{nodeName}
+		, #{lat}
+		, #{lng}
+		<if test="type!=null">, #{type}</if>)
+	</insert>
+
+	<update id="maptool-modifyNode" parameterType="java.util.Map">
+		UPDATE TB_NODE
+		   SET LAT=#{lat}
+		     , LNG=#{lng}
+		<if test="areaNum!=null">, AREA_NUM=#{areaNum}</if>
+		<if test="areaName!=null">, AREA_NAME=#{areaName}</if>
+		<if test="nodeName!=null">, NODE_NAME=#{nodeName}</if>
+		<if test="nodeID!=null">, NODE_ID=#{nodeID}</if>
+		<if test="jointName!=null">, JOINT_NAME=#{jointName}</if>
+		<if test="cate!=null">, CATE=#{cate}</if>
+		 WHERE NODE_NUM=#{nodeNum}
+	</update>
+
+	<delete id="maptool-deleteNode" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_NODE
+		 WHERE nodeNum=#{nodeNum}
+	</delete>
+
+
+
+	<select id="maptool-getNodeEdgeInfo" parameterType="java.util.Map" resultMap="nodeEdgeResult">
+		SELECT *
+		  FROM TB_NODE_EDGE
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="edgeNum!=null">AND EDGE_NUM=#{edgeNum}</if>
+			<if test="comNum!=null">AND COM_NUM=#{comNum}</if>
+			<if test="floor!=null">AND FLOOR=#{floor}</if>
+			<if test="type!=null">AND TYPE=#{type}</if>
+			<if test="startPoint and endPoint">
+				AND (
+					(START_POINT=#{startPoint} AND END_POINT=#{endPoint})
+					OR
+					(START_POINT=#{endPoint} AND END_POINT=#{startPoint})
+				)
+			</if>
+		</trim>
+	</select>
+
+	<insert id="maptool-insertNodeEdge" parameterType="java.util.Map">
+		INSERT INTO TB_NODE_EDGE
+		( EDGE_NUM
+        , COM_NUM
+        , FLOOR
+        , START_POINT
+        , END_POINT
+        , TYPE
+		)VALUES
+		( SEQ_NE_EDGE_NUM.NEXTVAL
+		, #{comNum}
+		, #{floor}
+		, #{startPoint}
+		, #{endPoint}
+		, #{type})
+
+		<selectKey resultType="int" keyProperty="edgeNum" order="AFTER">
+			SELECT SEQ_NE_EDGE_NUM.CURRVAL FROM DUAL;
+		</selectKey>
+	</insert>
+
+	<delete id="maptool-deleteNodeEdge" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_NODE_EDGE
+		 WHERE EDGE_NUM=#{edgeNum}
+	</delete>
+
+
+
+	<select id="maptool-getContentList" parameterType="java.util.Map" resultMap="contentsResult">
+		SELECT *
+		  FROM TB_CONTENTS
+		 WHERE COM_NUM=#{comNum}
+	</select>
+
+	<select id="maptool-getContentMappingList" parameterType="java.util.Map" resultMap="contentsMappingResult">
+		SELECT MAP.CON_NUM, MAP.REF_TYPE, MAP.REF_SUB_TYPE, MAP.REF_NUM, MAP.EVT_NUM
+		     , CON.CON_TYPE, CON.CON_NAME, REF.REF_NAME, REF.FLOOR
+		FROM TB_CONTENTS_MAPPING MAP
+	   INNER JOIN TB_CONTENTS CON
+	      ON MAP.CON_NUM=CON.CON_NUM
+	   INNER JOIN ( SELECT 'BC' REF_TYPE, BEACON_NUM REF_NUM, FLOOR, BEACON_NAME REF_NAME
+				      FROM TB_BEACON
+				     WHERE FLOOR IS NOT NULL
+				       AND COM_NUM=#{comNum}
+				       <if test="floor!=null">AND FLOOR=#{floor}</if>
+				    UNION
+				    SELECT 'GF' REF_TYPE, FC_NUM REF_NUM, FLOOR, FC_NAME REF_NAME
+                          FROM TB_GEOFENCING
+                         WHERE FLOOR IS NOT NULL
+				       AND COM_NUM=#{comNum}
+				       <if test="floor!=null">AND FLOOR=#{floor}</if>
+			   ) REF
+		    ON MAP.REF_TYPE=REF.REF_TYPE
+		   AND MAP.REF_NUM=REF.REF_NUM
+		 WHERE CON.COM_NUM=#{comNum}
+		<if test="floor!=null">AND REF.FLOOR=#{floor}</if>
+	</select>
+
+	<select id="maptool-getContentMappingInfo" parameterType="java.util.Map" resultMap="contentsMappingResult">
+		SELECT MAP.CON_NUM, MAP.REF_TYPE, MAP.REF_SUB_TYPE, MAP.REF_NUM, MAP.EVT_NUM
+		     , CON.CON_TYPE, CON.CON_NAME, REF.FLOOR,
+			<if test="refType eq 'BC'">REF.BEACON_NAME</if>
+			<if test="refType eq 'GF'">REF.FC_NAME</if>
+		  FROM TB_CONTENTS_MAPPING MAP
+		 INNER JOIN TB_CONTENTS CON ON(MAP.CON_NUM=CON.CON_NUM)
+		 INNER JOIN
+			<if test="refType eq 'BC'">
+				TB_BEACON REF ON (REF.BEACON_NUM=MAP.REF_NUM)
+			</if>
+			<if test="refType eq 'GF'">
+				TB_GEOFENCING REF ON (REF.FC_NUM=MAP.REF_NUM)
+			</if>
+		 WHERE MAP.CON_NUM=#{conNum}
+		   AND MAP.REF_TYPE=#{refType}
+		   AND MAP.REF_SUB_TYPE=#{refSubType}
+		   AND MAP.REF_NUM=#{refNum}
+	</select>
+
+	<insert id="maptool-insertContentMapping" parameterType="java.util.Map">
+		INSERT INTO TB_CONTENTS_MAPPING
+		( conNum
+		, refType
+		, refSubType
+		, refNum
+		)VALUES
+		( #{conNum}
+		, #{refType}
+		, #{refSubType}
+		, #{refNum})
+	</insert>
+
+	<delete id="maptool-deleteContentMapping" parameterType="java.util.Map">
+		DELETE
+		  FROM TB_CONTENTS_MAPPING
+		 WHERE CON_NUM=#{conNum}
+		   AND REF_TYPE=#{refType}
+		   AND REF_SUB_TYPE=#{refSubType}
+		   AND REF_NUM=#{refNum}
+	</delete>
+
+	<select id="maptool-getPresenceLogList" parameterType="java.util.Map" resultMap="presenceLogResult">
+		SELECT LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, LAT, LNG, FLOOR, REG_DATE
+		FROM TB_LOG_PRESENCE
+		WHERE SUUID=(SELECT UUID FROM TB_COMPANY WHERE COM_NUM=#{comNum})
+		<if test="majorVer!=null">AND MAJOR_VER = #{majorVer}</if>
+		<if test="minorVer!=null">AND MINOR_VER = #{minorVer}</if>
+		<if test="floor!=null">AND FLOOR = #{floor}</if>
+		<if test="startRegDate!=null and endRegDate!=null">
+			AND REG_DATE BETWEEN #{startRegDate} AND #{endRegDate}
+		</if>
+		ORDER BY REG_DATE ASC
+	</select>
+
+	<select id="maptool-getPresenceBeaconLogList" parameterType="java.util.Map" resultMap="presenceBeaconLogResult">
+		SELECT LOG_NUM, UUID, LAT, LNG, FLOOR, REG_DATE, DEVICE_INFO, PHONE_NUMBER, FC_NUM, FC_NAME
+		FROM TB_LOG_PRESENCE_BEACON
+		WHERE UUID=(SELECT UUID FROM TB_COMPANY WHERE COM_NUM=#{comNum})
+		<if test="floor!=null">AND FLOOR = #{floor}</if>
+		<if test="phoneNumber!=null">AND PHONE_NUMBER = #{phoneNumber}</if>
+		<if test="startRegDate!=null and endRegDate!=null">
+			AND REG_DATE BETWEEN #{startRegDate} AND #{endRegDate}
+		</if>
+		ORDER BY REG_DATE ASC
+	</select>
+
+	<select id="maptool-getPOICateList" resultMap="codeResult">
+		SELECT * FROM TB_CODE WHERE G_CD = 'POICATE'
+	</select>
+
+</mapper>

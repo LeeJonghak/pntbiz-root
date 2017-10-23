@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.company.CompanyDao">
+	
+	<resultMap id="cntResult" type="Integer">
+		<result property="cnt" column="CNT" />
+	</resultMap>
+	
+	<resultMap id="companyResult" type="core.admin.company.domain.Company">
+		<result property="comNum" column="comNum" />
+		<result property="UUID" column="UUID" />
+		<result property="comName" column="comName" />
+		<result property="comBizNum" column="comBizNum" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="oauthEnabled" column="oauthEnabled" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+	
+	<select id="getCompanyCount" parameterType="core.admin.company.domain.CompanySearchParam" resultMap="cntResult">
+		SELECT COUNT(comNum) CNT
+		FROM TB_COMPANY 
+		WHERE 1
+		<if test="comNum!=null">and comNum=#{comNum}</if>
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null"> 
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getCompanyList" parameterType="core.admin.company.domain.CompanySearchParam" resultMap="companyResult">
+		SELECT comNum, UUID, comName, comBizNum, lat, lng, oauthEnabled, regDate
+		FROM TB_COMPANY 
+		WHERE 1
+		<if test="comNum!=null">and comNum=#{comNum}</if>
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null">
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+		ORDER BY comNum DESC
+		<if test="firstItemNo!=null and pageSize!=null and pageSize>0">
+			LIMIT ${firstItemNo}, ${pageSize}
+		</if>
+	</select>
+
+	<select id="getCompanyListAll" resultMap="companyResult">
+		SELECT comNum, UUID, comName, comBizNum, lat, lng, oauthEnabled, regDate
+		FROM TB_COMPANY
+		WHERE 1
+	</select>
+	
+	<select id="getCompanyInfo" parameterType="core.admin.company.domain.Company" resultMap="companyResult">
+		SELECT comNum, UUID, comName, comBizNum, lat, lng, oauthEnabled, regDate
+		FROM TB_COMPANY 
+		WHERE comNum = #{comNum} 
+	</select>
+	
+	<insert id="insertCompany" parameterType="core.admin.company.domain.Company">
+        INSERT INTO TB_COMPANY
+        (UUID, comName, comBizNum, lat, lng, regDate)
+        VALUES
+        (#{UUID}, #{comName}, #{comBizNum}, #{lat}, #{lng}, UNIX_TIMESTAMP())
+		<selectKey keyProperty="comNum" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+    </insert>
+    
+    <update id="updateCompany" parameterType="core.admin.company.domain.Company">
+        UPDATE TB_COMPANY 
+        <set>
+        	<if test="comName != '' and comName != null">comName = #{comName},</if>
+        	<if test="comBizNum != '' and comBizNum != null">comBizNum = #{comBizNum},</if>
+        	<if test="lat != '' and lat != null">lat = #{lat},</if>
+        	<if test="lng != '' and lng != null">lng = #{lng},</if>
+			<if test="oauthEnabled!=null">oauthEnabled = #{oauthEnabled},</if>
+        </set>
+        WHERE comNum = #{comNum}
+    </update>
+    
+    <delete id="deleteCompany" parameterType="core.admin.company.domain.Company">
+        DELETE 
+        FROM TB_COMPANY
+        WHERE comNum = #{comNum}
+    </delete>
+	
+</mapper>

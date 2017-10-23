@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="api.core.wms.service.dao.AttendanceSeminarDao">
+
+	<sql id="selectAttendanceSeminarSearch">
+		<trim prefix="WHERE" prefixOverrides="and|or">
+			<if test="UUID!=null">AND a.UUID=#{UUID}</if>
+			<if test="state!=null">AND a.state=#{state}</if>
+			<if test="attdDate!=null">AND a.attdDate=#{attdDate}</if>
+			<if test="phoneNumber!=null">AND a.phoneNumber=#{phoneNumber}</if>
+			<if test="keyword != '' and keyword  != null">
+				<choose>
+                    <when test="opt == 'phoneNumber'"> AND a.phoneNumber LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt == 'subject'">     AND b.subject LIKE CONCAT(#{keyword}, '%')</when>
+                    <otherwise></otherwise>
+                </choose>
+			</if>
+		</trim>
+	</sql>
+	<select id="getAttendanceSeminarCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		  FROM TB_ATTENDANCE_SEMINAR a
+		  LEFT JOIN TB_ATTENDANCE_SEMINAR_MGR AS b on(a.UUID=b.UUID and a.majorVer=b.majorVer and a.minorVer=b.minorVer)
+         <include refid="selectAttendanceSeminarSearch"/>
+	</select>
+
+	<select id="getAttendanceSeminarList" parameterType="java.util.Map" resultType="core.wms.service.domain.AttendanceSeminar">
+		SELECT a.logNum, a.UUID, a.majorVer, a.minorVer, a.phoneNumber, a.deviceInfo, a.state, a.attdDate, a.regDate, b.subject
+		  FROM TB_ATTENDANCE_SEMINAR AS a
+		  LEFT JOIN TB_ATTENDANCE_SEMINAR_MGR AS b on(a.UUID=b.UUID and a.majorVer=b.majorVer and a.minorVer=b.minorVer)
+         <include refid="selectAttendanceSeminarSearch"/>
+
+		ORDER BY a.logNum DESC
+		<if test="firstItemNo!=null and pageSize!=null and pageSize>0">
+			LIMIT #{firstItemNo}, #{pageSize}
+		</if>
+	</select>
+
+	<insert id="insertAttendanceSeminar" parameterType="core.wms.service.domain.AttendanceSeminar">
+		INSERT INTO TB_ATTENDANCE_SEMINAR
+		(UUID, phoneNumber, state, attdDate, subject, regDate)
+		VALUES
+		(#{UUID}, #{phoneNumber}, #{state}, #{attdDate}, #{subject}, UNIX_TIMESTAMP())
+    </insert>
+
+    <delete id="deleteAttendanceSeminar" parameterType="java.util.Map">
+        DELETE FROM TB_ATTENDANCE_SEMINAR
+        WHERE UUID=#{UUID} AND attdDate=#{attdDate}
+        <if test="logNum!=null">
+			AND logNum=#{logNum}
+		</if>
+    </delete>
+
+</mapper>

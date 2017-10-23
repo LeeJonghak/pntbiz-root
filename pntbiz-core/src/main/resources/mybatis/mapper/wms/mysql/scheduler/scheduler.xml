@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="component.scheduler.SchedulerDao">
+
+    <!-- 48시간이 지난 로그 자동 삭제 -->
+    <delete id="deletePresenceLogSchedule">
+        DELETE
+        FROM TB_LOG_PRESENCE
+        WHERE regDate &lt; UNIX_TIMESTAMP( DATE_ADD(now(),interval -2 day))
+    </delete>
+</mapper>

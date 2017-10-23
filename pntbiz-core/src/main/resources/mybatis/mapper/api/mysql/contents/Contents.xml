@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.contents.dao.ContentsDao">
+	
+	<resultMap id="contentsResult" type="core.api.contents.domain.Contents">
+		<result property="UUID" column="UUID" />
+		
+		<result property="comNum" column="comNum" />
+		<result property="conNum" column="conNum" />
+		<result property="conType" column="conType" />
+		<result property="conName" column="conName" />
+		<result property="userID" column="userID" />
+		<result property="acNum" column="acNum" />	
+		<result property="expFlag" column="expFlag" />
+		<result property="rssi" column="rssi" />
+		<result property="conDesc" column="conDesc" />
+		<result property="sDate" column="sDate" />	
+		<result property="eDate" column="eDate" />
+		<result property="modDate" column="modDate" />
+		<result property="regDate" column="regDate" />
+		
+		<result property="imgSrc1" column="imgSrc1" />
+		<result property="imgSrc2" column="imgSrc2" />
+		<result property="imgSrc3" column="imgSrc3" />
+		<result property="imgSrc4" column="imgSrc4" />
+		<result property="imgSrc5" column="imgSrc5" />
+		<result property="text1" column="text1" />
+		<result property="text2" column="text2" />
+		<result property="text3" column="text3" />
+		<result property="soundSrc1" column="soundSrc1" />
+		<result property="soundSrc2" column="soundSrc2" />
+		<result property="soundSrc3" column="soundSrc3" />
+		<result property="url1" column="url1" />
+		<result property="url2" column="url2" />
+		<result property="url3" column="url3" />
+		
+		<result property="acName" column="acName" />		
+	</resultMap>
+		  
+	<!--
+	jhlee 2015-03-12 안차장님 요청으로 리스트는 프레즌스 콘텐츠는 제외  
+	 -->
+	<select id="getContentsList" parameterType="core.api.contents.domain.Contents" resultMap="contentsResult">
+		SELECT A.*, B.acName 
+		FROM (
+			SELECT A.comNum, A.conNum, A.conType, A.conName, A.userID, A.acNum, 
+			A.expFlag, A.rssi, A.conDesc, A.sDate, A.eDate, A.modDate, A.regDate, 
+			B.imgSrc1, B.imgSrc2, B.imgSrc3, B.imgSrc4, B.imgSrc5, B.text1, B.text2, B.text3, 
+			B.soundSrc1, B.soundSrc2, B.soundSrc3, B.url1, B.url2, B.url3, 
+			C.UUID 
+			FROM TB_CONTENTS	 A, TB_CONTENTS_DETAIL B, TB_COMPANY C   
+			WHERE A.conNum = B.conNum 
+			AND A.comNum = C.comNum 
+			AND C.UUID = #{UUID}	
+			AND A.conType != 'PRE' 
+		) A LEFT OUTER JOIN TB_ADVERT_COMPANY B 
+		ON A.acNum = B.acNum 
+	</select>
+	
+	<select id="getContentsInfo" parameterType="core.api.contents.domain.Contents" resultMap="contentsResult">
+		SELECT A.*, B.acName 
+		FROM (
+			SELECT A.comNum, A.conNum, A.conType, A.conName, A.userID, A.acNum, 
+			A.expFlag, A.rssi, A.conDesc, A.sDate, A.eDate, A.modDate, A.regDate, 
+			B.imgSrc1, B.imgSrc2, B.imgSrc3, B.imgSrc4, B.imgSrc5, B.text1, B.text2, B.text3, 
+			B.soundSrc1, B.soundSrc2, B.soundSrc3, B.url1, B.url2, B.url3, 
+			C.UUID 
+			FROM TB_CONTENTS	 A, TB_CONTENTS_DETAIL B, TB_COMPANY C   
+			WHERE A.conNum = B.conNum 
+			AND A.conNum = #{conNum} 
+			AND A.comNum = C.comNum 
+			<if test="comNum != '' and comNum != null">AND A.comNum = #{comNum}</if> 
+		) A LEFT OUTER JOIN TB_ADVERT_COMPANY B 
+		ON A.acNum = B.acNum
+	</select>
+	
+	<select id="getContentsMessage" parameterType="core.api.contents.domain.Contents" resultMap="contentsResult">
+		SELECT A.*, B.acName 
+		FROM (
+			SELECT A.comNum, A.conNum, A.conType, A.conName, A.userID, A.acNum, 
+			A.expFlag, A.rssi, A.conDesc, A.sDate, A.eDate, A.modDate, A.regDate, 
+			B.imgSrc1, B.imgSrc2, B.imgSrc3, B.imgSrc4, B.imgSrc5, B.text1, B.text2, B.text3, 
+			B.soundSrc1, B.soundSrc2, B.soundSrc3, B.url1, B.url2, B.url3, 
+			C.UUID 
+			FROM TB_CONTENTS	 A, TB_CONTENTS_DETAIL B, TB_COMPANY C   
+			WHERE A.conNum = B.conNum 
+			AND A.comNum = C.comNum 
+			<if test="conType != '' and conType != null">AND A.conType = #{conType}</if>
+			<if test="conType == 'WEL' or conType == 'BYE'">
+			ORDER BY conNum DESC 
+			LIMIT 0, 1
+			</if> 
+		) A LEFT OUTER JOIN TB_ADVERT_COMPANY B 
+		ON A.acNum = B.acNum
+	</select>
+	
+</mapper>

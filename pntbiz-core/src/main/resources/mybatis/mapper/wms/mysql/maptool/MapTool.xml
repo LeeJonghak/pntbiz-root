@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.maptool.dao.MapToolDao">
+
+
+	<resultMap id="presenceLog" type="java.util.Map">
+		<result property="logNum" column="logNum" />
+		<result property="suuid" column="SUUID" />
+		<result property="uuid" column="UUID" />
+		<result property="majorVer" column="majorVer" />
+		<result property="minorVer" column="minorVer" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="floor" column="floor" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+
+    <select id="maptool-getAreaList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM TB_AREA
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND comNum=#{comNum}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getAreaLatlngList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT LATLNG.num, LATLNG.areaNum, LATLNG.lat, LATLNG.lng, LATLNG.orderSeq
+        FROM TB_AREA_LATLNG LATLNG
+             INNER JOIN TB_AREA AREA ON(LATLNG.areaNum=AREA.areaNum)
+             INNER JOIN TB_COMPANY COM ON (AREA.comNum=COM.comNum)
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND COM.comNum=#{comNum}</if>
+			<if test="floor!=null">AND AREA.floor=#{floor}</if>
+			<if test="areaNum!=null">AND AREA.areaNum=#{areaNum}</if>
+		</trim>
+    </select>
+
+    <select id="maptool-getFloorList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * FROM TB_FLOOR
+		<trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND comNum=#{comNum}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getGeofenceList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM TB_GEOFENCING
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND comNum=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getGeofenceLatlngList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT LATLNG.* FROM TB_GEOFENCING_LATLNG LATLNG
+          INNER JOIN TB_GEOFENCING FENCE ON(LATLNG.fcNum=FENCE.fcNum)
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND FENCE.comNum=#{comNum}</if>
+			<if test="floor!=null">AND FENCE.floor=#{floor}</if>
+			<if test="fcNum!=null">AND FENCE.fcNum=#{fcNum}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getBeaconList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM TB_BEACON
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND comNum=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+        </trim>
+    </select>
+
+	<select id="maptool-getBeaconGroupList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * FROM TB_BEACON_GROUP
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND comNum=#{comNum}</if>
+		</trim>
+	</select>
+
+	<select id="maptool-getBeaconGroupMappingList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT MAP.beaconGroupNum, MAP.beaconNum, GR.beaconGroupName
+		FROM TB_BEACON_GROUP_MAPPING MAP INNER JOIN TB_BEACON BC ON(MAP.beaconNum=BC.beaconNum)
+		INNER JOIN TB_BEACON_GROUP GR ON(MAP.beaconGroupNum=GR.beaconGroupNum)
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND BC.comNum=#{comNum}</if>
+			<if test="floor!=null">AND BC.floor=#{floor}</if>
+			<if test="beaconNum!=null">AND BC.beaconNum=#{beaconNum}</if>
+		</trim>
+	</select>
+
+	<insert id="maptool-insertBeaconGroupMapping" parameterType="java.util.Map">
+		INSERT INTO TB_BEACON_GROUP_MAPPING(beaconGroupNum, beaconNum)
+		VALUES(#{beaconGroupNum}, #{beaconNum})
+	</insert>
+
+	<delete id="maptool-deleteBeaconGroupMapping" parameterType="java.util.Map">
+		DELETE FROM TB_BEACON_GROUP_MAPPING
+		WHERE beaconNum=#{beaconNum}
+		<if test="beaconGroupNum!=null">
+			AND beaconGroupNum=#{beaconGroupNum}
+		</if>
+	</delete>
+
+    <select id="maptool-getScannerList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM TB_SCANNER
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND comNum=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+        </trim>
+    </select>
+
+
+    <select id="maptool-getNodeList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM TB_NODE
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND comNum=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+			<if test="type!=null">AND type=#{type}</if>
+        </trim>
+    </select>
+
+    <select id="maptool-getNodeEdgeList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM TB_NODE_EDGE
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="comNum!=null">AND comNum=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+			<if test="type!=null">AND type=#{type}</if>
+        </trim>
+    </select>
+
+
+
+
+
+	<select id="maptool-getBeaconInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT *
+		FROM TB_BEACON
+		WHERE beaconNum=#{beaconNum}
+	</select>
+
+	<insert id="maptool-insertBeacon" parameterType="java.util.Map">
+		INSERT INTO TB_BEACON(UUID, comNum, majorVer, minorVer, txPower,
+							  beaconType, beaconName, beaconDesc, floor, lat, lng,
+							  field1, field2, field3, field4, field5,
+							  lastDate, modDate, regDate)
+		VALUES (#{UUID}, #{comNum}, #{majorVer}, #{minorVer}, #{txPower},
+				#{beaconType}, #{beaconName}, #{beaconDesc}, #{floor}, #{lat}, #{lng},
+				#{field1}, #{field2}, #{field3}, #{field4}, #{field5},
+				UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+		<selectKey resultType="int" keyProperty="beaconNum" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="maptool-modifyBeacon" parameterType="java.util.Map">
+		UPDATE TB_BEACON
+		SET UUID=#{UUID}, majorVer=#{majorVer}, minorVer=#{minorVer},
+		    beaconName=#{beaconName}, beaconType=#{beaconType}, beaconDesc=#{beaconDesc}, lat=#{lat}, lng=#{lng},
+			txPower=#{txPower}, modDate=UNIX_TIMESTAMP()
+		WHERE beaconNum=#{beaconNum}
+		<if test="floor!=null">AND floor=#{floor}</if>
+	</update>
+
+	<delete id="maptool-deleteBeacon" parameterType="java.util.Map">
+		DELETE FROM TB_BEACON WHERE beaconNum=#{beaconNum}
+	</delete>
+
+
+
+	<select id="maptool-getScannerInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT *
+		FROM TB_SCANNER
+		WHERE scannerNum=#{scannerNum}
+	</select>
+
+	<insert id="maptool-insertScanner" parameterType="java.util.Map">
+		INSERT INTO TB_SCANNER
+		(comNum,  macAddr, majorVer, scannerName, sid, lat, lng,
+		rssi, srssi, mrssi, drssi, exMeter, calPoint, maxSig, maxBuf,
+		fwVer, floor, modDate, regDate)
+		VALUES
+		(#{comNum}, #{macAddr}, #{majorVer}, #{scannerName}, #{sid}, #{lat}, #{lng},
+		#{rssi}, #{srssi}, #{mrssi}, #{drssi}, #{exMeter}, #{calPoint}, #{maxSig}, #{maxBuf},
+		#{fwVer}, #{floor}, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+		<selectKey resultType="int" keyProperty="scannerNum" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="maptool-modifyScanner" parameterType="java.util.Map">
+		UPDATE TB_SCANNER
+		SET
+			macAddr = #{macAddr},
+			majorVer = #{majorVer},
+			scannerName = #{scannerName},
+			sid = #{sid},
+			lat = #{lat},
+			lng = #{lng},
+			rssi = #{rssi},
+			srssi = #{srssi},
+			mrssi = #{mrssi},
+			drssi = #{drssi},
+			exMeter = #{exMeter},
+			calPoint = #{calPoint},
+			maxSig = #{maxSig},
+			maxBuf = #{maxBuf},
+			fwVer = #{fwVer},
+			floor = #{floor},
+			modDate = UNIX_TIMESTAMP()
+		WHERE scannerNum = #{scannerNum}
+	</update>
+
+	<delete id="maptool-deleteScanner" parameterType="java.util.Map">
+		DELETE FROM TB_SCANNER WHERE scannerNum=#{scannerNum}
+	</delete>
+
+
+
+	<select id="maptool-getGeofencingGroupList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * FROM TB_GEOFENCING_GROUP
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND comNum=#{comNum}</if>
+		</trim>
+	</select>
+
+	<select id="maptool-getGeofencingGroupMappingList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT MAP.fcGroupNum, MAP.fcNum, GR.fcGroupName
+		FROM TB_GEOFENCING_GROUP_MAPPING MAP INNER JOIN TB_GEOFENCING BC ON(MAP.fcNum=BC.fcNum)
+		INNER JOIN TB_GEOFENCING_GROUP GR ON(MAP.fcGroupNum=GR.fcGroupNum)
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="comNum!=null">AND BC.comNum=#{comNum}</if>
+			<if test="floor!=null">AND BC.floor=#{floor}</if>
+			<if test="fcNum!=null">AND BC.fcNum=#{fcNum}</if>
+		</trim>
+	</select>
+
+	<insert id="maptool-insertGeofencingGroupMapping" parameterType="java.util.Map">
+		INSERT INTO TB_GEOFENCING_GROUP_MAPPING(fcGroupNum, fcNum)
+		VALUES(#{fcGroupNum}, #{fcNum})
+	</insert>
+
+	<delete id="maptool-deleteGeofencingGroupMapping" parameterType="java.util.Map">
+		DELETE FROM TB_GEOFENCING_GROUP_MAPPING
+		WHERE fcNum=#{fcNum}
+		<if test="fcGroupNum!=null">
+			AND fcGroupNum=#{fcGroupNum}
+		</if>
+	</delete>
+
+
+	<select id="maptool-getGeofenceInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT *
+		FROM TB_GEOFENCING
+		WHERE fcNum=#{fcNum}
+	</select>
+
+	<insert id="maptool-insertGeofence" parameterType="java.util.Map">
+		INSERT INTO TB_GEOFENCING(comNum, fcNum, fcType, fcShape, fcName, floor,
+		evtEnter, evtLeave, evtStay, numEnter, numLeave, numStay, field1, field2, field3, field4, field5, userID, regDate)
+		VALUES (#{comNum}, #{fcNum}, #{fcType}, #{fcShape}, #{fcName}, #{floor},
+		#{evtEnter}, #{evtLeave}, #{evtStay}, #{numEnter}, #{numLeave}, #{numStay}, #{field1}, #{field2}, #{field3}, #{field4}, #{field5}, #{userID}, UNIX_TIMESTAMP())
+		<selectKey resultType="int" keyProperty="fcNum" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<insert id="maptool-insertGeofenceLatlng" parameterType="java.util.Map">
+		INSERT INTO TB_GEOFENCING_LATLNG(fcNum, lat, lng, radius, orderSeq)
+		VALUES (#{fcNum}, #{lat}, #{lng}, #{radius}, #{orderSeq})
+	</insert>
+
+	<update id="maptool-modifyGeofence" parameterType="java.util.Map">
+		UPDATE TB_GEOFENCING
+		SET fcName=#{fcName}, fcShape=#{fcShape}, modDate=UNIX_TIMESTAMP()
+			<if test="evtEnter!=null">,evtEnter=#{evtEnter}</if>
+			<if test="evtLeave!=null">,evtLeave=#{evtLeave}</if>
+			<if test="evtStay!=null">,evtStay=#{evtStay}</if>
+			<if test="numEnter!=null">,numEnter=#{numEnter}</if>
+			<if test="numLeave!=null">,numLeave=#{numLeave}</if>
+			<if test="numStay!=null">,numStay=#{numStay}</if>
+			<if test="field1!=null">,field1=#{field1}</if>
+			<if test="field2!=null">,field2=#{field2}</if>
+			<if test="field3!=null">,field3=#{field3}</if>
+			<if test="field4!=null">,field4=#{field4}</if>
+			<if test="field5!=null">,field5=#{field5}</if>
+		WHERE fcNum=#{fcNum}
+	</update>
+
+	<delete id="maptool-deleteGeofence" parameterType="java.util.Map">
+		DELETE FROM TB_GEOFENCING WHERE fcNum=#{fcNum}
+	</delete>
+
+	<delete id="maptool-deleteGeofenceLatlng" parameterType="java.util.Map">
+		DELETE FROM TB_GEOFENCING_LATLNG WHERE fcNum=#{fcNum}
+	</delete>
+
+
+	<select id="maptool-getAreaInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT *
+		FROM TB_AREA
+		WHERE areaNum=#{areaNum}
+	</select>
+
+	<delete id="maptool-deleteArea" parameterType="java.util.Map">
+		DELETE FROM TB_AREA WHERE areaNum=#{areaNum}
+	</delete>
+
+	<insert id="maptool-insertArea" parameterType="java.util.Map">
+		INSERT INTO TB_AREA(comNum, floor, areaName, regDate)
+		VALUES (#{comNum}, #{floor}, #{areaName}, UNIX_TIMESTAMP())
+		<selectKey resultType="int" keyProperty="areaNum" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<insert id="maptool-insertAreaLatlng" parameterType="java.util.Map">
+		INSERT INTO TB_AREA_LATLNG(areaNum, lat, lng, orderSeq)
+		VALUES (#{areaNum}, #{lat}, #{lng},  #{orderSeq})
+	</insert>
+
+	<update id="maptool-modifyArea" parameterType="java.util.Map">
+		UPDATE TB_AREA
+		SET areaName=#{areaName}
+		WHERE areaNum=#{areaNum}
+	</update>
+
+
+	<delete id="maptool-deleteAreaLatlng" parameterType="java.util.Map">
+		DELETE FROM TB_AREA_LATLNG WHERE areaNum=#{areaNum}
+	</delete>
+
+
+
+	<select id="maptool-getNodeInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT *
+		FROM TB_NODE
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="nodeNum!=null">AND nodeNum=#{nodeNum}</if>
+			<if test="comNum!=null">AND comNum=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+			<if test="nodeID!=null">AND nodeID=#{nodeID}</if>
+		</trim>
+	</select>
+
+	<insert id="maptool-insertNode" parameterType="java.util.Map">
+		<selectKey keyProperty="nodeID" resultType="java.lang.Integer" order="BEFORE">
+			select if(nodeMin.nodeID is null or nodeMin.nodeID>10000, 10000, node.nodeID) as nodeID
+			from (select min(nodeID) as nodeID from TB_NODE where comNum=#{comNum} and nodeID>0) as nodeMin,
+			(select min(nodeID)+1 as nodeID from TB_NODE where comNum=#{comNum} and nodeID>0 and nodeID+1 not in (select nodeID from TB_NODE where comNum=#{comNum} and nodeID>0)) as node
+		</selectKey>
+
+		insert into TB_NODE(comNum, nodeID, floor, nodeName, lat, lng <if test="type!=null">, type</if> )
+		values(#{comNum}, #{nodeID}, #{floor}, #{nodeName}, #{lat}, #{lng} <if test="type!=null">, #{type}</if>)
+
+	</insert>
+
+	<update id="maptool-modifyNode" parameterType="java.util.Map">
+		UPDATE TB_NODE
+		SET lat=#{lat}, lng=#{lng}
+		<if test="areaNum==0">, areaNum=null, areaName=null</if>
+		<if test="areaNum!=null and areaNum>0">,  areaNum=#{areaNum}</if>
+		<if test="areaName!=null and areaNum>0">, areaName=#{areaName}</if>
+		<if test="nodeName!=null">, nodeName=#{nodeName}</if>
+		<if test="nodeID!=null">, nodeID=#{nodeID}</if>
+		<if test="jointName!=null">, jointName=#{jointName}</if>
+		<if test="cate!=null">, cate=#{cate}</if>
+		WHERE nodeNum=#{nodeNum}
+	</update>
+
+	<delete id="maptool-deleteNode" parameterType="java.util.Map">
+		DELETE FROM TB_NODE WHERE nodeNum=#{nodeNum}
+	</delete>
+
+	<select id="maptool-getNodeEdgeInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT *
+		FROM TB_NODE_EDGE
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="edgeNum!=null">AND edgeNum=#{edgeNum}</if>
+			<if test="comNum!=null">AND comNum=#{comNum}</if>
+			<if test="floor!=null">AND floor=#{floor}</if>
+			<if test="type!=null">AND type=#{type}</if>
+			<if test="startPoint and endPoint">
+				AND (
+					(startPoint=#{startPoint} AND endPoint=#{endPoint})
+					OR
+					(startPoint=#{endPoint} AND endPoint=#{startPoint})
+				)
+			</if>
+		</trim>
+	</select>
+
+	<insert id="maptool-insertNodeEdge" parameterType="java.util.Map">
+		INSERT INTO TB_NODE_EDGE(comNum, floor, startPoint, endPoint, type)
+		VALUES(#{comNum}, #{floor}, #{startPoint}, #{endPoint}, #{type})
+		<selectKey resultType="int" keyProperty="edgeNum" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<delete id="maptool-deleteNodeEdge" parameterType="java.util.Map">
+		DELETE FROM TB_NODE_EDGE WHERE edgeNum=#{edgeNum}
+	</delete>
+
+	<select id="maptool-getContentList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT *
+		FROM TB_CONTENTS
+		WHERE comNum=#{comNum}
+	</select>
+
+	<select id="maptool-getContentMappingList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT MAP.conNum, MAP.refType, MAP.refSubType, MAP.refNum, MAP.evtNum,
+			CON.conType, CON.conName, REF.refName, REF.floor
+		FROM TB_CONTENTS_MAPPING MAP
+			INNER JOIN TB_CONTENTS CON ON(MAP.conNum=CON.conNum)
+			INNER JOIN (
+				SELECT 'BC' refType, beaconNum refNum, floor, beaconName refName
+				FROM TB_BEACON WHERE floor IS NOT NULL AND comNum=#{comNum}
+				<if test="floor!=null">AND floor=#{floor}</if>
+				UNION
+				SELECT 'GF' refType, fcNum refNum, floor, fcName refName
+				FROM TB_GEOFENCING WHERE floor IS NOT NULL AND comNum=#{comNum}
+				<if test="floor!=null">AND floor=#{floor}</if>
+				UNION
+				SELECT 'ND' refType, nodeNum refNum, floor, nodeName refName
+				FROM TB_NODE WHERE floor IS NOT NULL AND comNum=#{comNum}
+				<if test="floor!=null">AND floor=#{floor}</if>
+			) REF ON(MAP.refType=REF.refType AND MAP.refNum=REF.refNum)
+		WHERE CON.comNum=#{comNum}
+		<if test="floor!=null">AND REF.floor=#{floor}</if>
+	</select>
+
+	<select id="maptool-getContentMappingInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT MAP.conNum, MAP.refType, MAP.refSubType, MAP.refNum, MAP.evtNum,
+			CON.conType, CON.conName, REF.floor
+			<if test="refType eq 'BC'">,REF.beaconName</if>
+			<if test="refType eq 'GF'">,REF.fcName</if>
+			<if test="refType eq 'ND'">,REF.nodeName</if>
+		FROM TB_CONTENTS_MAPPING MAP
+		INNER JOIN TB_CONTENTS CON ON(MAP.conNum=CON.conNum)
+		INNER JOIN
+		<if test="refType eq 'BC'">
+			TB_BEACON REF ON (REF.beaconNum=MAP.refNum)
+		</if>
+		<if test="refType eq 'GF'">
+			TB_GEOFENCING REF ON (REF.fcNum=MAP.refNum)
+		</if>
+		<if test="refType eq 'ND'">
+			TB_NODE REF ON (REF.nodeNum=MAP.refNum)
+		</if>
+		WHERE MAP.conNum=#{conNum} AND MAP.refType=#{refType} AND MAP.refSubType=#{refSubType}
+			AND MAP.refNum=#{refNum}
+	</select>
+
+	<insert id="maptool-insertContentMapping" parameterType="java.util.Map">
+		INSERT INTO TB_CONTENTS_MAPPING(conNum, refType, refSubType, refNum)
+		VALUES(#{conNum}, #{refType}, #{refSubType}, #{refNum})
+	</insert>
+
+	<delete id="maptool-deleteContentMapping" parameterType="java.util.Map">
+		DELETE FROM TB_CONTENTS_MAPPING
+		WHERE conNum=#{conNum} AND refType=#{refType}
+			AND refSubType=#{refSubType} AND refNum=#{refNum}
+	</delete>
+
+
+	<select id="maptool-getPresenceLogList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT logNum, SUUID, UUID, majorVer, minorVer, lat, lng, floor, regDate
+		, beaconName, targetName
+		FROM TB_LOG_PRESENCE
+		WHERE SUUID=(SELECT UUID FROM TB_COMPANY WHERE comNum=#{comNum})
+		<if test="majorVer!=null">AND majorVer = #{majorVer}</if>
+		<if test="minorVer!=null">AND minorVer = #{minorVer}</if>
+		<if test="floor!=null">AND floor = #{floor}</if>
+		<if test="startRegDate!=null and endRegDate!=null">
+			AND regDate BETWEEN #{startRegDate} AND #{endRegDate}
+		</if>
+		ORDER BY regDate ASC
+	</select>
+
+	<select id="maptool-getPresenceBeaconLogList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT logNum, UUID, lat, lng, floor, regDate, deviceInfo, phoneNumber, fcNum, fcName
+		FROM TB_LOG_PRESENCE_BEACON
+		WHERE UUID=(SELECT UUID FROM TB_COMPANY WHERE comNum=#{comNum})
+		<if test="floor!=null">AND floor = #{floor}</if>
+		<if test="phoneNumber!=null">AND phoneNumber = #{phoneNumber}</if>
+		<if test="startRegDate!=null and endRegDate!=null">
+			AND regDate BETWEEN #{startRegDate} AND #{endRegDate}
+		</if>
+		ORDER BY regDate ASC
+	</select>
+
+	<select id="maptool-getPOICateList" resultType="java.util.Map">
+		SELECT * FROM TB_CODE WHERE gCD = 'POICATE'
+	</select>
+
+</mapper>

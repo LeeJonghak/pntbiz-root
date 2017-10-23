@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.common.CalibrationDao">
+
+	<resultMap id="calibrationResult" type="core.api.common.domain.Calibration">
+		<result property="calNum"     column="CAL_NUM" />
+		<result property="maker"      column="MAKER" />
+		<result property="telecom"    column="TELECOM" />
+		<result property="modelName"  column="MODEL_NAME" />
+		<result property="deviceName" column="DEVICE_NAME" />
+		<result property="os"         column="OS" />
+		<result property="rssi"       column="RSSI" />
+		<result property="modDate"    column="MOD_DATE" />
+		<result property="regDate"    column="REG_DATE" />
+	</resultMap>
+
+	<select id="getCalibrationInfo" parameterType="core.api.common.domain.Calibration" resultMap="calibrationResult">
+		SELECT CAL_NUM, MAKER, TELECOM, MODEL_NAME, DEVICE_NAME, OS, RSSI, MOD_DATE, REG_DATE
+		  FROM TB_CALIBRATION
+		 WHERE MODEL_NAME = #{modelName}
+	</select>
+
+	<select id="getCalibrationInfoByNum" parameterType="core.api.common.domain.Calibration" resultMap="calibrationResult">
+		SELECT CAL_NUM, MAKER, TELECOM, MODEL_NAME, DEVICE_NAME, OS, RSSI, MOD_DATE, REG_DATE
+		  FROM TB_CALIBRATION
+		 WHERE CAL_NUM = #{calNum}
+	</select>
+
+	<insert id="insertCalibration" parameterType="core.api.common.domain.Calibration">
+		INSERT INTO TB_CALIBRATION
+		( CAL_NUM
+		, MAKER
+		, TELECOM
+		, MODEL_NAME
+		, DEVICE_NAME
+		, OS
+		, RSSI
+		, MOD_DATE
+		, REG_DATE
+		) VALUES
+		( SEQ_CALIBRATION_CAL_NUM.nextval
+		, #{maker}
+		, #{telecom}
+		, #{modelName}
+		, #{deviceName}
+		, #{os}
+		, #{rssi}
+		, FN_UNIX_TIMESTEMP(SYSDATE)
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateCalibration" parameterType="core.api.common.domain.Calibration">
+		UPDATE TB_CALIBRATION
+		   SET MAKER = #{maker}
+		     , TELECOM = #{telecom}
+		     , DEVICE_NAME = #{deviceName}
+		     , RSSI = #{rssi}
+		     , MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+		 WHERE MODEL_NAME = #{modelName}
+		   AND OS=#{os}
+    </update>
+</mapper>

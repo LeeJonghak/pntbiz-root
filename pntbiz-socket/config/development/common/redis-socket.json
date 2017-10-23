@@ -1,0 +1,7 @@
+{
+	"port": 6379,
+	"host": "172.27.0.213",
+	"family": 4,
+	"password": "vldpsxl1q2w3e",
+	"db": 0
+}

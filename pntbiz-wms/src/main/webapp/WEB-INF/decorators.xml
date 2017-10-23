@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/jsp">
+    <excludes>
+        <pattern>/index.jsp</pattern>
+        <pattern>/html/error.html</pattern>
+        <pattern>/log/*</pattern>
+        <pattern>/swagger/*</pattern>
+        <pattern>/swagger-ui.html</pattern>
+        <pattern>/common/excel.do</pattern>
+		<pattern>/tracking/map.embed.do*</pattern>
+    </excludes>
+    <decorator name="layout" page="${viewVersion}/_global/layout.jsp">
+        <pattern>/*</pattern>
+    </decorator>
+    <decorator name="top" page="${viewVersion}/_global/top.jsp" />
+    <decorator name="logintop" page="${viewVersion}/_global/logintop.jsp" />
+    <decorator name="footer" page="${viewVersion}/_global/footer.jsp" />
+    <decorator name="sidemenu" page="${viewVersion}/_global/sidemenu.jsp" />
+    <decorator name="include" page="${viewVersion}/_global/include.jsp" />
+    <decorator name="popup" page="${viewVersion}/_global/popup.jsp" >
+        <pattern>/beacon/map.do</pattern>
+        <pattern>/service/event/popup/content_list.do</pattern>
+    </decorator>
+    <decorator name="ajax" page="${viewVersion}/_global/ajax.jsp" >
+        <pattern>/**/*.ajax.do</pattern>
+    </decorator>
+    <decorator name="authlayout" page="${viewVersion}/_global/authlayout.jsp">
+        <pattern>/auth/login.do</pattern>
+        <pattern>/auth/otp.do</pattern>
+    </decorator>
+    <decorator name="help" page="${viewVersion}/_global/help.jsp">
+        <pattern>/help/*/*</pattern>
+        <pattern>/help/*</pattern>
+    </decorator>
+    <decorator name="interworking" page="${viewVersion}/_global/interworking.jsp">
+    	<pattern>/map/yap/*</pattern>
+        <pattern>/beacon/yap/*</pattern>
+    </decorator>
+</decorators>

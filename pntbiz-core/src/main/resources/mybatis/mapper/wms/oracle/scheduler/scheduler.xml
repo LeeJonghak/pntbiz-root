@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="component.scheduler.SchedulerDao">
+
+
+    <!-- 48시간이 지난 로그 자동 삭제 -->
+    <delete id="deletePresenceLogSchedule">
+        DELETE
+        FROM TB_LOG_PRESENCE
+        WHERE REG_DATE &lt; FN_UNIX_TIMESTEMP(SYSDATE - interval '2' day)
+    </delete>
+
+
+
+    <select id="selectComNum" resultType="Integer">
+	    SELECT COM_NUM
+		  FROM TB_COMPANY
+		 WHERE COM_NAME = 'LG디스플레이'
+		   AND ROWNUM = 1
+    </select>
+
+    <delete id="deleteFloorCodeScheduler" parameterType="Integer">
+        DELETE
+          FROM TB_FLOOR_CODE
+         WHERE COM_NUM = #{comNum}
+    </delete>
+
+    <update id="insertFloorCodeScheduler" parameterType="Integer">
+        INSERT INTO TB_FLOOR_CODE
+        ( FLOOR_CODE_NUM
+         , COM_NUM
+         , NODE_ID
+         , NODE_NAME
+         , TYPE_CODE
+         , UPPER_NODE_ID
+         , LEVEL_NO
+         , SORT_NO)
+	      SELECT SEQ_FC_FLOOR_CODE_NUM .NEXTVAL
+	           , COM_NUM
+	           , NODE_ID
+	           , NODE_NAME
+	           , TYPE_CODE
+	           , UPPER_NODE_ID
+	           , LEVEL_NO
+	           , SORT_NO
+	        FROM (SELECT DISTINCT REGION_CODE AS NODE_ID
+	                   , #{comNum}     AS COM_NUM
+	                   , REGION_CODE  AS NODE_NAME
+	                   , 'REGION'     AS TYPE_CODE
+	                   , '0'          AS UPPER_NODE_ID
+	                   , 0 AS LEVEL_NO
+	                   , 0 AS SORT_NO
+	                FROM TB_RTL_LOCATION_M
+	               WHERE USE_FLAG = 'Y'
+	              UNION ALL
+	              SELECT SAFETY_WORK_LOCATION_ID
+	                   , #{comNum}
+	                   , SAFETY_WORK_LOCATION_NAME
+	                   , SAFETY_WORK_LOCATION_TYPE_CODE
+	                   , HIGH_SAFETY_WORK_LOCATION_ID
+	                   , LOCATION_ID_LEVEL_VALUE
+	                   , SORT_ORDER_NO
+	                FROM TB_RTL_LOCATION_M
+	               WHERE USE_FLAG = 'Y'
+	               ORDER BY LEVEL_NO, SORT_NO
+	               )
+	</update>
+
+    <resultMap id="BeaconResult" type="java.util.Map">
+        <result property="UUID" column="UUID" />
+        <result property="majorVer" column="MAJOR_VER" />
+        <result property="minorVer" column="MINOR_VER" />
+        <result property="tagId" column="TAG_ID" />
+        <result property="existYn" column="EXIST_YN" />
+    </resultMap>
+
+    <select id="selectBeaconList" resultMap="BeaconResult">
+        SELECT TRIM(TB.UUID) AS UUID, TB.MAJOR_VER, TB.MINOR_VER, TB.TAG_ID, DECODE(TRBS.TAG_ID, NULL, 'I', 'U') AS EXIST_YN
+          FROM TB_BEACON TB
+          LEFT OUTER JOIN TB_RTL_BEACON_STATUS_M TRBS
+            ON TB.TAG_ID = TRBS.TAG_ID
+		<!--  WHERE TB.COM_NUM IN ( SELECT COM_NUM
+		          FROM TB_COMPANY
+		         WHERE COM_NAME NOT LIKE '피플%'
+		           AND ROWNUM = 1) -->
+    </select>
+    <select id="selectChkExistBeaconStatus" parameterType="String" resultType="Integer">
+        SELECT COUNT(1)
+          FROM TB_RTL_BEACON_STATUS_M
+         WHERE TAG_ID = #{value}
+    </select>
+    <insert id="insertRtlBeaconStatus" parameterType="java.util.Map">
+        INSERT INTO TB_RTL_BEACON_STATUS_M
+        ( TAG_ID
+        , LOCATION_UPDATE_DATE
+        <if test="battery != null and battery != ''">, BATTERY</if>
+        <if test="regionCode != null and regionCode != ''">, REGION_CODE</if>
+        <if test="zoneCode != null and bazoneCodettery != ''">, ZONE_CODE</if>
+        <if test="buildingCode != null and buildingCode != ''">, BUILDING_CODE</if>
+        <if test="floorCode != null and floorCode != ''">, FLOOR_CODE</if>
+        <if test="columnCode != null and columnCode != ''">, COLUMN_CODE</if>
+        <if test="areaCode != null and areaCode != ''">, AREA_CODE</if>
+        ) VALUES
+        ( #{tagId}
+        , FN_FROM_UNIXTIME(#{lastTime})
+        <if test="battery != null and battery != ''">, #{battery}           </if>
+        <if test="regionCode != null and regionCode != ''">, #{regionCode}  </if>
+        <if test="zoneCode != null and bazoneCodettery != ''">, #{zoneCode} </if>
+        <if test="buildingCode != null and buildingCode != ''">, #{buildingCode}</if>
+        <if test="floorCode != null and floorCode != ''">, #{floorCode}     </if>
+        <if test="columnCode != null and columnCode != ''">, #{columnCode}  </if>
+        <if test="areaCode != null and areaCode != ''">, #{areaCode}        </if>
+        )
+    </insert>
+    <update id="updateRtlBeaconStatus" parameterType="java.util.Map">
+        UPDATE TB_RTL_BEACON_STATUS_M
+		   SET LOCATION_UPDATE_DATE = FN_FROM_UNIXTIME(#{lastTime})
+		    <if test="battery != null and battery != ''">, BATTERY              = #{battery}</if>
+		    <if test="regionCode != null and regionCode != ''">, REGION_CODE      = #{regionCode}   </if>
+		    <if test="zoneCode != null and bazoneCodettery != ''">, ZONE_CODE     = #{zoneCode}     </if>
+		    <if test="buildingCode != null and buildingCode != ''">, BUILDING_CODE= #{buildingCode} </if>
+		    <if test="floorCode != null and floorCode != ''">, FLOOR_CODE         = #{floorCode}    </if>
+		    <if test="columnCode != null and columnCode != ''">, COLUMN_CODE      = #{columnCode}   </if>
+		    <if test="areaCode != null and areaCode != ''">, AREA_CODE            = #{areaCode}     </if>
+		 WHERE TAG_ID               = #{tagId}
+    </update>
+</mapper>

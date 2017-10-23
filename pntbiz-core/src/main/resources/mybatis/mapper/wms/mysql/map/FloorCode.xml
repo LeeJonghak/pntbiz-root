@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.FloorCodeDao">
+
+	<resultMap id="floorCodeResult" type="core.wms.map.domain.FloorCode">
+		<result property="floorCodeNum" column="floorCodeNum"/>
+        <result property="comNum"       column="comNum"/>
+        <result property="nodeId"       column="nodeId"/>
+        <result property="nodeName1"    column="nodeName"/>
+        <result property="nodeField"    column="nodeField" />
+        <result property="typeCode"     column="typeCode"/>
+        <result property="upperNodeId"  column="upperNodeId"/>
+        <result property="levelNo"      column="levelNo"/>
+        <result property="sortNo"       column="sortNo"/>
+        <result property="useFlag"      column="useFlag"/>
+	</resultMap>
+
+	<select id="getFloorCodeCount" parameterType="core.wms.map.domain.FloorCode" resultType="Integer">
+		SELECT COUNT(1)
+          FROM TB_FLOOR_CODE
+         WHERE comNum = #{comNum}
+	</select>
+
+	<select id="getFloorCodeList" parameterType="core.wms.map.domain.FloorCode" resultMap="floorCodeResult">
+		SELECT floorCodeNum
+             , comNum
+             , nodeId
+             , nodeName
+             , nodeField
+             , typeCode
+             , upperNodeId
+             , levelNo
+             , sortNo
+             , useFlag
+          FROM TB_FLOOR_CODE
+         WHERE comNum = #{comNum}
+
+		 ORDER BY levelNo, sortNo
+		 <if test="firstItemNo != null and firstItemNo != '' and pageSize != null and pageSize != ''">
+       LIMIT #{firstItemNo}, #{pageSize}
+     </if>
+	</select>
+
+	<select id="getFloorCodeInfo" parameterType="core.wms.map.domain.FloorCode" resultMap="floorCodeResult">
+		SELECT floorCodeNum
+             , comNum
+             , nodeId
+             , nodeName
+             , nodeField
+             , typeCode
+             , upperNodeId
+             , levelNo
+             , sortNo
+             , useFlag
+          FROM TB_FLOOR_CODE
+         WHERE comNum = #{comNum}
+          <if test="floorCodeNum != null and floorCodeNum != ''">AND floorCodeNum = #{floorCodeNum}</if>
+          <if test="nodeId != null and nodeId != ''">AND nodeId= #{nodeId}</if>
+	</select>
+
+	<insert id="insertFloorCode" parameterType="core.wms.map.domain.FloorCode">
+        INSERT INTO TB_FLOOR_CODE
+        ( comNum
+        , nodeId
+        , nodeName
+        , nodeField
+        , typeCode
+        , upperNodeId
+        , levelNo
+        , sortNo
+        , useFlag)
+        VALUES
+        ( #{comNum}
+        , #{nodeId}
+        , #{nodeName1}
+        , #{nodeField}
+        <choose>
+            <when test="levelNo == 0">, 'REGION'</when>
+            <when test="levelNo == 1">, 'ZONE'</when>
+            <when test="levelNo == 2">, 'BUILDING'</when>
+            <when test="levelNo == 3">, 'FLOOR'</when>
+        </choose>
+        , #{upperNodeId}
+        , #{levelNo}
+        <choose>
+            <when test="sortNo == null or sortNo == ''">
+            , (SELECT TFC.sNo
+                 FROM (SELECT IFNULL(MAX(sortNo), 0)+1 as sNo
+			             FROM TB_FLOOR_CODE
+			            WHERE IFNULL(upperNodeId, '') = #{upperNodeId}
+			           ) TFC
+			   )
+            </when>
+            <otherwise>
+            , #{sortNo}
+            </otherwise>
+        </choose>
+        , #{useFlag}
+        )
+    </insert>
+
+    <update id="updateFloorCode" parameterType="core.wms.map.domain.FloorCode">
+        UPDATE TB_FLOOR_CODE
+           SET nodeName     = #{nodeName1}
+             , sortNo       = #{sortNo}
+             , nodeField    = #{nodeField}
+             , useFlag     = #{useFlag}
+         WHERE floorCodeNum = #{floorCodeNum}
+    </update>
+
+    <delete id="deleteFloorCodeList" parameterType="java.util.Map">
+        DELETE
+          FROM TB_FLOOR_CODE
+         WHERE comNum = #{comNum}
+           AND nodeId IN
+           <foreach item="nodeid" collection="array" open="(" separator="," close=")">
+           #{nodeid}
+         </foreach>
+    </delete>
+
+    <select id="getFloorCodeIdList" parameterType="java.util.Map" resultType="String">
+        SELECT nodeId
+          FROM TB_FLOOR_CODE
+         WHERE comNum = #{comNum}
+           AND upperNodeId IN
+          <foreach item="nodeid" collection="array" open="(" separator="," close=")">#{nodeid}</foreach>
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+

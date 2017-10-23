@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.geofencing.dao.GeofencingLatlngDao">
+
+    <!--
+        모든 지오펜스 좌표 정보 - 펜스 배치도에서 사용
+        @author nohsoo 2015-03-11
+    -->
+    <select id="getGeofencingLatlngAll" parameterType="java.util.HashMap" resultType="core.wms.geofencing.domain.GeofencingLatlng">
+        SELECT *
+        FROM TB_GEOFENCING_LATLNG AS a INNER JOIN TB_GEOFENCING AS b ON(a.fcNum=b.fcNum)
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="comNum!=null">
+                and b.comNum=#{comNum}
+            </if>
+            <if test="floor!=null">
+                and b.floor=#{floor}
+            </if>
+        </trim>
+        ORDER BY a.fcNum, a.orderSeq ASC
+    </select>
+
+    <select id="getGeofencingLatlngList" parameterType="java.util.HashMap" resultType="core.wms.geofencing.domain.GeofencingLatlng">
+        SELECT *
+        FROM TB_GEOFENCING_LATLNG
+        WHERE fcNum=#{fcNum}
+    </select>
+
+    <insert id="insertGeofencingLatlng" parameterType="core.wms.geofencing.domain.GeofencingLatlng">
+    <![CDATA[
+        INSERT INTO TB_GEOFENCING_LATLNG(fcNum, lat, lng, radius, orderSeq)
+        VALUES (#{fcNum}, #{lat}, #{lng}, #{radius}, #{orderSeq})
+    ]]>
+    </insert>
+
+    <delete id="deleteGeofencingLatlng" parameterType="java.util.HashMap">
+        DELETE FROM TB_GEOFENCING_LATLNG
+        <where>
+            fcNum=#{fcNum}
+        </where>
+    </delete>
+</mapper>

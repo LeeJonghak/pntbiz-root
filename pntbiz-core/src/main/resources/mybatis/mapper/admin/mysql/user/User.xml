@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.user.dao.UserDao">
+	
+	<resultMap id="userResult" type="core.admin.user.domain.User">
+		<result property="comNum" column="comNum"  />
+		<result property="userNum" column="userNum"  />
+		<result property="userType" column="userType"   />
+		<result property="userID" column="userID"   />
+		<result property="userName" column="userName" />
+		<result property="mobileID" column="mobileID" />
+		<result property="birth" column="birth"    />
+		<result property="gender" column="gender"   />
+		<result property="anniversary" column="anniversary" />
+		<result property="visitCnt" column="visitCnt" />
+		<result property="agreeLocation" column="agreeLocation"   />
+		<result property="agreeContents" column="agreeContents"   />
+		<result property="modDate" column="modDate"  />
+		<result property="regDate" column="regDate"  />		
+	</resultMap>
+	
+	<select id="getUserCount" parameterType="core.admin.user.domain.UserSearchParam" resultType="Integer">
+		SELECT COUNT(userNum) CNT
+		FROM TB_USER
+		WHERE 1 
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+		<if test="gender != '' and gender != null">AND gender = #{gender}</if>
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null"> 
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getUserList" parameterType="core.admin.user.domain.UserSearchParam" resultMap="userResult">
+		SELECT comNum, userNum, userType, userID, userName, mobileID, birth, gender,
+		anniversary, visitCnt, agreeLocation, agreeContents, modDate, regDate
+		FROM TB_USER
+		WHERE 1 
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+		<if test="gender != '' and gender != null">AND gender = #{gender}</if>
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null"> 
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+		ORDER BY userNum DESC
+		LIMIT ${firstItemNo}, ${pageSize}
+	</select>
+	
+	<select id="getUserInfo" parameterType="core.admin.user.domain.User" resultMap="userResult">
+		SELECT comNum, userNum, userType, userID, userName, mobileID, birth, gender,
+		anniversary, visitCnt, agreeLocation, agreeContents, modDate, regDate 
+		FROM TB_USER 
+		WHERE userNum = #{userNum} 
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+	</select>
+	
+	<select id="getUserInfoByID" parameterType="core.admin.user.domain.User" resultMap="userResult">
+		SELECT comNum, userNum, userType, userID, userName, mobileID, birth, gender,
+		anniversary, visitCnt, agreeLocation, agreeContents, modDate, regDate 
+		FROM TB_USER 
+		WHERE userID = #{userID} 
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+	</select>
+	
+	<select id="checkUserDuplication" parameterType="core.admin.user.domain.User" resultType="Integer">
+		SELECT COUNT(userID) CNT
+		FROM TB_USER 
+		WHERE userID = #{userID} 
+		<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+	</select>
+	
+	<insert id="insertUser" parameterType="core.admin.user.domain.User">
+        INSERT INTO TB_USER
+        (comNum, userType, userID, userName, mobileID, birth, gender,
+		anniversary, visitCnt, agreeLocation, agreeContents, modDate, regDate)
+        VALUES
+        (#{comNum}, #{userType}, #{userID}, #{userName}, #{mobileID}, #{birth}, #{gender}, 
+        #{anniversary}, #{visitCnt}, #{agreeLocation}, #{agreeContents}, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+	    <selectKey keyProperty="userNum" resultType="Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+    </insert>
+    
+    <update id="updateUser" parameterType="core.admin.user.domain.User">
+        UPDATE TB_USER 
+        <set>
+			<if test="userType != '' and userType != null">userType = #{userType},</if>
+			<if test="userName != '' and userName != null">expFlag = #{expFlag},</if> 
+			<if test="birth != '' and birth != null">birth = #{birth},</if> 
+			<if test="gender != '' and gender != null">gender = #{gender},</if> 
+			<if test="anniversary != '' and anniversary != null">anniversary = #{anniversary},</if> 
+			<if test="visitCnt != '' and visitCnt != null">visitCnt = #{visitCnt},</if> 
+			<if test="agreeLocation != '' and agreeLocation != null">agreeLocation = #{agreeLocation},</if> 
+			<if test="agreeContents != '' and agreeContents != null">agreeContents = #{agreeContents},</if> 
+			modDate = UNIX_TIMESTAMP(), 
+        </set>
+        WHERE userNum = #{userNum}
+        <if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+    </update>
+    
+    <delete id="deleteUser" parameterType="core.admin.user.domain.User">
+        DELETE 
+        FROM TB_USER
+        WHERE userNum = #{userNum} 
+        <if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+    </delete>
+    
+</mapper>

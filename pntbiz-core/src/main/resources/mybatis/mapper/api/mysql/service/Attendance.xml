@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.service.AttendanceDao">
+
+	<resultMap id="attendanceResult" type="core.api.service.domain.Attendance">
+		<result property="logNum" column="logNum" />
+		<result property="UUID" column="UUID" />
+		<result property="sidNum" column="sidNum" />
+		<result property="sName" column="sName" />	
+		<result property="subject" column="subject" />
+		<result property="sPhoneNumber" column="sPhoneNumber" />
+		<result property="attdDate" column="attdDate" />
+		<result property="regDate" column="regDate" />
+		<result property="modDate" column="modDate" />
+	</resultMap>	
+	
+	<select id="getAttendanceCount" parameterType="core.api.service.domain.Attendance" resultType="Integer">
+		SELECT COUNT(sidNum) CNT
+		FROM TB_ATTENDANCE 
+		WHERE UUID = #{UUID}
+		AND sidNum = #{sidNum}   
+		AND subject = #{subject}
+		AND attdDate = #{attdDate}
+	</select>
+	
+	<select id="getAttendanceInfoBySidnum" parameterType="core.api.service.domain.Attendance" resultMap="attendanceResult">
+		SELECT sidNum, sName, subject, sPhoneNumber, attdDate, regDate, modDate 
+		FROM TB_ATTENDANCE 
+		WHERE UUID = #{UUID}  
+		AND subject = #{subject} 
+		AND attdDate = #{attdDate}
+	</select>
+	
+	<insert id="insertAttendance" parameterType="core.api.service.domain.Attendance">
+		INSERT INTO TB_ATTENDANCE 
+		(UUID, sidNum, sName, subject, sPhoneNumber, attdDate, regDate, modDate)
+		VALUES
+		(#{UUID}, #{sidNum}, #{sName}, #{subject}, #{sPhoneNumber}, #{attdDate}, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+    </insert>
+    
+    <update id="updateAttendance" parameterType="core.api.service.domain.Attendance">
+		UPDATE TB_ATTENDANCE
+		<set>
+			modDate = UNIX_TIMESTAMP(),
+		</set>
+		WHERE UUID = #{UUID}
+		AND sidNum = #{sidNum}   
+		AND subject = #{subject}
+		AND attdDate = #{attdDate}
+    </update>
+	
+</mapper>

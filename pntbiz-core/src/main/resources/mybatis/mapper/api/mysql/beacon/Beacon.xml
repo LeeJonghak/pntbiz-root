@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.beacon.beaconDao">
+
+	<resultMap id="cntResult" type="Integer">
+		<result property="cnt" column="CNT" />
+	</resultMap>
+
+	<resultMap id="beaconResult" type="core.api.beacon.domain.Beacon">
+		<result property="beaconNum" column="beaconNum" />
+		<result property="comNum" column="comNum" />
+		<result property="UUID" column="UUID" />
+		<result property="majorVer" column="majorVer" />
+		<result property="minorVer" column="minorVer" />
+		<result property="macAddr" column="macAddr" />
+		<result property="txPower" column="txPower" />
+		<result property="battery" column="battery" />
+		<result property="beaconName" column="beaconName" />
+		<result property="beaconDesc" column="beaconDesc" />
+		<result property="floor" column="floor" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="lastDate" column="lastDate" />
+		<result property="modDate" column="modDate" />
+		<result property="regDate" column="regDate" />
+		<result property="externalId" column="externalId" />
+	</resultMap>
+
+	<select id="getBeaconInfo" parameterType="core.api.beacon.domain.Beacon" resultMap="beaconResult">
+		SELECT beaconNum, comNum, UUID, majorVer, minorVer, macAddr, txPower, battery,
+		beaconName, beaconDesc, floor, lat, lng, lastDate, modDate, regDate, externalId
+		FROM TB_BEACON
+		WHERE UUID = #{UUID}
+		AND majorVer = #{majorVer}
+		AND minorVer = #{minorVer}
+	</select>
+
+	<select id="getBeaconInfoMacAddress" parameterType="String" resultMap="beaconResult">
+		SELECT beaconNum, comNum, UUID, majorVer, minorVer, macAddr, txPower, battery,
+		beaconName, beaconDesc, floor, lat, lng, lastDate, modDate, regDate, externalId
+		FROM TB_BEACON
+		WHERE macAddr = #{VALUE }
+	</select>
+
+	<select id="getBeaconInfoByNum" parameterType="core.api.beacon.domain.Beacon" resultMap="beaconResult">
+		SELECT beaconNum, comNum, UUID, majorVer, minorVer, macAddr, txPower, battery,
+		beaconName, beaconDesc, floor, lat, lng, lastDate, modDate, regDate, externalId
+		FROM TB_BEACON 
+		WHERE beaconNum = #{beaconNum} 
+	</select>
+
+	<insert id="insertBeaconState" parameterType="core.api.beacon.domain.BeaconState">
+		INSERT INTO TB_LOG_BEACON_STATE  
+		(SUUID, UUID, majorVer, minorVer, battery, regDate)
+		VALUES
+		(#{SUUID}, #{UUID}, #{majorVer}, #{minorVer}, #{battery}, UNIX_TIMESTAMP());
+    </insert>
+
+	<!--
+		비콘 조회
+		2015-03-11 jhlee 박이사님요청으로  프레즌스 콘텐츠 제거
+	-->
+	<select id="getBeaconList" parameterType="java.util.HashMap" resultType="core.api.beacon.domain.BeaconContents">
+		SELECT DISTINCT(a.beaconNum), a.*
+		FROM TB_BEACON AS a
+		INNER JOIN TB_CONTENTS_MAPPING AS b ON(a.beaconNum=b.refNum AND b.refType='BC')
+		INNER JOIN TB_CONTENTS AS c ON(b.conNum=c.conNum)
+		INNER JOIN TB_COMPANY AS d ON(a.comNum=d.comNum)
+		<trim prefix="where" prefixOverrides="and|or">
+
+			<if test="UUID!=null">
+				and d.UUID=#{UUID}
+			</if>
+			<if test="majorVer!=null">
+				and a.majorVer=#{majorVer}
+			</if>
+			<if test="minorVer!=null">
+				and a.minorVer=#{minorVer}
+			</if>
+			<if test="conType!=null">
+				and c.conType=#{conType}
+			</if>
+			<if test="conType==null">
+				and c.conType != 'PRE'
+			</if>
+		</trim>
+		ORDER BY a.beaconNum DESC
+	</select>
+
+	<select id="getBeaconListByAll" parameterType="java.util.HashMap" resultType="core.api.beacon.domain.Beacon">
+        SELECT a.beaconNum, a.comNum, a.UUID, a.majorVer, a.minorVer, a.macAddr, a.txPower, a.battery,
+		a.beaconName, a.beaconDesc, a.floor, a.lat, a.lng, a.externalId, a.lastDate, a.modDate, a.regDate, externalId
+        FROM TB_BEACON AS a 
+        INNER JOIN TB_COMPANY AS b ON(a.comNum=b.comNum) 
+        WHERE b.UUID=#{UUID}
+        ORDER BY a.beaconNum DESC
+    </select>
+
+	<select id="getBeaconContentsList" parameterType="java.util.HashMap" resultType="core.api.contents.domain.Contents">
+
+		SELECT a.*, b.*, c.*
+		FROM TB_CONTENTS AS a INNER JOIN TB_CONTENTS_DETAIL AS b ON(a.conNum=b.conNum)
+		INNER JOIN TB_CONTENTS_MAPPING AS c ON(a.conNum=c.conNum AND c.refType='BC')
+		INNER JOIN TB_BEACON AS d ON(d.beaconNum=c.refNum)
+		INNER JOIN TB_COMPANY AS e ON(a.comNum=e.comNum)
+		<where>
+			<if test="UUID!=null">
+				and e.UUID=#{UUID}
+			</if>
+			<if test="majorVer!=null">
+				and d.majorVer=#{majorVer}
+			</if>
+			<if test="minorVer!=null">
+				and d.minorVer=#{minorVer}
+			</if>
+			<if test="conType!=null">
+				and a.conType=#{conType}
+			</if>
+		</where>
+		ORDER BY d.beaconNum ASC, a.conNum ASC
+
+	</select>
+
+	<select id="getBeaconActionList" parameterType="java.util.HashMap" resultType="core.api.geofencing.domain.CodeAction">
+
+		SELECT a.*, c.*
+		FROM TB_CODE_ACTION AS a
+		INNER JOIN TB_CODE_ACTION_MAPPING AS c ON(a.codeNum=c.codeNum AND c.refType='BC')
+		INNER JOIN TB_BEACON AS d ON(d.beaconNum=c.refNum)
+		INNER JOIN TB_COMPANY AS e ON(a.comNum=e.comNum)
+		<where>
+			<if test="UUID!=null">
+				and e.UUID=#{UUID}
+			</if>
+			<if test="majorVer!=null">
+				and d.majorVer=#{majorVer}
+			</if>
+			<if test="minorVer!=null">
+				and d.minorVer=#{minorVer}
+			</if>
+		</where>
+		ORDER BY d.beaconNum ASC, a.codeNum ASC
+
+	</select>
+
+    <select id="getBeaconFloorCodeList" parameterType="java.util.HashMap" resultType="core.api.beacon.domain.BeaconContents">
+        SELECT DISTINCT(a.beaconNum), a.*
+        FROM TB_BEACON a
+        INNER JOIN TB_CONTENTS_MAPPING b ON a.beaconNum=b.refNum AND b.refType='BC'
+        INNER JOIN TB_CONTENTS c ON b.conNum=c.conNum
+        INNER JOIN TB_COMPANY d ON a.comNum=d.comNum
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="UUID!=null">
+                AND d.UUID=#{UUID}
+            </if>
+            <if test="conType!=null">
+                and c.conType=#{conType}
+            </if>
+            <if test="floorCodeList != null">
+                AND a.floor IN
+                <foreach item="item" index="index" collection="floorCodeList" open="(" separator="," close=")">#{item.nodeId}</foreach>
+            </if>
+        </trim>
+        ORDER BY a.beaconNum DESC
+    </select>
+
+	<select id="getBeaconFloorCodeListByField" parameterType="java.util.HashMap" resultType="core.api.beacon.domain.BeaconContents">
+		SELECT DISTINCT(a.beaconNum), a.comNum, a.UUID,  a.majorVer, a.minorVer, a.macAddr, a.txPower, a.battery,
+		a.beaconName, a.beaconDesc, a.lat, a.lng, a.lastDate, a.modDate, a.regDate, e.nodeField floor, externalId
+		FROM TB_BEACON a
+		INNER JOIN TB_CONTENTS_MAPPING b ON a.beaconNum=b.refNum AND b.refType='BC'
+		INNER JOIN TB_CONTENTS c ON b.conNum=c.conNum
+		INNER JOIN TB_COMPANY d ON a.comNum=d.comNum
+		INNER JOIN TB_FLOOR_CODE e ON a.floor=e.nodeId
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="UUID!=null">
+				AND d.UUID=#{UUID}
+			</if>
+			<if test="conType!=null">
+				and c.conType=#{conType}
+			</if>
+			<if test="floorCodeList != null">
+				AND a.floor IN
+				<foreach item="item" index="index" collection="floorCodeList" open="(" separator="," close=")">#{item.nodeId}</foreach>
+			</if>
+		</trim>
+		ORDER BY a.beaconNum DESC
+	</select>
+
+	<update id="updateScannerBeaconState" parameterType="core.api.beacon.domain.Beacon">
+		UPDATE TB_BEACON
+		SET
+			battery = #{battery},
+			modDate=UNIX_TIMESTAMP()
+		WHERE
+			beaconNum=#{beaconNum}
+	</update>
+
+</mapper>

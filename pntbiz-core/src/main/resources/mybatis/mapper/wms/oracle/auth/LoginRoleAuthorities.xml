@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="auth.dao.LoginRoleAuthoritiesDao">
+
+	<resultMap id="loginRoleAuthoritiesResult" type="core.wms.auth.domain.LoginRoleAuthorities">
+        <result property="roleNum"  column="ROLE_NUM" />
+        <result property="authNum"  column="AUTH_NUM" />
+        <result property="authCode" column="AUTH_CODE" />
+        <result property="authName" column="AUTH_NAME" />
+        <result property="regDate"  column="REG_DATE" />
+	</resultMap>
+
+	<select id="getLoginRoleAuthoritiesInfo" parameterType="core.wms.auth.domain.LoginRoleAuthorities" resultMap="loginRoleAuthoritiesResult">
+		SELECT ROLE_NUM, AUTH_NUM, AUTH_CODE, AUTH_NAME, REG_DATE
+		  FROM TB_LOGIN_ROLE_AUTHORITIES
+		 WHERE ROLE_NUM = #{roleNum}
+		   AND AUTH_NUM = #{authNum}
+	</select>
+
+    <select id="getLoginRoleAuthorities" parameterType="core.wms.auth.domain.LoginRoleAuthorities" resultMap="loginRoleAuthoritiesResult">
+		SELECt ROLE_NUM, AUTH_NUM, AUTH_CODE, AUTH_NAME, REG_DATE
+		  FROM TB_LOGIN_ROLE_AUTHORITIES
+		 WHERE ROLE_NUM = #{roleNum}
+	</select>
+
+</mapper>

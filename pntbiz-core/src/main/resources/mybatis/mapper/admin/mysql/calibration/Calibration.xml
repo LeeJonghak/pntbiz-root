@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.calibration.CalibrationDao">
+	
+	<resultMap id="cntResult" type="Integer">
+		<result property="cnt" column="CNT" />
+	</resultMap>
+	
+	<resultMap id="calibrationResult" type="core.admin.calibration.domain.Calibration">
+		<result property="calNum" column="calNum" />
+		<result property="maker" column="maker" />
+		<result property="telecom" column="telecom" />
+		<result property="modelName" column="modelName" />
+		<result property="deviceName" column="deviceName" />
+		<result property="os" column="os" />
+		<result property="rssi" column="rssi" />
+		<result property="modDate" column="modDate" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<select id="getCalibrationCount" parameterType="core.admin.calibration.domain.CalibrationSearchParam" resultMap="cntResult">
+		SELECT COUNT(calNum) CNT
+		FROM TB_CALIBRATION 
+		WHERE 1 
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null"> 
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getCalibrationList" parameterType="core.admin.calibration.domain.CalibrationSearchParam" resultMap="calibrationResult">
+		SELECT calNum, maker, telecom, modelName, deviceName, os, rssi, modDate, regDate 
+		FROM TB_CALIBRATION 
+		WHERE 1
+		<if test="maker != '' and maker != null">AND maker = #{maker}</if>
+		<if test="telecom != '' and telecom != null">AND telecom = #{telecom}</if>
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null"> 
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>		
+		ORDER BY calNum DESC 
+		LIMIT ${firstItemNo}, ${pageSize}
+	</select>
+	
+	<select id="getCalibrationInfo" parameterType="core.admin.calibration.domain.Calibration" resultMap="calibrationResult">
+		SELECT calNum, maker, telecom, modelName, deviceName, os, rssi, modDate, regDate 
+		FROM TB_CALIBRATION 
+		WHERE calNum = #{calNum}
+	</select>
+	
+	<insert id="insertCalibration" parameterType="core.admin.calibration.domain.Calibration">
+        INSERT INTO TB_CALIBRATION
+        (maker, telecom, modelName, deviceName, os, rssi, modDate, regDate)
+        VALUES
+        (#{maker}, #{telecom}, #{modelName}, #{deviceName}, #{os}, #{rssi}, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())     
+    </insert>
+    
+    <update id="updateCalibration" parameterType="core.admin.calibration.domain.Calibration">
+        UPDATE TB_CALIBRATION 
+        <set>
+        	<if test="maker != ''">maker = #{maker},</if>
+        	<if test="telecom != ''">telecom = #{telecom},</if>
+        	<if test="modelName != ''">modelName = #{modelName},</if>
+        	<if test="deviceName != ''">deviceName = #{deviceName},</if>
+        	<if test="os != ''">os = #{os},</if>
+        	<if test="rssi != ''">rssi = #{rssi},</if>
+        	modDate = UNIX_TIMESTAMP(),
+        </set>
+        WHERE calNum = #{calNum}
+    </update>
+    
+    <delete id="deleteCalibration" parameterType="core.admin.calibration.domain.Calibration">
+        DELETE 
+        FROM TB_CALIBRATION
+        WHERE calNum = #{calNum}
+    </delete>
+	
+</mapper>

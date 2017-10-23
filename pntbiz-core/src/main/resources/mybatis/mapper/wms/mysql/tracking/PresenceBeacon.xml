@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.tracking.dao.PresenceBeaconDao">
+
+	<resultMap id="beaconResult" type="core.wms.beacon.domain.Beacon">
+		<result property="beaconNum" column="beaconNum" />
+		<result property="UUID" column="UUID" />
+		<result property="majorVer" column="majorVer" />
+		<result property="minorVer" column="minorVer" />
+		<result property="beaconName" column="beaconName" />
+	</resultMap>
+
+	<resultMap id="presenceBeaconLogResult" type="core.wms.tracking.domain.PresenceBeaconLog">
+		<result property="logNum" column="logNum" />
+		<result property="UUID" column="UUID" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="floor" column="floor" />
+		<result property="deviceInfo" column="deviceInfo" />
+		<result property="phoneNumber" column="phoneNumber" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<select id="getPresenceBeaconTargetListByBeacon" parameterType="core.wms.tracking.domain.PresenceBeaconTargetSearchParam" resultMap="beaconResult">
+		SELECT beaconNum, UUID, majorVer, minorVer, beaconName
+		FROM TB_BEACON
+		WHERE comNum = #{comNum}
+		AND ${opt} LIKE CONCAT('%', #{keyword}, '%')
+	</select>
+
+	<select id="getPresenceBeaconTargetLogList" parameterType="core.wms.tracking.domain.PresenceBeaconTargetSearchParam" resultMap="presenceBeaconLogResult">
+		SELECT logNum, UUID, lat, lng, floor, deviceInfo, phoneNumber, regDate
+		FROM TB_LOG_PRESENCE_BEACON
+		WHERE UUID = #{UUID}
+		<if test="phoneNumber != '' and phoneNumber  != null">	AND phoneNumber = #{phoneNumber}</if>
+		AND regDate <![CDATA[>=]]> UNIX_TIMESTAMP(#{sDate})
+		AND regDate <![CDATA[<=]]> UNIX_TIMESTAMP(#{eDate})
+	</select>
+
+	<select id="getPresenceBeaconLogInfo" parameterType="core.wms.tracking.domain.PresenceBeaconLog" resultMap="presenceBeaconLogResult">
+		SELECT logNum, UUID, lat, lng, floor, deviceInfo, phoneNumber, regDate
+		FROM TB_LOG_PRESENCE_BEACON
+		WHERE logNum = #{logNum}
+	</select>
+
+    <insert id="insertPresenceBeaconLog" parameterType="core.wms.tracking.domain.PresenceBeaconLog">
+        INSERT INTO TB_LOG_PRESENCE_BEACON
+        (UUID, lat, lng, floor, deviceInfo, phoneNumber, regDate)
+        VALUES
+        (#{UUID}, #{lat}, #{lng}, #{floor}, #{deviceInfo}, #{phoneNumber}, UNIX_TIMESTAMP())
+    </insert>
+
+	<select id="getPresenceBeaconLogList" parameterType="core.wms.tracking.domain.PresenceBeaconLog" resultMap="presenceBeaconLogResult">
+		SELECT logNum, UUID, lat, lng, floor, deviceInfo, phoneNumber, regDate
+		FROM TB_LOG_PRESENCE_BEACON
+		WHERE UUID = #{UUID}
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null">
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+	</select>
+
+	<select id="getPresenceBeaconLogListByLimit" parameterType="core.wms.tracking.domain.PresenceBeaconLog" resultMap="presenceBeaconLogResult">
+		SELECT logNum, UUID, lat, lng, floor, deviceInfo, phoneNumber, fcNum, fcName, nodeID, regDate
+		FROM TB_LOG_PRESENCE_BEACON
+		WHERE UUID = #{UUID}
+
+		<if test="keyword != '' and keyword  != null">
+		     <choose>
+		         <when test="opt eq 'phoneNumber'">AND phoneNumber LIKE CONCAT(#{keyword}, '%')</when>
+                 <when test="opt eq 'deviceInfo'">AND deviceInfo LIKE CONCAT(#{keyword}, '%')</when>
+                 <when test="opt eq 'fcNum'">AND fcNum LIKE CONCAT(#{keyword}, '%')</when>
+                 <when test="opt eq 'fcName'">AND fcName LIKE CONCAT(#{keyword}, '%')</when>
+                 <when test="opt eq 'nodeID'">AND nodeId LIKE CONCAT(#{keyword}, '%')</when>
+                 <otherwise></otherwise>
+		    </choose>
+        </if>
+		ORDER BY logNum DESC
+		LIMIT 30
+	</select>
+
+</mapper>

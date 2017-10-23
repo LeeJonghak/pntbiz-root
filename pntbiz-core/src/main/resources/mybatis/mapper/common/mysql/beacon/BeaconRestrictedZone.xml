@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.common.beacon.dao.BeaconRestrictedZoneDao">
+
+	<resultMap id="beaconRestrictedZoneResultMap" type="core.common.beacon.domain.BeaconRestrictedZone">
+		<result property="beaconNum" column="beaconNum" />
+		<result property="zoneType" column="zoneType" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result property="zoneId" column="zoneId" />
+		<result property="permitted" column="permitted" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result property="additionalAttributeRaw" column="additionalAttribute" />
+		<result property="startDate" column="startDate" />
+		<result property="endDate" column="endDate" />
+		<result property="modDate" column="modDate" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<select id="getBeaconRestrictedZoneInfo"
+			parameterType="core.common.beacon.domain.BeaconRestrictedZone"
+			resultMap="beaconRestrictedZoneResultMap">
+
+		SELECT beaconNum, zoneType, zoneId, permitted, additionalAttribute
+			, startDate, endDate, modDate, regDate
+		FROM TB_BEACON_RESTRICTED_ZONE
+		<where>
+			beaconNum=#{beaconNum} AND zoneType=#{zoneType, typeHandler=framework.database.ValueEnumTypeHandler}
+			AND zoneId=#{zoneId}
+		</where>
+
+	</select>
+
+	<select id="getBeaconRestrictedZoneCount"	parameterType="String" resultType="Integer">
+		SELECT COUNT(*)
+		FROM TB_BEACON_RESTRICTED_ZONE
+		<where>
+			beaconNum=#{beaconNum}
+		</where>
+	</select>
+
+	<select id="getBeaconRestrictedZoneList"
+			parameterType="core.common.beacon.domain.BeaconRestrictedZone"
+			resultMap="beaconRestrictedZoneResultMap">
+
+		SELECT beaconNum, zoneType, zoneId, permitted, additionalAttribute
+			, startDate, endDate, modDate, regDate
+		FROM TB_BEACON_RESTRICTED_ZONE
+		<where>
+			beaconNum=#{beaconNum}
+		</where>
+
+	</select>
+	
+	<insert id="insertBeaconRestrictedZone"
+			parameterType="core.common.beacon.domain.BeaconRestrictedZone">
+
+		INSERT INTO TB_BEACON_RESTRICTED_ZONE(beaconNum, zoneType, zoneId, permitted, additionalAttribute
+			, startDate, endDate, modDate, regDate)
+		VALUES(#{beaconNum}, #{zoneType, typeHandler=framework.database.ValueEnumTypeHandler}
+		, #{zoneId}, #{permitted, typeHandler=framework.database.ValueEnumTypeHandler}
+		, #{additionalAttributeRaw}, #{startDate}, #{endDate}, null, UNIX_TIMESTAMP())
+
+	</insert>
+
+	<update id="updateBeaconRestrictedZone" parameterType="core.common.beacon.domain.BeaconRestrictedZone">
+
+		UPDATE TB_BEACON_RESTRICTED_ZONE
+		<set>
+			permitted=#{permitted, typeHandler=framework.database.ValueEnumTypeHandler},
+			zoneType=#{zoneType, typeHandler=framework.database.ValueEnumTypeHandler}, additionalAttribute=#{additionalAttributeRaw}
+			, startDate=#{startDate}, endDate=#{endDate}, modDate=UNIX_TIMESTAMP()
+		</set>
+		<where>
+			beaconNum = #{beaconNum} AND zoneType = #{zoneType, typeHandler=framework.database.ValueEnumTypeHandler}
+			AND zoneId = #{zoneId}
+		</where>
+
+	</update>
+
+	<update id="updateAllBeaconRestrictedZoneForPermitted" parameterType="core.common.beacon.domain.BeaconRestrictedZone">
+		UPDATE TB_BEACON_RESTRICTED_ZONE
+		<set>
+			permitted=#{permitted, typeHandler=framework.database.ValueEnumTypeHandler}, modDate=UNIX_TIMESTAMP()
+		</set>
+		<where>
+			beaconNum = #{beaconNum}
+		</where>
+	</update>
+
+	<delete id="deleteBeaconRestrictedZone" parameterType="core.common.beacon.domain.BeaconRestrictedZone">
+
+		DELETE FROM TB_BEACON_RESTRICTED_ZONE
+		<where>
+			beaconNum=#{beaconNum}
+			<if test="zoneType!=null">AND zoneType=#{zoneType, typeHandler=framework.database.ValueEnumTypeHandler}</if>
+			<if test="zoneId!=null">AND zoneId=#{zoneId}</if>
+		</where>
+
+	</delete>
+
+</mapper>

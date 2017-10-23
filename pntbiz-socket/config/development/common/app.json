@@ -1,0 +1,14 @@
+{
+    "ssl": true,
+    "port": 10000,
+    "domain": "wmsdev.pntbiz.com",
+    "socketURL": "http://wmsdev.pntbiz.com:10000",
+    "nodeCluster": false,
+    "redisCluster": false,
+    "log": true,
+    "cert" : {
+        "privateKey" : "/usr/local/apache2/conf/certs/_wildcard_pntbiz_com_SHA256WITHRSA.key",
+        "cerificate" : "/usr/local/apache2/conf/certs/_wildcard_pntbiz_com.crt",
+        "ca" : "/usr/local/apache2/conf/certs/pntbiz_com_chain.crt"
+    }
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>config</comment>
+    
+    <entry key="buildVersion">${build.version}</entry>    
+    <entry key="staticDomain"></entry>
+    <entry key="staticURL">/v1</entry>
+    <entry key="wmsDomain">wmsstage.pntbiz.com</entry>
+    <entry key="wmsURL">https://wmsstage.pntbiz.com</entry>
+    <entry key="apiDomain">apistage.pntbiz.com</entry>
+    <entry key="apiURL">https://apistage.pntbiz.com</entry>
+
+    <entry key="db.auth.driver">com.mysql.jdbc.Driver</entry>
+    <entry key="db.auth.url">jdbc:mysql://52.79.145.63/auth</entry>
+    <entry key="db.auth.id">pntbiz</entry>
+    <entry key="db.auth.passwd">vldpsxl1q2w3e</entry>
+    <entry key="db.auth.maxactive">30</entry>
+    <entry key="db.auth.maxidle">10</entry>
+    <entry key="db.auth.maxwait">10000</entry>
+    <entry key="db.auth.autocommit">false</entry>
+    
+    <entry key="db.driver">com.mysql.jdbc.Driver</entry>
+    <entry key="db.url">jdbc:mysql://211.253.27.150:33306/pntbiz_beacon</entry>
+    <entry key="db.id">pntbiz</entry>
+    <entry key="db.passwd">vldpsxl1q2w3e</entry>
+    <entry key="db.maxactive">30</entry>
+    <entry key="db.maxidle">10</entry>
+    <entry key="db.maxwait">10000</entry>
+    <entry key="db.autocommit">false</entry>  
+    
+    <entry key="mail.host">mail.pntbiz.com</entry>
+    <entry key="mail.port">587</entry>
+    <entry key="mail.username">no-reply@pntbiz.com</entry>
+    <entry key="mail.password">rkskek123</entry>
+    <entry key="mail.charset">UTF-8</entry>	 
+    <entry key="mail.from">no-reply@pntbiz.com</entry>
+    
+</properties>

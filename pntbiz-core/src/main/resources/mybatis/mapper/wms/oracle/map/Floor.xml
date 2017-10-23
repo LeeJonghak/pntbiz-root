@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.FloorDao">
+
+	<resultMap id="floorResult" type="core.wms.map.domain.Floor">
+	    <result property="floorNum" column="FLOOR_NUM" />
+        <result property="comNum"   column="COM_NUM" />
+        <result property="floor"    column="FLOOR" />
+        <result property="floorName" column="FLOOR_NAME" />
+        <result property="swLat"    column="SW_LAT" />
+        <result property="swLng"    column="SW_LNG" />
+        <result property="neLat"    column="NE_LAT" />
+        <result property="neLng"    column="NE_LNG" />
+        <result property="deg"      column="DEG" />
+        <result property="imgSrc"   column="IMG_SRC" />
+        <result property="modDate"  column="MOD_DATE" />
+        <result property="regDate"  column="REG_DATE" />
+	</resultMap>
+
+	<resultMap id="floorCodeResult" type="core.wms.map.domain.FloorCode">
+	   <result property="floorCodeNum" column="FLOOR_CODE_NUM"/>
+        <result property="comNum"      column="COM_NUM"/>
+        <result property="nodeId"      column="NODE_ID"/>
+        <result property="nodeName1"    column="NODE_NAME"/>
+        <result property="typeCode"    column="TYPE_CODE"/>
+        <result property="upperNodeId" column="UPPER_NODE_ID"/>
+        <result property="levelNo"     column="LEVEL_NO"/>
+    </resultMap>
+
+    <!--
+    ========================= TB_FLOOR ======================================
+     -->
+	<select id="checkFloorDuplication" parameterType="core.wms.map.domain.Floor" resultType="Integer">
+		SELECT COUNT(1) CNT
+          FROM TB_FLOOR
+         WHERE COM_NUM = #{comNum}
+           AND FLOOR = #{floor}
+           <if test="floorNum != '' and floorNum != null">AND FLOOR_NUM <![CDATA[!=]]> #{floorNum}</if>
+    </select>
+
+	<select id="getFloorCount" parameterType="core.wms.map.domain.Floor" resultType="Integer">
+		SELECT COUNT(1) CNT
+		  FROM TB_FLOOR
+		 WHERE COM_NUM = #{comNum}
+		<if test="floorNum != '' and floorNum != null">AND FLOOR_NUM = #{floorNum}</if>
+        <if test="floor != '' and floor != null">AND FLOOR = #{floor}</if>
+	</select>
+
+	<select id="getFloorList" parameterType="core.wms.map.domain.Floor" resultMap="floorResult">
+		SELECT TF.FLOOR_NUM, TF.COM_NUM, TF.FLOOR, TFC.NODE_NAME AS FLOOR_NAME, TF.SW_LAT
+		     , TF.SW_LNG, TF.NE_LAT, TF.NE_LNG, TF.DEG, TF.IMG_SRC
+		     , TF.MOD_DATE, TF.REG_DATE
+		  FROM TB_FLOOR TF
+		  LEFT OUTER JOIN TB_FLOOR_CODE TFC
+		    ON TF.FLOOR = TFC.NODE_ID
+		   AND TFC.COM_NUM = #{comNum}
+		 WHERE TF.COM_NUM = #{comNum}
+		 <if test="floorNum != '' and floorNum != null">AND TF.FLOOR_NUM = #{floorNum}</if>
+         <if test="floor != '' and floor != null">AND TF.FLOOR = #{floor}</if>
+		 ORDER BY TF.FLOOR DESC
+	</select>
+
+	<select id="getFloorInfo" parameterType="core.wms.map.domain.Floor" resultMap="floorResult">
+		SELECT TF.FLOOR_NUM, TF.COM_NUM, TF.FLOOR, TF.FLOOR_NAME, TF.SW_LAT
+		     , TF.SW_LNG, TF.NE_LAT, TF.NE_LNG, TF.DEG, TF.IMG_SRC
+		     , TF.MOD_DATE, TF.REG_DATE
+		  FROM TB_FLOOR TF
+		WHERE TF.COM_NUM = #{comNum}
+        <if test="floorNum != '' and floorNum != null">AND TF.FLOOR_NUM = #{floorNum}</if>
+        <!-- <if test="floor != '' and floor != null">AND TF.FLOOR = #{floor}</if> -->
+	</select>
+
+    <select id="getFloorGroup" parameterType="core.wms.map.domain.Floor" resultMap="floorResult">
+        SELECT TF.FLOOR, TFC.NODE_NAME AS FLOOR_NAME
+          FROM (SELECT FLOOR
+                  FROM TB_FLOOR
+                 WHERE COM_NUM = #{comNum}
+                 GROUP BY FLOOR
+                ) TF
+          INNER JOIN TB_FLOOR_CODE TFC
+             ON TF.FLOOR = TFC.NODE_ID
+            AND TFC.COM_NUM = #{comNum}
+    </select>
+
+	<insert id="insertFloor" parameterType="core.wms.map.domain.Floor">
+		INSERT INTO TB_FLOOR
+		( FLOOR_NUM
+		, COM_NUM
+		, FLOOR
+		, FLOOR_NAME
+		, SW_LAT
+		, SW_LNG
+		, NE_LAT
+		, NE_LNG
+		, DEG
+		, IMG_SRC
+		, MOD_DATE
+		, REG_DATE
+		) VALUES
+		( SEQ_FLOOR_FLOOR_NUM.nextval
+		, #{comNum}
+		, #{floor}
+		, #{floorName}
+		, #{swLat}
+		, #{swLng}
+		, #{neLat}
+		, #{neLng}
+		, #{deg}
+		, #{imgSrc}
+		, FN_UNIX_TIMESTEMP(SYSDATE)
+		, FN_UNIX_TIMESTEMP(SYSDATE)
+		)
+    </insert>
+
+    <update id="updateFloor" parameterType="core.wms.map.domain.Floor">
+        UPDATE TB_FLOOR
+           SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+           <if test="floor != '' and floor != null">,FLOOR = #{floor}</if>
+		   <if test="floorName != '' and floorName != null">,FLOOR_NAME = #{floorName}</if>
+		   <if test="swLat != '' and swLat != null">,SW_LAT  = #{swLat}</if>
+		   <if test="swLng != '' and swLng != null">,SW_LNG  = #{swLng}</if>
+		   <if test="neLat != '' and neLat != null">,NE_LAT  = #{neLat}</if>
+		   <if test="neLng != '' and neLng != null">,NE_LNG  = #{neLng}</if>
+		   <if test="deg != '' and deg != null">,DEG = #{deg}</if>
+		   <if test="imgSrc != '' and imgSrc != null">,IMG_SRC = #{imgSrc}</if>
+         WHERE COM_NUM = #{comNum}
+           AND FLOOR_NUM = #{floorNum}
+    </update>
+
+    <delete id="deleteFloor" parameterType="core.wms.map.domain.Floor">
+    	DELETE
+    	  FROM TB_FLOOR
+		 WHERE COM_NUM = #{comNum}
+           AND FLOOR_NUM = #{floorNum}
+    </delete>
+
+    <!--
+    ========================= TB_RTL_LOCATION_M ======================================
+     -->
+    <select id="getFloorCodeList1" parameterType="core.wms.admin.company.domain.Company" resultMap="floorCodeResult">
+        <!-- SELECT DISTINCT REGION_CODE AS SAFETY_WORK_LOCATION_ID
+             , REGION_CODE AS SAFETY_WORK_LOCATION_NAME
+             , REGION_CODE
+             , 'REGION' AS SAFETY_WORK_LOCATION_TYPE_CODE
+             , '0' AS HIGH_SAFETY_WORK_LOCATION_ID
+             , 0 AS LOCATION_ID_LEVEL_VALUE
+          FROM TB_RTL_LOCATION_M
+         WHERE USE_FLAG = 'Y'
+        UNION ALL
+        SELECT SAFETY_WORK_LOCATION_ID
+             , SAFETY_WORK_LOCATION_NAME
+             , REGION_CODE
+             , SAFETY_WORK_LOCATION_TYPE_CODE
+             , HIGH_SAFETY_WORK_LOCATION_ID
+             , LOCATION_ID_LEVEL_VALUE
+          FROM TB_RTL_LOCATION_M
+         WHERE USE_FLAG = 'Y'
+         ORDER BY LOCATION_ID_LEVEL_VALUE -->
+
+         SELECT FLOOR_CODE_NUM
+              , NODE_ID
+              , NODE_NAME
+              , TYPE_CODE
+              , UPPER_NODE_ID
+              , LEVEL_NO
+           FROM TB_FLOOR_CODE
+          WHERE COM_NUM = #{comNum}
+            AND USE_FLAG = 'Y'
+          ORDER BY LEVEL_NO, SORT_NO
+    </select>
+</mapper>

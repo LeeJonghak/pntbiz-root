@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.contents.dao.ContentsDao">
+
+	<resultMap id="contentsResult" type="core.api.contents.domain.Contents">
+		<result property="UUID"       column="UUID" />
+
+		<result property="comNum"     column="COM_NUM" />
+		<result property="conNum"     column="CON_NUM" />
+		<result property="conType"    column="CON_TYPE" />
+		<result property="conName"    column="CON_NAME" />
+		<result property="userID"     column="USERID" />
+		<result property="acNum"      column="AC_NUM" />
+		<result property="expFlag"    column="EXP_FLAG" />
+		<result property="rssi"       column="RSSI" />
+		<result property="conDesc"    column="CON_DESC" />
+		<result property="sDate"      column="S_DATE" />
+		<result property="eDate"      column="E_DATE" />
+		<result property="modDate"    column="MOD_DATE" />
+		<result property="regDate"    column="REG_DATE" />
+
+		<result property="imgSrc1"    column="IMG_SRC1" />
+		<result property="imgSrc2"    column="IMG_SRC2" />
+		<result property="imgSrc3"    column="IMG_SRC3" />
+		<result property="imgSrc4"    column="IMG_SRC4" />
+		<result property="imgSrc5"    column="IMG_SRC5" />
+		<result property="text1"      column="TEXT1" />
+		<result property="text2"      column="TEXT2" />
+		<result property="text3"      column="TEXT3" />
+		<result property="soundSrc1"  column="SOUND_SRC1" />
+		<result property="soundSrc2"  column="SOUND_SRC2" />
+		<result property="soundSrc3"  column="SOUND_SRC3" />
+		<result property="url1"       column="URL1" />
+		<result property="url2"       column="URL2" />
+		<result property="url3"       column="URL3" />
+
+		<result property="acName" column="AC_NAME" />
+	</resultMap>
+
+	<!--
+	jhlee 2015-03-12 안차장님 요청으로 리스트는 프레즌스 콘텐츠는 제외
+	 -->
+	<select id="getContentsList" parameterType="core.api.contents.domain.Contents" resultMap="contentsResult">
+		SELECT A.*, B.AC_NAME
+		  FROM ( SELECT A.COM_NUM, A.CON_NUM, A.CON_TYPE, A.CON_NAME, A.USER_ID, A.AC_NUM
+		              , A.EXP_FLAG, A.RSSI, A.CON_DESC, A.S_DATE, A.E_DATE, A.MOD_DATE, A.REG_DATE
+		              , B.IMG_SRC1, B.IMG_SRC2, B.IMG_SRC3, B.IMG_SRC4, B.IMG_SRC5, B.TEXT1, B.TEXT2, B.TEXT3
+		              , B.SOUND_SRC1, B.SOUND_SRC2, B.SOUND_SRC3, B.URL1, B.URL2, B.URL3
+		              , C.UUID
+				   FROM TB_CONTENTS	 A
+				      , TB_CONTENTS_DETAIL B
+				      , TB_COMPANY C
+				  WHERE A.CON_NUM = B.CON_NUM
+				    AND A.COM_NUM = C.COM_NUM
+				    AND C.UUID = #{UUID}
+				    AND A.CON_TYPE != 'PRE'
+		  ) A
+	      LEFT OUTER JOIN TB_ADVERT_COMPANY B
+		    ON A.AC_NUM = B.AC_NUM
+	</select>
+
+	<select id="getContentsInfo" parameterType="core.api.contents.domain.Contents" resultMap="contentsResult">
+		SELECT A.*, B.AC_NAME
+		  FROM ( SELECT A.COM_NUM, A.CON_NUM, A.CON_TYPE, A.CON_NAME, A.USER_ID, A.AC_NUM
+                      , A.EXP_FLAG, A.RSSI, A.CON_DESC, A.S_DATE, A.E_DATE, A.MOD_DATE, A.REG_DATE
+                      , B.IMG_SRC1, B.IMG_SRC2, B.IMG_SRC3, B.IMG_SRC4, B.IMG_SRC5, B.TEXT1, B.TEXT2, B.TEXT3
+                      , B.SOUND_SRC1, B.SOUND_SRC2, B.SOUND_SRC3, B.URL1, B.URL2, B.URL3
+                      , C.UUID
+				   FROM TB_CONTENTS	 A
+				      , TB_CONTENTS_DETAIL B
+				      , TB_COMPANY C
+				  WHERE A.CON_NUM = B.CON_NUM
+				    AND A.CON_NUM = #{conNum}
+				    AND A.COM_NUM = C.COM_NUM
+			<if test="comNum != '' and comNum != null">AND A.COM_NUM = #{comNum}</if>
+		  ) A
+		  LEFT OUTER JOIN TB_ADVERT_COMPANY B
+		    ON A.AC_NUM = B.AC_NUM
+	</select>
+
+	<select id="getContentsMessage" parameterType="core.api.contents.domain.Contents" resultMap="contentsResult">
+		SELECT A.*, B.AC_NAME
+		  FROM ( SELECT *
+                   FROM (
+			        SELECT A.COM_NUM, A.CON_NUM, A.CON_TYPE, A.CON_NAME, A.USER_ID, A.AC_NUM
+	                      , A.EXP_FLAG, A.RSSI, A.CON_DESC, A.S_DATE, A.E_DATE, A.MOD_DATE, A.REG_DATE
+	                      , B.IMG_SRC1, B.IMG_SRC2, B.IMG_SRC3, B.IMG_SRC4, B.IMG_SRC5, B.TEXT1, B.TEXT2, B.TEXT3
+	                      , B.SOUND_SRC1, B.SOUND_SRC2, B.SOUND_SRC3, B.URL1, B.URL2, B.URL3
+	                      , C.UUID
+	                      , ROWNUM AS RNUM
+	                   FROM TB_CONTENTS  A
+	                      , TB_CONTENTS_DETAIL B
+	                      , TB_COMPANY C
+				     WHERE A.CON_NUM = B.CON_NUM
+				       AND A.COM_NUM = C.COM_NUM
+						<if test="conType != '' and conType != null">AND A.CON_TYPE = #{conType}</if>
+						<if test="conType == 'WEL' or conType == 'BYE'">
+						ORDER BY CON_NUM DESC
+						</if>
+				   ) TB
+				  <if test="conType == 'WEL' or conType == 'BYE'">
+                  WHERE TB.RNUM =1
+                  </if>
+		  ) A
+		  LEFT OUTER JOIN TB_ADVERT_COMPANY B
+		    ON A.AC_NUM = B.AC_NUM
+	</select>
+</mapper>

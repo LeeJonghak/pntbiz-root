@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="core.admin.auth.dao.LoginDao">
+
+	<resultMap id="loginResult" type="core.admin.user.domain.User">
+        <result property="userID" column="USER_ID" />
+        <result property="userPW" column="USER_PW" />
+		<result property="userGrade" column="USER_GRADE" />
+    </resultMap>
+
+    <resultMap id="authLoginResult" type="core.admin.auth.domain.Login">
+        <result property="userID"    	column="USER_ID" />
+        <result property="userPW"    	column="USER_PW" />
+        <result property="userName"  	column="USER_NAME" />
+        <result property="roleNum"   	column="ROLE_NUM" />
+        <result property="roleName"  	column="ROLE_NAME" />
+        <result property="comNum"    	column="COM_NUM" />
+        <result property="comName"   	column="COM_NAME" />
+        <result property="groupNum"  	column="GROUP_NUM" />
+        <result property="groupName" 	column="GROUP_NAME" />
+        <result property="state"   		column="STATE" />
+        <result property="regDate"  	column="REG_DATE" />
+        <result property="userStatus" 	column="USER_STATUS" />
+        <result property="userEmail" 	column="USER_EMAIL" />
+        <result property="loginFailCnt" column="LOGIN_FAIL_CNT" />
+        <result property="loginDate" 	column="LOGIN_DATE" />
+        <result property="userPhoneNum" column="USER_PHONE_NUM" />
+        <result property="pwModDate" 	column="PW_MOD_DATE" />
+    </resultMap>
+
+	<select id="getLoginCheck" parameterType="map" resultType="Integer">
+		SELECT COUNT(userID) AS CNT
+		FROM TB_LOGIN
+		WHERE USER_ID = #{userID}
+		AND USER_PW = #{userPW}
+	</select>
+
+	<select id="getUser" parameterType="map" resultMap="loginResult">
+		SELECT USER_ID, USER_PW, USER_GRADE
+		FROM TB_LOGIN
+		WHERE USER_ID = #{userID}
+		AND USER_PW = #{userPW}
+	</select>
+
+
+    <select id="getLogin" parameterType="map" resultMap="authLoginResult">
+        SELECT TL.USER_ID, TL.USER_PW, TL.USER_NAME, TL.ROLE_NUM, TLR.ROLE_NAME
+        	  , TL.COM_NUM, TL.COM_NAME, TL.GROUP_NUM, TL.GROUP_NAME, TL.REG_DATE
+        	  , TL.STATE, TL.USER_STATUS, TL.USER_EMAIL, TL.LOGIN_FAIL_CNT, TL.LOGIN_DATE
+        	  , TL.USER_PHONE_NUM, TL.PW_MOD_DATE
+           FROM TB_LOGIN TL
+          INNER JOIN TB_LOGIN_ROLE TLR ON TL.ROLE_NUM = TLR.ROLE_NUM
+          WHERE TL.USER_ID = #{userID}
+    </select>
+
+    <select id="getLoginCount" parameterType="core.admin.auth.domain.LoginSearchParam" resultType="Integer">
+		SELECT COUNT(1) CNT
+		FROM TB_LOGIN
+		WHERE 1
+		<if test="comNum > 0">
+			and COM_NUM = #{comNum}
+		</if>
+		<if test="opt != '' and opt  != null">
+			<if test="keyword != '' and keyword  != null">
+				AND ${opt} LIKE CONCAT(#{keyword}, '%')
+			</if>
+		</if>
+    </select>
+
+    <select id="getLoginList" parameterType="core.admin.auth.domain.LoginSearchParam" resultMap="authLoginResult">
+   		SELECT *
+   		  FROM (
+	        SELECT TL.USER_ID, TL.USER_PW, TL.USER_NAME, TL.ROLE_NUM, TLR.ROLE_NAME
+	        	 , TL.COM_NUM, TL.COM_NAME, TL.GROUP_NUM, TL.GROUP_NAME, TL.REG_DATE
+	        	 , TL.STATE, TL.USER_STATUS, TL.USER_EMAIL, TL.LOGIN_FAIL_CNT, TL.LOGIN_DATE
+	        	 , TL.USER_PHONE_NUM, TL.PW_MOD_DATE
+	        	 , ROWNUM AS RNUM
+	        FROM TB_LOGIN TL
+	        INNER JOIN TB_LOGIN_ROLE TLR
+	        		ON TL.ROLE_NUM = TLR.ROLE_NUM
+	        <include refid="sqlLoginListSearch"/>
+		  ) TB
+		 WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+    </select>
+
+    <select id="getLoginRoleCountByAdmin" parameterType="core.admin.auth.domain.LoginRole" resultType="Integer">
+        SELECT COUNT(1) CNT
+          FROM TB_LOGIN
+         WHERE ROLE_NUM = #{roleNum}
+    </select>
+
+    <select id="getUser" parameterType="Map" resultMap="authLoginResult">
+        SELECT USER_ID, USER_PW
+          FROM TB_LOGIN
+         WHERE USER_ID = #{userID}
+           AND USER_PW = #{userPW}
+    </select>
+
+    <insert id="insertLogin" parameterType="core.admin.auth.domain.Login">
+        INSERT INTO TB_LOGIN
+        ( USER_ID, USER_PW, USER_NAME, ROLE_NUM, COM_NUM, COM_NAME
+
+        , GROUP_NUM
+		, GROUP_NAME
+        , USER_GRADE, STATE
+        , USER_STATUS, USER_EMAIL, USER_PHONE_NUM
+        , LOGIN_DATE
+        , PW_MOD_DATE
+        , REG_DATE
+        ) VALUES
+        ( #{userID}, #{userPW}, #{userName}, #{roleNum}, #{comNum}, #{comName}
+        , #{groupNum}
+        , DECODE(#{groupName}, NULL, ' ', #{groupName})
+
+        , 10, #{state}
+        , #{userStatus}, #{userEmail}, #{userPhoneNum}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateLogin" parameterType="core.admin.auth.domain.Login">
+        UPDATE TB_LOGIN
+        <set>
+            <if test="userPW != '' and userPW != null">USER_PW = #{userPW},</if>
+            <if test="userName != '' and userName != null">USER_NAME = #{userName},</if>
+            <if test="roleNum != '' and roleNum != null">ROLE_NUM = #{roleNum},</if>
+            <if test="comNum != '' and comNum != null">COM_NUM = #{comNum},</if>
+            <if test="comName != '' and comName != null">COM_NAME = #{comName},</if>
+            <if test="groupNum != '' and groupNum != null">GROUP_NUM = #{groupNum},</if>
+            <if test="groupName != '' and groupName != null">GROUP_NAME = #{groupName},</if>
+            <if test="state != '' and state != null">STATE = #{state},</if>
+            <if test="userStatus != null">USER_STATUS = #{userStatus},</if>
+            <if test="userEmail != '' and userEmail != null">USER_EMAIL = #{userEmail},</if>
+            <if test="loginFailCnt != null">LOGIN_FAIL_CNT = #{loginFailCnt},</if>
+            <if test="loginDate != '' and loginDate != null">LOGIN_DATE = FN_UNIX_TIMESTEMP(SYSDATE),</if>
+            <if test="userPhoneNum != '' and userPhoneNum != null">USER_PHONE_NUM = #{userPhoneNum},</if>
+            <if test="pwModDate != '' and pwModDate != null">PW_MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE),</if>
+        </set>
+        WHERE USER_ID = #{userID}
+    </update>
+
+    <delete id="deleteLogin" parameterType="core.admin.auth.domain.Login">
+        DELETE
+        FROM TB_LOGIN
+        <where>
+            USER_ID = #{userID}
+            <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+        </where>
+    </delete>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+ 
+ 	<!-- 
+ 		로그인 처리를 위한 Spring Security 설정
+ 		2014-11-14 nohsoo
+ 	-->
+ 	<bean id="loginDao" class="core.admin.auth.dao.LoginDao">
+ 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+ 	</bean>
+ 	<bean id="loginRoleAuthoritiesDao" class="core.admin.auth.dao.LoginRoleAuthoritiesDao" >
+ 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+ 	</bean>
+ 	<bean id="companyDao" class="core.admin.company.dao.CompanyDao">
+ 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+ 	</bean>
+ 	<bean id="loginDetailService" class="framework.auth.LoginDetailService">
+    	<property name="loginDao" ref="loginDao" />
+    	<property name="loginRoleAuthoritiesDao" ref="loginRoleAuthoritiesDao" />
+        <property name="companyDao" ref="companyDao" />
+    </bean>
+    
+ 	<security:authentication-manager id="authenticationManager" alias="authenticationManager">
+    	<security:authentication-provider user-service-ref="loginDetailService">
+    		<security:password-encoder base64="false" hash="sha-256"></security:password-encoder>
+    	</security:authentication-provider>
+    </security:authentication-manager>    
+ 
+    <security:http auto-config="true" name="securityHttp" pattern="/**" use-expressions="true" realm="WMS Login" authentication-manager-ref="authenticationManager">
+        <!--
+        Local 에서 테스트하기 위해서 https 옵션 제거
+        <security:intercept-url pattern="/auth/*" access="permitAll" requires-channel="https" />-->
+        <security:intercept-url pattern="/auth/*" access="permitAll" />
+        
+        <!--
+            URL별 접근권한 설정
+            권한 코드는 TB_LOGIN_AUTHCODE 테이블을 참고
+        -->
+        <security:intercept-url pattern="/admin/code/*.do" access="hasAnyRole('BF_ADMIN_CODE')" />
+        <security:intercept-url pattern="/admin/company/*.do" access="hasAnyRole('BF_ADMIN_COMPANY')" />
+        <security:intercept-url pattern="/admin/login/*/*.do" access="hasAnyRole('BF_ADMIN_LOGIN_ACCOUNT')" />
+        <security:intercept-url pattern="/admin/authpackage/*.do" access="hasAnyRole('BF_ADMIN_AUTHPACKAGE')" />
+        <security:intercept-url pattern="/admin/log/*.do" access="hasAnyRole('BF_ADMIN_LOG')" />
+
+        <!-- nohsoo 2015-09-24: OAUTH 설정 -->
+        <security:intercept-url pattern="/oauth/client/**.do" access="hasAnyRole('BF_OAUTH')" />
+
+        <!-- end -->
+        <security:session-management session-fixation-protection="none"></security:session-management>
+        
+        <!-- 로그인 폼 -->
+        <security:form-login login-page="/auth/login.do"
+        	login-processing-url="/auth/login"
+        	authentication-failure-url="/auth/login.do?failure=1"
+        	default-target-url="/"
+        	username-parameter="userid"
+        	password-parameter="userpw" /> 
+        <!-- 로그아웃 처리 -->
+        <security:logout
+        	logout-url="/auth/logout" 
+        	logout-success-url="/"
+        	delete-cookies="JSESSIONID" invalidate-session="true" />
+    </security:http>
+ 
+</beans>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.geofencing.dao.GeofencingDao">
+
+
+    <resultMap id="geofencingResult" type="core.common.geofencing.domain.Geofencing">
+        <result property="comNum"       column="COM_NUM" javaType="java.lang.Integer"/>
+        <result property="fcNum"        column="FC_NUM" javaType="java.lang.Long"/>
+        <result property="fcType"       column="FC_TYPE" javaType="java.lang.String"/>
+        <result property="fcShape"      column="FC_SHAPE" javaType="java.lang.String"/>
+        <result property="fcName"       column="FC_NAME" javaType="java.lang.String" />
+        <result property="floor"        column="FLOOR" javaType="java.lang.String"/>
+        <result property="evtEnter"     column="EVT_ENTER" javaType="java.lang.Integer"/>
+        <result property="evtLeave"     column="EVT_LEAVE" javaType="java.lang.Integer"/>
+        <result property="evtStay"      column="EVT_STAY" javaType="java.lang.Integer"/>
+        <result property="numEnter"     column="NUM_ENTER" javaType="java.lang.Integer"/>
+        <result property="numLeave"     column="NUM_LEAVE" javaType="java.lang.Integer"/>
+        <result property="numStay"      column="NUM_STAY" javaType="java.lang.Integer"/>
+        <result property="field1"       column="FIELD1" javaType="java.lang.String"/>
+        <result property="field2"       column="FIELD2" javaType="java.lang.String"/>
+        <result property="field3"       column="FIELD3" javaType="java.lang.String"/>
+        <result property="field4"       column="FIELD4" javaType="java.lang.String"/>
+        <result property="field5"       column="FIELD5" javaType="java.lang.String"/>
+        <result property="isNodeEnable" column="IS_NODE_ENABLE" javaType="java.lang.String"/>
+        <result property="userID"       column="USERID" javaType="java.lang.String"/>
+        <result property="modDate"      column="MOD_DATE" javaType="java.lang.Integer"/>
+        <result property="regDate"      column="REG_DATE" javaType="java.lang.Integer"/>
+        <result property="fcGroupNum"   column="FC_GROUP_NUM" javaType="java.lang.Integer"/>
+        <result property="fcGroupName"  column="FC_GROUP_NAME" javaType="java.lang.String"/>
+    </resultMap>
+
+	<resultMap id="geofencingGroupResult" type="core.wms.geofencing.domain.GeofencingGroup">
+		<result property="comNum"       column="COM_NUM"  javaType="java.lang.Integer" />
+        <result property="fcGroupNum"   column="FC_GROUP_NUM"  javaType="java.lang.Integer"/>
+        <result property="fcGroupName"  column="FC_GROUP_NAME" javaType="java.lang.String" />
+        <result property="fcCount"      column="FC_COUNT" javaType="java.lang.Integer" />
+        <result property="modDate"      column="MOD_DATE" javaType="java.lang.Integer" />
+        <result property="regDate"      column="REG_DATE" javaType="java.lang.Integer" />
+	</resultMap>
+
+    <!--
+    =============================TB_GEOFENCING============================
+     -->
+    <!--
+        모든 지오펜스 목록 - 펜스 배치도에서 사용하기 위해서 작성
+        @author nohsoo 2015-03-11
+    -->
+    <select id="getGeofencingAll" parameterType="java.util.HashMap" resultMap="geofencingResult">
+        SELECT A.COM_NUM, A.FC_NUM, A.FC_TYPE, A.FC_SHAPE, A.FC_NAME
+             , A.FLOOR, A.EVT_ENTER, A.EVT_LEAVE, A.EVT_STAY, A.NUM_ENTER
+             , A.NUM_LEAVE, A.NUM_STAY, A.FIELD1, A.FIELD2, A.FIELD3
+             , A.FIELD4, A.FIELD5, A.IS_NODE_ENABLE, A.USERID, A.MOD_DATE, A.REG_DATE
+             , C.FC_GROUP_NUM, C.FC_GROUP_NAME
+          FROM TB_GEOFENCING A
+          LEFT OUTER JOIN TB_GEOFENCING_GROUP_MAPPING B ON A.FC_NUM = B.FC_NUM
+          LEFT OUTER JOIN TB_GEOFENCING_GROUP C ON B.FC_GROUP_NUM = C.FC_GROUP_NUM
+
+         <where>
+            <if test="comNum!=null">
+	            A.COM_NUM = #{comNum}
+	        </if>
+            <if test="floor!=null">
+                AND A.FLOOR = #{floor}
+            </if>
+         </where>
+         ORDER BY A.FC_NUM DESC
+    </select>
+
+    <sql id="sqlGeofencingSearch">
+        <where>
+           <if test="comNum!=null">
+               A.COM_NUM = #{comNum}
+           </if>
+           <if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+               AND A.FC_NAME LIKE CONCAT(#{keyword}, '%')
+           </if>
+        </where>
+    </sql>
+    <select id="getGeofencingList" parameterType="core.wms.geofencing.domain.GeofencingGroupSearchParam" resultMap="geofencingResult">
+        SELECT *
+          FROM (
+	       SELECT A.COM_NUM, A.FC_NUM, A.FC_TYPE, A.FC_SHAPE, A.FC_NAME
+	             , A.FLOOR, A.EVT_ENTER, A.EVT_LEAVE, A.EVT_STAY, A.NUM_ENTER
+	             , A.NUM_LEAVE, A.NUM_STAY, A.FIELD1, A.FIELD2, A.FIELD3
+	             , A.FIELD4, A.FIELD5, A.IS_NODE_ENABLE, A.USERID, A.MOD_DATE, A.REG_DATE
+	             , C.FC_GROUP_NUM, C.FC_GROUP_NAME
+	             , ROWNUM AS RNUM
+	          FROM TB_GEOFENCING A
+	          LEFT OUTER JOIN TB_GEOFENCING_GROUP_MAPPING B ON A.FC_NUM = B.FC_NUM
+	          LEFT OUTER JOIN TB_GEOFENCING_GROUP C ON B.FC_GROUP_NUM = C.FC_GROUP_NUM
+	         <include refid="sqlGeofencingSearch"/>
+	         ORDER BY A.FC_NUM DESC
+	     ) TB
+        <if test="firstItemNo!=null and pageSize!=null or pageSize != 0">
+	       	WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+	    </if>
+    </select>
+
+    <select id="getGeofencingCount" parameterType="core.wms.geofencing.domain.GeofencingGroupSearchParam" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+          FROM TB_GEOFENCING A
+        <include refid="sqlGeofencingSearch"/>
+    </select>
+
+    <select id="getGeofencing" parameterType="java.util.HashMap" resultMap="geofencingResult">
+        SELECT A.COM_NUM, A.FC_NUM, A.FC_TYPE, A.FC_SHAPE, A.FC_NAME
+             , A.FLOOR, A.EVT_ENTER, A.EVT_LEAVE, A.EVT_STAY, A.NUM_ENTER
+             , A.NUM_LEAVE, A.NUM_STAY, A.FIELD1, A.FIELD2, A.FIELD3
+             , A.FIELD4, A.FIELD5, A.IS_NODE_ENABLE, A.USERID, A.MOD_DATE, A.REG_DATE
+             , C.FC_GROUP_NUM, C.FC_GROUP_NAME
+          FROM TB_GEOFENCING A
+          LEFT OUTER JOIN TB_GEOFENCING_GROUP_MAPPING B ON A.FC_NUM = B.FC_NUM
+          LEFT OUTER JOIN TB_GEOFENCING_GROUP C ON B.FC_GROUP_NUM = C.FC_GROUP_NUM
+
+         WHERE A.FC_NUM = #{fcNum}
+         <if test="comNum!=null">
+         	AND A.COM_NUM = #{comNum}
+         </if>
+    </select>
+
+    <insert id="insertGeofencing" parameterType="core.common.geofencing.domain.Geofencing">
+        INSERT INTO TB_GEOFENCING
+        ( COM_NUM
+        , FC_NUM
+        , FC_TYPE
+        , FC_SHAPE
+        , FC_NAME
+        , FLOOR
+        , EVT_ENTER
+        , EVT_LEAVE
+        , EVT_STAY
+        , FIELD1
+        , FIELD2
+        , FIELD3
+        , FIELD4
+        , FIELD5
+        , IS_NODE_ENABLE
+        , USERID
+        , MOD_DATE
+        , REG_DATE
+        ) VALUES
+        ( #{comNum}
+        , SEQ_GEOFENCING_FC_NUM.nextval
+        , #{fcType}
+        , #{fcShape}
+        , #{fcName}
+        , #{floor}
+        , #{evtEnter}
+        , #{evtLeave}
+        , #{evtStay}
+        , #{field1}
+        , #{field2}
+        , #{field3}
+        , #{field4}
+        , #{field5}
+        , #{isNodeEnable}
+        , #{userID}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+
+        <selectKey keyProperty="fcNum" resultType="Long">
+            SELECT SEQ_GEOFENCING_FC_NUM.currval FROM DUAL
+        </selectKey>
+    </insert>
+
+    <update id="modifyGeofencing" parameterType="core.common.geofencing.domain.Geofencing">
+        UPDATE TB_GEOFENCING
+           SET  MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+            <if test="fcType!=null">,       FC_TYPE         = #{fcType}</if>
+            <if test="fcShape!=null">,      FC_SHAPE        = #{fcShape}</if>
+            <if test="fcName!=null">,       FC_NAME         = #{fcName}</if>
+            <if test="floor!=null">,        FLOOR           = #{floor}</if>
+            <if test="evtEnter!=null">,     EVT_ENTER       = #{evtEnter}</if>
+            <if test="evtLeave!=null">,     EVT_LEAVE       = #{evtLeave}</if>
+            <if test="evtStay!=null">,      EVT_STAY        = #{evtStay}</if>
+            <if test="numEnter!=null">,     NUM_ENTER       = #{numEnter}</if>
+            <if test="numLeave!=null">,     NUM_LEAVE       = #{numLeave}</if>
+            <if test="numStay!=null">,      NUM_STAY        = #{numStay}</if>
+            <if test="field1!=null">,       FIELD1          = #{field1}</if>
+            <if test="field2!=null">,       FIELD2          = #{field2}</if>
+            <if test="field3!=null">,       FIELD3          = #{field3}</if>
+            <if test="field4!=null">,       FIELD4          = #{field4}</if>
+            <if test="field5!=null">,       FIELD5          = #{field5}</if>
+            <if test="isNodeEnable!=null">, IS_NODE_ENABLE  = #{isNodeEnable}</if>
+            <if test="userID!=null">,       USERID          = #{userID}</if>
+
+         WHERE FC_NUM = #{fcNum}
+         <if test="comNum!=null">
+            AND COM_NUM = #{comNum}
+         </if>
+    </update>
+
+    <delete id="deleteGeofencing" parameterType="java.util.HashMap">
+        DELETE
+          FROM TB_GEOFENCING
+         WHERE FC_NUM = #{fcNum}
+         <if test="comNum!=null">
+            AND COM_NUM = #{comNum}
+         </if>
+    </delete>
+
+    <!--
+    =============================TB_GEOFENCING_BPZONE============================
+     -->
+    <!-- <insert id="insertBpzone" parameterType="geofencing.domain.GeofencingBpzone">
+        INSERT INTO TB_GEOFENCING_BPZONE
+        ( FC_NUM
+        , ZONE_TYPE
+        )VALUES
+        ( #{fcNum}
+        , #{zoneType})
+    </insert>
+
+    <update id="updateBpzone" parameterType="geofencing.domain.GeofencingBpzone">
+        UPDATE TB_GEOFENCING_BPZONE
+           SET ZONE_TYPE = #{zoneType}
+         WHERE FC_NUM = #{fcNum}
+    </update>
+
+    <delete id="delBpzone" parameterType="java.util.HashMap">
+        DELETE
+          FROM TB_GEOFENCING_BPZONE
+         WHERE FC_NUM=#{fcNum}
+    </delete> -->
+
+    <!--
+    =============================TB_GEOFENCING_GROUP============================
+     -->
+    <sql id="sqlGeofencingGroupSearch">
+        <where>
+            <if test="comNum!=null">
+                 A.COM_NUM=#{comNum}
+            </if>
+            <if test="keyword != '' and keyword  != null">
+                AND A.FC_GROUP_NAME LIKE CONCAT(#{keyword}, '%')
+            </if>
+        </where>
+    </sql>
+    <select id="getGeofencingGroupCount" parameterType="core.wms.geofencing.domain.GeofencingGroupSearchParam" resultType="Integer">
+		SELECT COUNT(FC_GROUP_NUM) as cnt
+		  FROM TB_GEOFENCING_GROUP a
+		 <include refid="sqlGeofencingGroupSearch"/>
+	</select>
+
+	<select id="getGeofencingGroupList" parameterType="core.wms.geofencing.domain.GeofencingGroupSearchParam" resultMap="geofencingGroupResult">
+		SELECT *
+          FROM (
+			SELECT A.FC_GROUP_NAME, A.REG_DATE, A.MOD_DATE, A.FC_GROUP_NUM, FC_COUNT
+                 , ROWNUM AS RNUM
+              FROM TB_GEOFENCING_GROUP A
+              LEFT OUTER JOIN (SELECT FC_GROUP_NUM, COUNT(1) FC_COUNT FROM TB_GEOFENCING_GROUP_MAPPING GROUP BY FC_GROUP_NUM) B
+                ON A.FC_GROUP_NUM = B.FC_GROUP_NUM
+             <include refid="sqlGeofencingGroupSearch"/>
+			 ORDER BY A.FC_GROUP_NUM DESC
+		  ) TB
+		<if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+		</if>
+	</select>
+
+	<select id="getGeofencingGroup" parameterType="core.wms.geofencing.domain.GeofencingGroup" resultMap="geofencingGroupResult">
+		SELECT *
+		  FROM TB_GEOFENCING_GROUP
+		 WHERE FC_GROUP_NUM = #{fcGroupNum}
+		 <if test="comNum!=null">
+             AND COM_NUM = #{comNum}
+         </if>
+	</select>
+
+	<insert id="insertGeofencingGroup" parameterType="core.wms.geofencing.domain.GeofencingGroup">
+		INSERT INTO TB_GEOFENCING_GROUP
+		( COM_NUM
+		, FC_GROUP_NUM
+		, FC_GROUP_NAME
+		, MOD_DATE
+		, REG_DATE
+		)VALUES
+		( #{comNum}
+		, SEQ_GG_FC_GROUP_NUM.nextval
+		, #{fcGroupName}
+		, FN_UNIX_TIMESTEMP(SYSDATE)
+		, FN_UNIX_TIMESTEMP(SYSDATE))
+	</insert>
+
+	<update id="updateGeofencingGroup" parameterType="core.wms.geofencing.domain.GeofencingGroup">
+		UPDATE TB_GEOFENCING_GROUP
+		   SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+		   <if test="fcGroupName!=null">, FC_GROUP_NAME=#{fcGroupName}</if>
+
+		 WHERE FC_GROUP_NUM = #{fcGroupNum}
+         <if test="comNum!=null">
+             AND COM_NUM = #{comNum}
+         </if>
+	</update>
+
+	<delete id="deleteGeofencingGroup" parameterType="core.wms.geofencing.domain.GeofencingGroup">
+		DELETE
+		  FROM TB_GEOFENCING_GROUP
+		 WHERE FC_GROUP_NUM = #{fcGroupNum}
+         <if test="comNum!=null">
+             AND COM_NUM = #{comNum}
+         </if>
+	</delete>
+
+    <!--
+    =============================TB_GEOFENCING_GROUP_MAPPING============================
+     -->
+	<insert id="insertGeofencingGroupMapping" parameterType="core.wms.geofencing.domain.GeofencingGroupMapping">
+		INSERT INTO TB_GEOFENCING_GROUP_MAPPING
+		( FC_GROUP_NUM
+		, FC_NUM
+		)VALUES
+		( #{fcGroupNum}
+		, #{fcNum})
+	</insert>
+
+	<update id="updateGeofencingGroupMapping" parameterType="core.wms.geofencing.domain.GeofencingGroupMapping">
+		UPDATE TB_GEOFENCING_GROUP_MAPPING
+		<trim prefix="SET" suffixOverrides=",">
+			FC_GROUP_NUM = #{fcGroupNum},
+			FC_NUM = #{fcNum}
+		</trim>
+		<where>
+			AND FC_GROUP_NUM = #{fromFcGroupNum}
+			AND FC_NUM = #{fromFcNum}
+		</where>
+	</update>
+
+	<delete id="deleteGeofencingGroupMapping" parameterType="core.wms.geofencing.domain.GeofencingGroupMapping">
+		DELETE FROM TB_GEOFENCING_GROUP_MAPPING
+		<where>
+			AND FC_GROUP_NUM = #{fcGroupNum}
+            AND FC_NUM = #{fcNum}
+		</where>
+	</delete>
+
+
+    <!--
+        선택가능한 펜스 지역 목록(TB_GEOFENCING_BPZONE)
+        @author nohsoo 2015-03-10
+    -->
+    <select id="getBpzoneList" parameterType="java.util.HashMap" resultType="core.common.code.domain.Code">
+        SELECT *
+          FROM TB_CODE
+         WHERE G_CD = 'GFBPZONE'
+    </select>
+</mapper>

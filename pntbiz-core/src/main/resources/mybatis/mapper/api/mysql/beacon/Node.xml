@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.beacon.NodeDao">
+
+	<resultMap id="nodeResult" type="core.api.beacon.domain.Node">
+		<result property="nodeNum"  column="nodeNum" />
+		<result property="comNum"   column="comNum" />
+		<result property="nodeID"   column="nodeID" />
+		<result property="floor"    column="floor" />
+		<result property="nodeName" column="nodeName" />
+		<result property="lat"      column="lat" />
+		<result property="lng"      column="lng" />
+        <result property="cate"     column="cate" />
+        <result property="type"     column="type" />
+		<result property="areaName" column="areaName" />
+	</resultMap>
+	
+	<resultMap id="nodeEdgeResult" type="core.api.beacon.domain.NodeEdge">
+		<result property="edgeNum"  column="edgeNum" />
+		<result property="comNum"   column="comNum" />
+		<result property="floor"    column="floor" />
+		<result property="edge"     column="edge" />
+        <result property="type"     column="type" />
+	</resultMap>
+	
+	<select id="getNode" parameterType="core.api.beacon.domain.Node" resultMap="nodeResult">
+        SELECT nodeNum, comNum, nodeID, floor, nodeName, lat, lng, cate, type, areaName
+        FROM TB_NODE
+        <where>
+            nodeNum=#{nodeNum}
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="getNodeList" parameterType="core.api.beacon.domain.Node" resultMap="nodeResult">
+        SELECT A.nodeNum, A.comNum, A.nodeID, A.floor, A.nodeName, A.lat, A.lng, A.cate, A.jointName, A.type, A.areaName
+        FROM TB_NODE A
+             INNER JOIN TB_COMPANY B on(A.comNum=B.comNum)
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="UUID!=null">
+                and B.UUID=#{UUID}
+            </if>
+            <if test="floor!=null">
+                and A.floor=#{floor}
+            </if>
+            <if test="type!=null">
+                and A.type=#{type}
+            </if>
+        </trim>
+        ORDER BY nodeID ASC
+    </select>
+
+    <select id="getNodeEdgeList" parameterType="core.api.beacon.domain.NodeEdge" resultMap="nodeEdgeResult">
+        SELECT A.edgeNum, A.comNum, A.floor, A.type, CONCAT(A.startPoint, '_', A.endPoint) as edge
+        FROM TB_NODE_EDGE AS A
+        INNER JOIN TB_COMPANY AS B on(A.comNum=B.comNum)
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="UUID!=null">
+                and B.UUID=#{UUID}
+            </if>
+            <if test="floor!=null">
+                and A.floor=#{floor}
+            </if>
+            <if test="type!=null">
+                and A.type=#{type}
+            </if>
+        </trim>
+        ORDER BY startPoint ASC
+    </select>
+
+
+    <select id="getNodeContentsList" parameterType="java.util.HashMap" resultType="core.api.contents.domain.Contents">
+
+        SELECT a.*, b.*, c.*
+        FROM TB_CONTENTS AS a INNER JOIN TB_CONTENTS_DETAIL AS b ON(a.conNum=b.conNum)
+        INNER JOIN TB_CONTENTS_MAPPING AS c ON(a.conNum=c.conNum AND c.refType='ND')
+        INNER JOIN TB_NODE AS d ON(d.nodeNum=c.refNum)
+        INNER JOIN TB_COMPANY AS e ON(a.comNum=e.comNum)
+        where 1
+            <if test="UUID!=null">
+                and e.UUID=#{UUID}
+            </if>
+            <if test="floor!=null">
+                and d.floor=#{floor}
+            </if>
+            <if test="type!=null">
+                and d.type=#{type}
+            </if>
+        ORDER BY d.nodeNum ASC, a.conNum ASC
+
+    </select>
+
+    <select id="getNodeCategoryList" resultType="java.util.HashMap">
+        SELECT * FROM TB_CODE WHERE gCD='POICATE'
+    </select>
+    
+    <delete id="deleteNode" parameterType="java.util.HashMap">
+        DELETE A 
+        FROM TB_NODE A INNER JOIN TB_COMPANY B ON(A.comNum = B.comNum) 
+        <where>
+        	B.UUID = #{UUID}
+            AND nodeNum=#{nodeNum}
+            <if test="type!=null">AND A.type=#{type}</if>
+        </where>
+    </delete>
+    
+    <delete id="deleteNodePair" parameterType="java.util.HashMap">
+        DELETE A
+		FROM TB_NODE_EDGE A INNER JOIN TB_COMPANY B ON(A.comNum = B.comNum)
+        <where>
+        	B.UUID = #{UUID}
+            <if test="pairNum!=null">
+                AND A.pairNum=#{pairNum}
+            </if>
+            <if test="nodeID!=null">
+                AND (A.startPoint=#{nodeID} OR A.endPoint=#{nodeID})
+            </if>
+            <if test="startPoint!=null and endPoint!=null">
+                AND (
+                (A.startPoint=#{startPoint} AND A.endPoint=#{endPoint})
+                OR
+                (A.startPoint=#{endPoint} AND A.endPoint=#{startPoint})
+                )
+            </if>
+            <if test="type!=null">AND A.type=#{type}</if>
+        </where>
+    </delete>
+</mapper>

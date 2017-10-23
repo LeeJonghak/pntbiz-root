@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.oauth.dao.OauthAccessTokenDao">
+
+    <resultMap id="oauthAccessTokenResult" type="core.wms.oauth.domain.OauthAccessToken">
+        <result property="tokenID"          column="TOKEN_ID"/>
+        <result property="token"            column="TOKEN"/>
+        <result property="userID"           column="USER_ID"/>
+        <result property="clientID"         column="CLIENT_ID"/>
+        <result property="authentication"   column="AUTHENTICATION"/>
+        <result property="authenticationID" column="AUTHENTICATION_ID"/>
+        <result property="refreshToken"     column="REFRESH_TOKEN"/>
+        <result property="regDate"          column="REG_DATE"/>
+    </resultMap>
+
+    <select id="getOauthAccessTokenInfo" parameterType="java.util.Map" resultMap="oauthAccessTokenResult">
+        SELECT *
+          FROM TB_OAUTH_ACCESS_TOKEN
+         WHERE TOKEN_ID = #{tokenID}
+    </select>
+
+    <sql id="selectOauthAccessTokenSearch">
+        <where>
+            <if test="clientID!=null">
+	            AND CLIENT_ID = #{clientID}
+	        </if>
+	        <if test="opt != '' and opt  != null">
+	            <if test="keyword != '' and keyword  != null">
+	                AND ${opt} LIKE CONCAT(#{keyword}, '%')
+	            </if>
+	        </if>
+        </where>
+    </sql>
+    <select id="getOauthAccessTokenList" parameterType="java.util.Map" resultMap="oauthAccessTokenResult">
+        SELECT *
+          FROM (
+	        SELECT A.*
+                 , ROWNUM RNUM
+	          FROM TB_OAUTH_ACCESS_TOKEN A
+	         <include refid="selectOauthAccessTokenSearch"/>
+
+	        ORDER BY REG_DATE DESC
+	    ) TB
+        <if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+        </if>
+    </select>
+
+    <select id="getOauthAccessTokenCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+          FROM TB_OAUTH_ACCESS_TOKEN
+         <include refid="selectOauthAccessTokenSearch"/>
+    </select>
+</mapper>

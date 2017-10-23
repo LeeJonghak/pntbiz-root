@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.map.dao.AreaDao">
+
+    <select id="getAreaList" parameterType="java.util.Map" resultType="core.wms.map.domain.Area">
+
+		SELECT areaNum, comNum, floor, areaName, regDate
+		FROM TB_AREA
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="comNum!=null">
+				and comNum=#{comNum}
+			</if>
+			<if test="floor!=null">
+				and floor=#{floor}
+			</if>
+			<if test="opt != '' and opt  != null">
+				<if test="keyword != '' and keyword  != null">
+					<if test="opt eq 'areaName'">AND areaNum LIKE CONCAT(#{keyword}, '%')</if>
+				</if>
+			</if>
+		</trim>
+		ORDER BY areaNum DESC
+		<if test="firstItemNo!=null and pageSize!=null">
+			LIMIT ${firstItemNo}, ${pageSize}
+		</if>
+
+    </select>
+    
+    <select id="getAreaCenterList" parameterType="java.util.Map" resultType="core.wms.map.domain.AreaCenter">
+      SELECT areaNum, comNum, floor, areaName
+      FROM TB_AREA 
+      WHERE comNum=#{comNum} 
+      ORDER BY areaName ASC, floor ASC
+    </select>
+    
+    <select id="getAreaCenterLatlngList" parameterType="java.util.Map" resultType="core.wms.map.domain.AreaLatlng">
+        SELECT LATLNG.num, LATLNG.areaNum, LATLNG.lat, LATLNG.lng, LATLNG.orderSeq
+        FROM TB_AREA_LATLNG LATLNG INNER JOIN TB_AREA AREA ON(LATLNG.areaNum=AREA.areaNum) 
+        WHERE AREA.comNum=#{comNum}
+    </select>
+
+    <select id="getAreaCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) cnt
+        FROM TB_AREA
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="comNum!=null">
+                and comNum=#{comNum}
+            </if>
+            <if test="floor!=null">
+                and floor=#{floor}
+            </if>
+            <if test="opt != '' and opt  != null">
+                <if test="keyword != '' and keyword  != null">
+                    <if test="opt eq 'areaName'">AND areaName LIKE CONCAT(#{keyword}, '%')</if>
+                </if>
+            </if>
+        </trim>
+    </select>
+
+    <select id="getAreaInfo" parameterType="java.util.Map" resultType="core.wms.map.domain.Area">
+        SELECT areaNum, comNum, floor, areaName, regDate
+        FROM TB_AREA
+        <where>
+            areaNum=#{areaNum}
+            <if test="comNum!=null">
+                and comNum=#{comNum}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertArea" parameterType="core.wms.map.domain.Area" useGeneratedKeys="true" keyProperty="areaNum" keyColumn="areaNum">
+        INSERT INTO TB_AREA(comNum, floor, areaName, regDate)
+        VALUES (#{comNum}, #{floor}, #{areaName}, UNIX_TIMESTAMP())
+    </insert>
+
+    <update id="modifyArea" parameterType="core.wms.map.domain.Area">
+        UPDATE TB_AREA
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="floor!=null">floor=#{floor},</if>
+            <if test="areaName!=null">areaName=#{areaName},</if>
+        </trim>
+        <where>
+            areaNum=#{areaNum}
+            <if test="comNum!=null">
+                and comNum=#{comNum}
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteArea" parameterType="java.util.Map">
+        DELETE FROM TB_AREA
+        <where>
+            areaNum=#{areaNum}
+            <if test="comNum!=null">
+                and COM_NUM=#{comNum}
+            </if>
+        </where>
+    </delete>
+
+</mapper>

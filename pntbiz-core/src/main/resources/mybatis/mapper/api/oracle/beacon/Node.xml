@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.beacon.NodeDao">
+
+	<resultMap id="nodeResult" type="core.api.beacon.domain.Node">
+		<result property="nodeNum"  column="NODE_NUM" />
+		<result property="comNum"   column="COM_NUM" />
+		<result property="nodeID"   column="NODE_ID" />
+		<result property="floor"    column="FLOOR" />
+		<result property="nodeName" column="NODE_NAME" />
+		<result property="lat"      column="LAT" />
+		<result property="lng"      column="LNG" />
+        <result property="cate"     column="CATE" />
+        <result property="type"     column="TYPE" />
+	</resultMap>
+
+	<resultMap id="nodeEdgeResult" type="core.api.beacon.domain.NodeEdge">
+		<result property="edgeNum"  column="EDGE_NUM" />
+		<result property="comNum"   column="COM_NUM" />
+		<result property="floor"    column="FLOOR" />
+		<result property="edge"     column="EDGE" />
+        <result property="type"     column="TYPE" />
+	</resultMap>
+
+    <resultMap id="contentsResult" type="core.api.Contents">
+        <result property="comNum"  column="COM_NUM" />
+        <result property="conNum"  column="CON_NUM" />
+        <result property="conType" column="CON_TYPE" />
+        <result property="conName" column="CON_NAME" />
+        <result property="userID"  column="USER_ID" />
+        <result property="acNum"   column="AC_NUM" />
+        <result property="expFlag" column="EXP_FLAG" />
+        <result property="rssi"    column="RSSI" />
+        <result property="conDesc" column="CON_DESC" />
+        <result property="sDate"   column="S_DATE" />
+        <result property="eDate"   column="E_DATE" />
+        <result property="modDate" column="MOD_DATE" />
+        <result property="regDate" column="REG_DATE" />
+
+        <result property="imgSrc1" column="IMG_SRC1" />
+        <result property="imgSrc2" column="IMG_SRC2" />
+        <result property="imgSrc3" column="IMG_SRC3" />
+        <result property="imgSrc4" column="IMG_SRC4" />
+        <result property="imgSrc5" column="IMG_SRC5" />
+        <result property="text1" column="TEXT1" />
+        <result property="text2" column="TEXT2" />
+        <result property="text3" column="TEXT3" />
+        <result property="text4" column="TEXT4" />
+        <result property="text5" column="TEXT5" />
+        <result property="soundSrc1" column="SOUND_SRC1" />
+        <result property="soundSrc2" column="SOUND_SRC2" />
+        <result property="soundSrc3" column="SOUND_SRC3" />
+        <result property="url1" column="URL1" />
+        <result property="url2" column="URL2" />
+        <result property="url3" column="URL3" />
+
+        <result property="imgURL1" column="IMG_URL1" />
+        <result property="imgURL2" column="IMG_URL2" />
+        <result property="imgURL3" column="IMG_URL3" />
+        <result property="imgURL4" column="IMG_URL4" />
+        <result property="imgURL5" column="IMG_URL5" />
+        <result property="soundURL1" column="SOUND_URL1" />
+        <result property="soundURL2" column="SOUND_URL2" />
+        <result property="soundURL3" column="SOUND_URL3" />
+
+        <result property="acName" column="AC_NAME" />
+
+        <result property="refNum" column="REF_NUM" />
+        <result property="refType" column="REF_TYPE" />
+        <result property="refSubType" column="REF_SUB_TYPE" />
+    </resultMap>
+
+
+    <resultMap id="codeReslut" type="java.util.HashMap">
+		<result property="gCd"  column="G_CD"/>
+		<result property="sCd"  column="S_CD"/>
+		<result property="gName"  column="G_NAME"/>
+		<result property="sName"  column="S_NAME"/>
+		<result property="langCode"  column="LANG_CODE"/>
+    </resultMap>
+
+	<select id="getNode" parameterType="core.api.beacon.domain.Node" resultMap="nodeResult">
+        SELECT NODE_NUM, COM_NUM, NODE_ID, FLOOR, NODE_NAME, LAT, LNG, CATE, TYPE
+          FROM TB_NODE
+        <where>
+            NODE_NUM=#{nodeNum}
+            <if test="type!=null">
+                AND TYPE=#{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="getNodeList" parameterType="core.api.beacon.domain.Node" resultMap="nodeResult">
+        SELECT A.NODE_NUM, A.COM_NUM, A.NODE_ID, A.FLOOR, A.NODE_NAME, A.LAT, A.LNG, A.CATE, A.JOINT_NAME, A.TYPE
+          FROM TB_NODE A
+         INNER JOIN TB_COMPANY B
+            on A.COM_NUM=B.COM_NUM
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="UUID!=null">
+                and B.UUID=#{UUID}
+            </if>
+            <if test="floor!=null">
+                and A.FLOOR=#{floor}
+            </if>
+            <if test="type!=null">
+                and A.TYPE=#{type}
+            </if>
+        </trim>
+        ORDER BY NODE_ID ASC
+    </select>
+
+    <select id="getNodeEdgeList" parameterType="core.api.beacon.domain.NodeEdge" resultMap="nodeEdgeResult">
+        SELECT A.EDGE_NUM, A.COM_NUM, A.FLOOR, A.TYPE, A.START_POINT||'_'||A.END_POINT as EDGE
+          FROM TB_NODE_EDGE A
+         INNER JOIN TB_COMPANY B
+            on A.COM_NUM=B.COM_NUM
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="UUID!=null">
+                and B.UUID=#{UUID}
+            </if>
+            <if test="floor!=null">
+                and A.floor=#{floor}
+            </if>
+            <if test="type!=null">
+                and A.type=#{type}
+            </if>
+        </trim>
+        ORDER BY START_POINT ASC
+    </select>
+
+
+    <select id="getNodeContentsList" parameterType="java.util.HashMap" resultMap="contentsResult">
+        SELECT a.*, b.*, c.*
+          FROM TB_CONTENTS a
+         INNER JOIN TB_CONTENTS_DETAIL b
+            ON a.CON_NUM=b.CON_NUM
+         INNER JOIN TB_CONTENTS_MAPPING c
+            ON a.CON_NUM=c.CON_NUM
+           AND c.REF_TYPE='ND'
+         INNER JOIN TB_NODE d
+            ON d.NODE_NUM=c.REF_NUM
+         INNER JOIN TB_COMPANY e
+            ON a.COM_NUM=e.COM_NUM
+        where 1=1
+            <if test="UUID!=null">
+                and e.UUID=#{UUID}
+            </if>
+            <if test="floor!=null">
+                and d.FLOOR=#{floor}
+            </if>
+            <if test="type!=null">
+                and d.TYPE=#{type}
+            </if>
+        ORDER BY d.NODE_NUM ASC, a.CON_NUM ASC
+
+    </select>
+
+    <select id="getNodeCategoryList" resultMap="codeReslut">
+        SELECT *
+          FROM TB_CODE
+         WHERE G_CD='POICATE'
+    </select>
+
+    <delete id="deleteNode" parameterType="java.util.HashMap">
+        DELETE A
+          FROM TB_NODE A
+         INNER JOIN TB_COMPANY B
+            ON A.COM_NUM = B.COM_NUM
+        <where>
+        	B.UUID = #{UUID}
+            AND NODE_NUM=#{nodeNum}
+            <if test="type!=null">AND A.TYPE=#{type}</if>
+        </where>
+    </delete>
+
+    <delete id="deleteNodePair" parameterType="java.util.HashMap">
+        DELETE A
+		  FROM TB_NODE_EDGE A
+		 INNER JOIN TB_COMPANY B
+		    ON A.COM_NUM = B.COM_NUM
+        <where>
+        	B.UUID = #{UUID}
+            <if test="pairNum!=null">
+                AND A.PAIR_NUM=#{pairNum}
+            </if>
+            <if test="nodeID!=null">
+                AND (A.START_POINT=#{nodeID} OR A.END_POINT=#{nodeID})
+            </if>
+            <if test="startPoint!=null and endPoint!=null">
+                AND (
+                (A.START_POINT=#{startPoint} AND A.END_POINT=#{endPoint})
+                OR
+                (A.START_POINT=#{endPoint} AND A.END_POINT=#{startPoint})
+                )
+            </if>
+            <if test="type!=null">AND A.TYPE=#{type}</if>
+        </where>
+    </delete>
+</mapper>

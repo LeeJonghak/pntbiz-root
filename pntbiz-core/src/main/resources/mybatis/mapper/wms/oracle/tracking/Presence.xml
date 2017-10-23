@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.tracking.dao.PresenceDao">
+
+    <resultMap id="beaconResult" type="core.wms.beacon.domain.Beacon">
+        <result property="beaconNum"    column="BEACON_NUM" />
+        <result property="UUID"         column="UUID" />
+        <result property="majorVer"     column="MAJOR_VER" />
+        <result property="minorVer"     column="MINOR_VER" />
+        <result property="beaconName"   column="BEACON_NAME" />
+    </resultMap>
+
+    <resultMap id="presenceLogResult" type="core.wms.tracking.domain.PresenceLog">
+        <result property="logNum"     column="LOG_NUM" />
+        <result property="SUUID"      column="SUUID" />
+        <result property="UUID"       column="UUID" />
+        <result property="majorVer"   column="MAJOR_VER" />
+        <result property="minorVer"   column="MINOR_VER" />
+        <result property="lat"        column="LAT" />
+        <result property="lng"        column="LNG" />
+        <result property="floor"      column="FLOOR" />
+        <result property="beaconName" column="BEACON_NAME" />
+        <result property="targetName" column="TARGET_NAME" />
+        <result property="logDesc"    column="LOG_DESC" />
+        <result property="regDate"    column="REG_DATE" />
+    </resultMap>
+
+    <resultMap id="presenceGfLogResult" type="core.wms.tracking.domain.PresenceGfLog">
+        <result property="logNum"     column="LOG_NUM" />
+        <result property="SUUID"      column="SUUID" />
+        <result property="UUID"       column="UUID" />
+        <result property="majorVer"   column="MAJOR_VER" />
+        <result property="minorVer"   column="MINOR_VER" />
+        <result property="fcNum"      column="FC_NUM" />
+        <result property="fcName"     column="FC_NAME" />
+        <result property="floor"      column="FLOOR" />
+        <result property="beaconName" column="BEACON_NAME" />
+        <result property="targetName" column="TARGET_NAME" />
+        <result property="logDesc"    column="LOG_DESC" />
+        <result property="regDate"    column="REG_DATE" />
+        <result property="fcNumCnt"   column="FC_NUM_CNT" />
+        <result property="viewDate"   column="VIEW_DATE" />
+    </resultMap>
+
+	<resultMap id="presenceFloorLogResult" type="core.wms.tracking.domain.PresenceFloorLog">
+		<result property="logNum" column="LOG_NUM" />
+		<result property="SUUID" column="SUUID" />
+		<result property="UUID" column="UUID" />
+		<result property="majorVer" column="MAJOR_VER" />
+		<result property="minorVer" column="MINOR_VER" />
+		<result property="fcNum" column="FC_NUM" />
+		<result property="fcName" column="FC_NAME" />
+		<result property="floor" column="FLOOR" />
+		<result property="beaconName" column="BEACON_NAME" />
+		<result property="targetName" column="TARGET_NAME" />
+		<result property="logDesc" column="LOG_DESC" />
+		<result property="inDate" column="IN_DATE" />
+		<result property="outDate" column="OUT_DATE" />
+		<result property="regDate" column="REG_DATE" />
+	</resultMap>
+
+    <resultMap id="presenceIoLogResult" type="core.wms.tracking.domain.PresenceIoLog">
+        <result property="logNum"     column="LOG_NUM" />
+        <result property="SUUID"      column="SUUID" />
+        <result property="UUID"       column="UUID" />
+        <result property="majorVer"   column="MAJOR_VER" />
+        <result property="minorVer"   column="MINOR_VER" />
+        <result property="io"         column="IO" />
+        <result property="state"      column="STATE" />
+        <result property="gate"       column="GATE" />
+        <result property="beaconName" column="BEACON_NAME" />
+        <result property="targetName" column="TARGET_NAME" />
+        <result property="logDesc"    column="LOG_DESC" />
+        <result property="regDate"    column="REG_DATE" />
+    </resultMap>
+
+    <!--
+    ========================= TB_LOG_PRESENCE ======================================
+     -->
+    <select id="getPresenceTargetListByBeacon" parameterType="core.wms.tracking.domain.PresenceTargetSearchParam" resultMap="beaconResult">
+        SELECT BEACON_NUM, UUID, MAJOR_VER, MINOR_VER, BEACON_NAME
+          FROM TB_BEACON
+         WHERE COM_NUM = #{comNum}
+           AND ${opt} LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+	<select id="getPresenceTargetLogList" parameterType="core.wms.tracking.domain.PresenceTargetSearchParam" resultMap="presenceLogResult">
+		SELECT LOG_NUM, UUID, MAJOR_VER, MINOR_VER, BEACON_NAME, TARGET_NAME, LOG_DESC, LAT, LNG, FLOOR, REG_DATE
+		  FROM TB_LOG_PRESENCE
+		 WHERE SUUID = #{SUUID}
+		   AND UUID = #{UUID}
+	       AND MAJOR_VER = #{majorVer}
+	       AND MINOR_VER = #{minorVer}
+	       AND REG_DATE BETWEEN FN_UNIX_TIMESTEMP(TO_DATE(#{sDate}, 'YYYY-MM-DDHH24:MI:SS')) AND FN_UNIX_TIMESTEMP(TO_DATE(#{eDate}, 'YYYY-MM-DDHH24:MI:SS'))
+	</select>
+
+    <select id="getPresenceLogInfo" parameterType="core.wms.tracking.domain.PresenceLog" resultMap="presenceLogResult">
+        SELECT LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, LAT, LNG, FLOOR, BEACON_NAME, TARGET_NAME, LOG_DESC, REG_DATE
+          FROM TB_LOG_PRESENCE
+         WHERE LOG_NUM = #{logNum}
+    </select>
+
+    <insert id="insertPresenceLog" parameterType="core.wms.tracking.domain.PresenceLog">
+        INSERT INTO TB_LOG_PRESENCE
+        ( LOG_NUM
+        , SUUID
+        , UUID
+        , MAJOR_VER
+        , MINOR_VER
+        , LAT
+        , LNG
+        , FLOOR
+        , BEACON_NAME
+        , TARGET_NAME
+        , LOG_DESC
+        , REG_DATE)
+        VALUES
+        ( SEQ_LPE_LOG_NUM.NEXTVAL
+        , #{SUUID}
+        , #{UUID}
+        , #{majorVer}
+        , #{minorVer}
+        , #{lat}
+        , #{lng}
+        , #{floor}
+        , #{beaconName}
+        , #{targetName}
+        , #{logDesc}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <select id="getPresenceLogList" parameterType="core.wms.tracking.domain.PresenceLog" resultMap="presenceLogResult">
+        SELECT LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, LAT, LNG, FLOOR, BEACON_NAME, TARGET_NAME, LOG_DESC, REG_DATE
+          FROM TB_LOG_PRESENCE
+         WHERE SUUID = #{SUUID}
+        <if test="opt != '' and opt  != null">
+            <if test="keyword != '' and keyword  != null">
+                AND ${opt} LIKE CONCAT(#{keyword}, '%')
+            </if>
+        </if>
+    </select>
+
+    <select id="getPresenceLogListByLimit" parameterType="core.wms.tracking.domain.PresenceLog" resultMap="presenceLogResult">
+       SELECT *
+         FROM (
+            SELECT LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, LAT, LNG, FLOOR, BEACON_NAME, TARGET_NAME, LOG_DESC, REG_DATE
+              FROM TB_LOG_PRESENCE
+             WHERE SUUID = #{SUUID}
+             <if test="keyword != '' and keyword  != null">
+                 <choose>
+                     <when test="opt eq 'targetName'">AND TARGET_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                     <when test="opt eq 'beaconName'">AND BEACON_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                     <otherwise></otherwise>
+                 </choose>
+             </if>
+             ORDER BY LOG_NUM DESC
+         ) TB
+        WHERE ROWNUM &lt;= 30
+    </select>
+
+    <!--
+    ========================= TB_LOG_PRESENCE_GEOFENCE ======================================
+     -->
+    <select id="getPresenceGfLogListByLimit" parameterType="core.wms.tracking.domain.PresenceGfLog" resultMap="presenceGfLogResult">
+        SELECT *
+          FROM (
+            SELECT LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, FC_NUM, FC_NAME, FLOOR, BEACON_NAME, TARGET_NAME, LOG_DESC, REG_DATE
+              FROM TB_LOG_PRESENCE_GEOFENCE
+             WHERE SUUID = #{SUUID}
+             <if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+                 AND FC_NAME LIKE CONCAT(#{keyword}, '%')
+             </if>
+            ORDER BY LOG_NUM DESC
+         ) TB
+        WHERE ROWNUM &lt;= 30
+    </select>
+
+	<select id="getPresenceFloorLogListByLimit" parameterType="core.wms.tracking.domain.PresenceFloorLog" resultMap="presenceFloorLogResult">
+		SELECT *
+		FROM (
+			SELECT LOG_NUM , SUUID, UUID, MAJOR_VER, MINOR_VER, FLOOR, PERMITTED, BEACON_NAME, TARGET_NAME, LOG_DESC,
+			IN_DATE, OUT_DATE, REG_DATE
+			FROM TB_LOG_PRESENCE_FLOOR
+			WHERE SUUID = #{SUUID}
+			<if test="opt != '' and opt  != null and keyword != '' and keyword  != null">AND FLOOR LIKE CONCAT(#{keyword},'%')</if>
+			ORDER BY LOG_NUM DESC
+		) TB
+		<if test="firstItemNo!=null and pageSize!=null and pageSize!=0">
+			WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+		</if>
+		<if test="firstItemNo==null or pageSize==null or pageSize==0">
+			WHERE ROWNUM &lt;= 30
+		</if>
+
+	</select>
+
+    <insert id="insertPresenceGeofenceLog" parameterType="core.wms.tracking.domain.PresenceGfLog">
+        INSERT INTO TB_LOG_PRESENCE_GEOFENCE
+        ( LOG_NUM
+        , SUUID
+        , UUID
+        , MAJOR_VER
+        , MINOR_VER
+        , FC_NUM
+        , FC_NAME
+        , FLOOR
+        , BEACON_NAME
+        , TARGET_NAME
+        , LOG_DESC
+        , IN_DATE
+        , OUT_DATE
+        , REG_DATE
+        ) VALUES
+        ( SEQ_LPG_LOG_NUM.nextval
+        , #{SUUID}
+        , #{UUID}
+        , #{majorVer}
+        , #{minorVer}
+        , #{fcNum}
+        , #{fcName}
+        , #{floor}
+        , #{beaconName}
+        , #{targetName}
+        , #{logDesc}
+        , #{inDate}
+        , #{outDate}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <!--
+    ========================= TB_LOG_PRESENCE_INOUT ======================================
+     -->
+    <select id="getPresenceIoLogListByLimit" parameterType="core.wms.tracking.domain.PresenceIoLog" resultMap="presenceIoLogResult">
+       SELECT *
+         FROM (
+            SELECT LOG_NUM, SUUID, UUID, MAJOR_VER, MINOR_VER, IO, STATE, GATE, BEACON_NAME, TARGET_NAME, LOG_DESC, REG_DATE
+              FROM TB_LOG_PRESENCE_INOUT
+             WHERE SUUID = #{SUUID}
+            <if test="keyword != '' and keyword  != null">
+                 <choose>
+                     <when test="opt eq 'targetName'">AND TARGET_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                     <when test="opt eq 'beaconName'">AND BEACON_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                     <otherwise></otherwise>
+                 </choose>
+             </if>
+            ORDER BY LOG_NUM DESC
+         ) TB
+        WHERE ROWNUM &lt;= 30
+    </select>
+
+
+    <!--
+    ========================= DASH BOARD ======================================
+     -->
+    <!-- 대시보드, 마이크로펜스 관제 현황 차트 -->
+    <select id="getChartPresenceGfLogListByLimit" parameterType="core.wms.tracking.domain.PresenceGfLog" resultMap="presenceGfLogResult">
+        SELECT FC_NUM, FC_NAME, VIEW_DATE, count(1) as FC_NUM_CNT
+          FROM (
+            SELECT TLPG.FC_NUM, FC_NAME, FN_FROM_UNIXTIME(REG_DATE) as VIEW_DATE
+              FROM TB_LOG_PRESENCE_GEOFENCE TLPG
+             INNER JOIN (SELECT FC_NUM
+                              FROM(
+                                  SELECT FC_NUM, count(1) as NUM
+                                    FROM TB_LOG_PRESENCE_GEOFENCE
+                                   WHERE FN_FROM_UNIXTIME(REG_DATE) > (SYSDATE - interval '7' day)
+                                     AND SUUID = #{SUUID}
+                                     AND EVENT_TYPE = 'E'
+                                   GROUP BY FC_NUM HAVING count(1) > 0
+                                   ORDER BY NUM DESC
+                              )A
+                             WHERE ROWNUM &lt;= 5
+                        ) TLPG2
+                ON TLPG.FC_NUM = TLPG2.FC_NUM
+             WHERE EVENT_TYPE = 'E'
+          )
+         GROUP BY VIEW_DATE, FC_NUM, FC_NAME
+        HAVING count(1) > 0
+         ORDER BY FC_NUM, VIEW_DATE
+    </select>
+
+    <!-- 대시보드, 주요 Zone별 진출입 횟수 차트 -->
+    <select id="getChartPresenceGfInOutLogListByLimit" parameterType="core.wms.tracking.domain.PresenceGfLog" resultMap="presenceGfLogResult">
+        SELECT FC_NAME
+            , SUM(enterType) ENTER_COUNT
+            , SUM(leaveType) LEAVE_COUNT
+            , SUM(stayType) STAY_COUNT
+        FROM(
+            SELECT FC_NAME
+                , DECODE(EVENT_TYPE, 'E', fcNumCnt, 0) enterType
+                , DECODE(EVENT_TYPE, 'L', fcNumCnt, 0) leaveType
+                , DECODE(EVENT_TYPE, 'S', fcNumCnt, 0) stayType
+                , FC_NUM
+            FROM(
+                SELECT TLPG.FC_NUM, FC_NAME, count(1) as fcNumCnt, EVENT_TYPE
+                  FROM TB_LOG_PRESENCE_GEOFENCE TLPG
+                 INNER JOIN (SELECT FC_NUM
+                               FROM(
+                                 SELECT FC_NUM, count(1) as num
+                                   FROM TB_LOG_PRESENCE_GEOFENCE
+                                  WHERE FN_FROM_UNIXTIME(REG_DATE) > (SYSDATE - interval '7' day)
+                                    AND SUUID = #{SUUID}
+                                  GROUP BY FC_NUM
+                                 HAVING count(1) > 0
+                                  ORDER BY num DESC
+                               )A
+                              WHERE ROWNUM &lt;= 3
+                            ) TLPG2
+                     ON TLPG.FC_NUM = TLPG2.FC_NUM
+                 WHERE FN_FROM_UNIXTIME(TLPG.REG_DATE) > (SYSDATE - interval '7' day)
+                 GROUP BY TLPG.EVENT_TYPE, TLPG.FC_NUM, TLPG.FC_NAME
+                HAVING count(1) > 0
+            ) PG
+        ) Z
+        GROUP BY FC_NUM, FC_NAME
+    </select>
+
+     <!-- 대시보드, 스캐너 위치측위 현황 차트 -->
+    <select id="getChartPresenceLogList" parameterType="core.wms.tracking.domain.PresenceLog" resultMap="presenceLogResult">
+        SELECT sum(DECODE(mRegdate, TO_DATE((SYSDATE - interval '7' day),'YYYY-MM-DD'), 1, 0)) chartCount1
+             , sum(DECODE(mRegdate, TO_DATE((SYSDATE - interval '6' day),'YYYY-MM-DD'), 1, 0)) chartCount2
+             , sum(DECODE(mRegdate, TO_DATE((SYSDATE - interval '5' day),'YYYY-MM-DD'), 1, 0)) chartCount3
+             , sum(DECODE(mRegdate, TO_DATE((SYSDATE - interval '4' day),'YYYY-MM-DD'), 1, 0)) chartCount4
+             , sum(DECODE(mRegdate, TO_DATE((SYSDATE - interval '3' day),'YYYY-MM-DD'), 1, 0)) chartCount5
+             , sum(DECODE(mRegdate, TO_DATE((SYSDATE - interval '2' day),'YYYY-MM-DD'), 1, 0)) chartCount6
+             , sum(DECODE(mRegdate, TO_DATE((SYSDATE - interval '1' day),'YYYY-MM-DD'), 1, 0)) chartCount7
+          FROM (
+              SELECT *
+                FROM (
+                    SELECT TO_DATE('19700101','yyyy-mm-dd') + (REG_DATE/86400) as mRegdate
+                      FROM TB_LOG_PRESENCE
+                     WHERE SUUID = #{SUUID}
+                       AND FN_FROM_UNIXTIME(REG_DATE) > (SYSDATE - interval '7' day)
+                ) TB
+               WHERE ROWNUM &lt;= 50
+          )A
+    </select>
+</mapper>

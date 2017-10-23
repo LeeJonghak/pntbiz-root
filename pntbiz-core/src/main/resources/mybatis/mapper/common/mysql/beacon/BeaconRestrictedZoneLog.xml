@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.common.beacon.dao.BeaconRestrictedZoneLogDao">
+
+	<resultMap id="BeaconRestrictedZoneLogResultMap" type="core.common.beacon.domain.BeaconRestrictedZoneLog">
+		<result property="logNum" column="logNum" />
+		<result property="type" column="type" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result property="refLogNum" column="refLogNum" />
+		<result property="beaconNum" column="beaconNum" />
+		<result property="zoneType" column="zoneType" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result property="zoneId" column="zoneId" />
+		<result property="permitted" column="permitted" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result property="additionalAttributeRaw" column="additionalAttribute" />
+		<result property="startDate" column="startDate" />
+		<result property="endDate" column="endDate" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<insert id="insertBeaconRestrictedZoneLog" parameterType="core.common.beacon.domain.BeaconRestrictedZoneLog">
+
+		INSERT INTO TB_BEACON_RESTRICTED_ZONE_LOG(refLogNum, type, beaconNum, zoneType, zoneId, permitted,
+			additionalAttribute, startDate, endDate, regDate)
+		SELECT #{refLogNum}, #{type, typeHandler=framework.database.ValueEnumTypeHandler}, beaconNum,
+			zoneType, zoneId, permitted, additionalAttribute, startDate, endDate, UNIX_TIMESTAMP()
+		FROM TB_BEACON_RESTRICTED_ZONE
+		WHERE beaconNum=#{beaconNum}
+		<if test="zoneType!=null">
+			AND zoneType=#{zoneType, typeHandler=framework.database.ValueEnumTypeHandler}
+		</if>
+		<if test="zoneId!=null">
+			AND zoneId=#{zoneId}
+		</if>
+
+	</insert>
+
+	<select id="listBeaconRestrictedZoneLog"
+			parameterType="core.common.beacon.domain.BeaconRestrictedZoneLog"
+			resultMap="BeaconRestrictedZoneLogResultMap">
+
+		SELECT logNum, type, refLogNum, beaconNum, zoneType, zoneId, permitted, additionalAttribute
+			, startDate, endDate, regDate
+		FROM TB_BEACON_RESTRICTED_ZONE_LOG
+		WHERE beaconNum=#{beaconNum}
+		<if test="type!=null">AND type=#{type, typeHandler=framework.database.ValueEnumTypeHandler}</if>
+
+	</select>
+
+</mapper>

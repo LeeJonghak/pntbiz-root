@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.common.config.dao.InterfaceConfigDao">
+
+	<resultMap id="InterfaceConfig" type="core.common.config.domain.InterfaceConfig">
+		<id column="interfaceNum" property="interfaceNum" />
+		<result column="comNum" property="comNum" />
+		<result column="interfaceBindingType" property="interfaceBindingType" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result column="bindingZoneId" property="bindingZoneId" />
+		<result column="bindingZoneName" property="bindingZoneName" />
+		<result column="interfaceCommandType" property="interfaceCommandType" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<result column="targetInfo" property="targetInfo" />
+		<result column="headers" property="headers" />
+		<result column="bodyMetaData" property="bodyMetaData" />
+	</resultMap>
+
+	<resultMap id="floor" type="hashMap" >
+		<result javaType="String" column="nodeId" property="bindingZoneId" />
+		<result javaType="String" column="nodeName" property="bindingZoneName" />
+	</resultMap>
+
+	<resultMap id="geofenceGroup" type="hashMap" >
+		<result javaType="String" column="fcGroupNum" property="bindingZoneId" />
+		<result javaType="String" column="fcGroupName" property="bindingZoneName" />
+	</resultMap>
+
+	<sql id="sqlInterfaceSearch">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="UUID!=null">AND C.UUID=#{UUID}</if>
+			<if test="comNum!=null">AND CI.comNum=#{comNum}</if>
+			<if test="interfaceBindingType!=null">AND CI.interfaceBindingType=#{interfaceBindingType, typeHandler=framework.database.ValueEnumTypeHandler}</if>
+			<if test="interfaceCommandType!=null">AND CI.interfaceCommandType=#{interfaceCommandType, typeHandler=framework.database.ValueEnumTypeHandler}</if>
+			<if test="bindingZoneId!=null">AND CI.bindingZoneId LIKE CONCAT(#{bindingZoneId},'%')</if>
+		</trim>
+	</sql>
+
+	<select id="selectInterfaceConfigCount"
+			parameterType="core.common.config.domain.InterfaceConfigSearchParam"
+			resultType="Integer">
+		SELECT COUNT(*)
+		FROM 		TB_CONFIG_INTERFACE CI
+		<if test="UUID!=null">
+			INNER JOIN TB_COMPANY 	C ON C.comNum = CI.comNum
+		</if>
+		<include refid="sqlInterfaceSearch"/>
+	</select>
+
+	<select id="selectInterfaceConfigs"
+			parameterType="core.common.config.domain.InterfaceConfigSearchParam"
+			resultMap="InterfaceConfig">
+		SELECT CI.*,	CASE
+									WHEN CI.interfaceBindingType IN('FF') THEN nodeName
+									WHEN CI.interfaceBindingType IN('GC') THEN fcName
+									WHEN CI.interfaceBindingType IN('GG') THEN fcGroupName
+								END AS bindingZoneName
+		FROM
+		(
+			SELECT  		interfaceNum,
+								comNum,
+								interfaceBindingType,
+								bindingZoneId,
+								InterfaceCommandType,
+								targetInfo,
+								headers,
+								bodyMetaData,
+								modDate,
+								regDate
+			FROM TB_CONFIG_INTERFACE
+			WHERE comNum=#{comNum}
+		) AS CI
+		LEFT JOIN TB_FLOOR_CODE FC
+		ON	(FC.comNum=#{comNum}	AND	IF(CI.interfaceBindingType IN ('FF'), CI.bindingZoneId, NULL)=FC.nodeId	)
+		LEFT JOIN TB_GEOFENCING GF
+		ON	(GF.comNum=#{comNum} AND	IF(CI.interfaceBindingType IN ('GC'), CI.bindingZoneId, NULL)=GF.fcNum	)
+		LEFT JOIN TB_GEOFENCING_GROUP GG
+		ON	(GG.comNum=#{comNum} AND	IF(CI.interfaceBindingType IN ('GG'), CI.bindingZoneId, NULL)=GG.fcGroupNum	)
+		<include refid="sqlInterfaceSearch"/>
+		ORDER BY CI.interfaceNum DESC
+		<if test="firstItemNo!=null and pageSize!=null and pageSize!=0">
+			LIMIT #{firstItemNo}, #{pageSize}
+		</if>
+	</select>
+
+	<select id="selectInterfaceConfig"
+			parameterType="core.common.config.domain.InterfaceConfig"
+			resultMap="InterfaceConfig">
+	SELECT CI.*,	CASE
+								WHEN CI.interfaceBindingType IN('FF') THEN nodeName
+								WHEN CI.interfaceBindingType IN('GC') THEN fcName
+								WHEN CI.interfaceBindingType IN('GG') THEN fcGroupName
+							END AS bindingZoneName
+	FROM
+	(
+		SELECT  		interfaceNum,
+							comNum,
+							interfaceBindingType,
+							bindingZoneId,
+							InterfaceCommandType,
+							targetInfo,
+							headers,
+							bodyMetaData,
+							modDate,
+							regDate
+		FROM TB_CONFIG_INTERFACE
+		WHERE comNum=#{comNum}
+	) AS CI
+	LEFT JOIN TB_FLOOR_CODE FC
+	ON	(FC.comNum=#{comNum}	AND	IF(CI.interfaceBindingType IN ('FF'), CI.bindingZoneId, NULL)=FC.nodeId	)
+	LEFT JOIN TB_GEOFENCING GF
+	ON	(GF.comNum=#{comNum} AND	IF(CI.interfaceBindingType IN ('GC'), CI.bindingZoneId, NULL)=GF.fcNum	)
+	LEFT JOIN TB_GEOFENCING_GROUP GG
+	ON	(GG.comNum=#{comNum} AND	IF(CI.interfaceBindingType IN ('GG'), CI.bindingZoneId, NULL)=GG.fcGroupNum	)
+	WHERE CI.interfaceNum=#{interfaceNum}
+	</select>
+
+	<select id="selectFloors" parameterType="Integer" resultMap="floor">
+		SELECT nodeId, nodeName
+		FROM TB_FLOOR_CODE
+		WHERE comNum=#{comNum}
+	</select>
+
+	<select id="selectGeofenceGroups" parameterType="Integer" resultMap="geofenceGroup">
+		SELECT fcGroupNum, fcGroupName
+		FROM TB_GEOFENCING_GROUP
+		WHERE comNum=#{comNum}
+	</select>
+
+	<insert id="insertInterfaceConfig" parameterType="core.common.config.domain.InterfaceConfig" keyColumn="interfaceNum" keyProperty="interfaceNum" >
+		INSERT INTO TB_CONFIG_INTERFACE
+		SET
+		comNum = #{comNum},
+		interfaceBindingType = #{interfaceBindingType, typeHandler=framework.database.ValueEnumTypeHandler},
+		bindingZoneId = #{bindingZoneId},
+		interfaceCommandType = #{interfaceCommandType, typeHandler=framework.database.ValueEnumTypeHandler},
+		targetInfo = #{targetInfo},
+		headers = #{headers},
+		bodyMetaData = #{bodyMetaData},
+		regDate = UNIX_TIMESTAMP();
+	</insert>
+
+	<update id="updateInterfaceConfig" parameterType="core.common.config.domain.InterfaceConfig" >
+		UPDATE TB_CONFIG_INTERFACE
+		SET
+				comNum = #{comNum},
+				interfaceBindingType = #{interfaceBindingType, typeHandler=framework.database.ValueEnumTypeHandler},
+				bindingZoneId = #{bindingZoneId},
+				interfaceCommandType = #{interfaceCommandType, typeHandler=framework.database.ValueEnumTypeHandler},
+				targetInfo = #{targetInfo},
+				headers = #{headers},
+				bodyMetaData = #{bodyMetaData},
+				modDate = UNIX_TIMESTAMP()
+		WHERE	interfaceNum = #{interfaceNum}
+	</update>
+
+	<delete id="deleteInterfaceConfig" parameterType="Long">
+		DELETE
+		FROM 		TB_CONFIG_INTERFACE
+		WHERE		interfaceNum = #{interfaceNum}
+	</delete>
+
+</mapper>

@@ -1,0 +1,17 @@
+@charset "utf-8";
+thead th { 
+	cursor: pointer; 
+	/*text-align: center;*/ 
+}
+thead .arrow {
+	font-family: webdings; 
+	padding: 0; 
+	height: 11px; 
+	width: 10px; 
+	overflow: hidden; 
+	margin-bottom: 2px; 
+	margin-top: -3px; 
+	padding: 0; 
+	padding-top: 0; 
+	padding-bottom: 2px;
+}

@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>Language Pack - English</comment>
+
+  <entry key="common.alert.error">Error Occured</entry>
+
+  <entry key="menu.000000">Dashboard</entry>
+
+  <entry key="menu.100000">Beacon</entry>
+  <entry key="menu.100100">Beacon Management</entry>
+  <entry key="menu.100101">Beacon List</entry>
+  <entry key="menu.100102">Register Beacon</entry>
+  <entry key="menu.100103">Modify Beacon</entry>
+  <entry key="menu.100104">RestrictedZone List</entry>
+  <entry key="menu.100105">Register restrictedZone</entry>
+  <entry key="menu.100106">Modify restrictedZone</entry>
+  <entry key="menu.100200">Beacon Monitor</entry>
+  <entry key="menu.100201">Beacon Status Check</entry>
+  <entry key="menu.100202">Beacon Status Summary</entry>
+  <entry key="menu.100300">Beacon Group Management</entry>
+  <entry key="menu.100301">Beacon Group List</entry>
+  <entry key="menu.100302">Register Beacon Group</entry>
+  <entry key="menu.100303">Modify Beacon Group</entry>
+
+  <entry key="menu.110000">Scanner</entry>
+  <entry key="menu.110100">Scanner Management</entry>
+  <entry key="menu.110101">Scanner List</entry>
+  <entry key="menu.110102">Register Scanner</entry>
+  <entry key="menu.110103">Modify Scanner</entry>
+  <entry key="menu.110104">Batch Update Scanner</entry>
+  <entry key="menu.110200">Deploy Scanner Configuration</entry>
+  <entry key="menu.110300">Scanner Server Management</entry>
+  <entry key="menu.110301">Scanner Server List</entry>
+  <entry key="menu.110302">Register Scanner Server</entry>
+  <entry key="menu.110303">Modify Scanner Server</entry>
+  <entry key="menu.110400">Scanner Configuration Deploy Management</entry>
+  <entry key="menu.110401">Scanner Configuration Deploy List</entry>
+  <entry key="menu.110402">Register Scanner Configuration Deploy</entry>
+  <entry key="menu.110403">Modify Scanner Configuration Deploy</entry>
+  <entry key="menu.110404">Deploy Scanner Configuration</entry>
+
+  <entry key="menu.120000">Map</entry>
+  <entry key="menu.120100">Floor Management</entry>
+  <entry key="menu.120200">Beacon Plan Management</entry>
+  <entry key="menu.120300">Geofencing Management</entry>
+  <entry key="menu.120400">Scanner Plan Management</entry>
+  <entry key="menu.120500">Beacon Status Management</entry>
+  <entry key="menu.120600">Presence Map Setting</entry>
+  <entry key="menu.120700">Floor Setting</entry>
+
+  <entry key="menu.130000">Contents</entry>
+  <entry key="menu.130100">Contents Management</entry>
+  <entry key="menu.130101">Contents List</entry>
+  <entry key="menu.130102">Register Contents</entry>
+  <entry key="menu.130103">Modify Contents</entry>
+  <entry key="menu.130200">Contents Mapping Management</entry>
+  <entry key="menu.130300">Contents Type Management</entry>
+  <entry key="menu.130301">Contents Type List</entry>
+  <entry key="menu.130302">Register Contents Type</entry>
+  <entry key="menu.130303">Modify Contents Type</entry>
+
+  <entry key="menu.140000">Service</entry>
+  <entry key="menu.140100">Event Management</entry>
+  <entry key="menu.140101">Event List</entry>
+  <entry key="menu.140102">Register Event</entry>
+  <entry key="menu.140103">Modify Event</entry>
+  <entry key="menu.140200">Event Type Management</entry>
+  <entry key="menu.140201">Event Type List</entry>
+  <entry key="menu.140202">Register Event Type</entry>
+  <entry key="menu.140203">Modify Event Type</entry>
+  <entry key="menu.140300">Check Attendance</entry>
+  <entry key="menu.140400">Check Seminar In/Out</entry>
+
+  <entry key="menu.160000">Geofencing</entry>
+  <entry key="menu.160100">Geofencing Management</entry>
+  <entry key="menu.160101">Geofencing List</entry>
+  <entry key="menu.160102">Register Geofencing</entry>
+  <entry key="menu.160103">Modify Geofencing</entry>
+  <entry key="menu.160200">Geofencing Group Management</entry>
+  <entry key="menu.160201">Geofencing Group List</entry>
+  <entry key="menu.160202">Register Geofencing Group</entry>
+  <entry key="menu.160203">Modify Geofencing Group</entry>
+
+  <entry key="menu.170000">Statistics</entry>
+  <entry key="menu.170100">RTLS</entry>
+  <entry key="menu.170101">Real-Time Tracking View</entry>
+  <entry key="menu.170200">Tracking</entry>
+  <entry key="menu.170201">Beacon Tag Tracking Graph</entry>
+  <entry key="menu.170211">Smartphone Tracking Record</entry>
+  <entry key="menu.170300">Log</entry>
+  <entry key="menu.170301">Beacon Tag Tracking Log</entry>
+  <entry key="menu.170302">Beacon Tag Geofencing Log</entry>
+  <entry key="menu.170303">Beacon Tag In/Out Log</entry>
+  <entry key="menu.170304">Beacon Tag Tracking Status</entry>
+  <entry key="menu.170311">Smartphone Tracking Log</entry>
+  <entry key="menu.170312">Smartphone Tracking Status</entry>
+  <entry key="menu.170313">Micro Fence Control Status</entry>
+  <entry key="menu.170314">Zone Enter/Leave Status</entry>
+
+  <entry key="menu.180000">Monitoring</entry>
+  <entry key="menu.180100">Server Monitoring</entry>
+  <entry key="menu.180200">Scanner Monitoring</entry>
+
+  <entry key="menu.990000">Basic Information</entry>
+  <entry key="menu.990100">Site Infomation</entry>
+  <entry key="menu.990200">Code Management</entry>
+  <entry key="menu.990201">Code List</entry>
+  <entry key="menu.990202">Register Code</entry>
+  <entry key="menu.990203">Modify Code</entry>
+  <entry key="menu.990300">Advertising Partner Management</entry>
+  <entry key="menu.990301">Advertising Partner List</entry>
+  <entry key="menu.990302">Register Advertising Partner</entry>
+  <entry key="menu.990303">Modify Advertising Partner</entry>
+  <entry key="menu.990400">Location Information Usage</entry>
+  <entry key="menu.990401">Location Information Usage List</entry>
+  <entry key="menu.990500">Location Information Usage Access Record</entry>
+  <entry key="menu.990501">Location Information Usage Access Record List</entry>
+  <entry key="menu.990502">Register Location Information Usage Access Record</entry>
+  <entry key="menu.990600">OAuth Client</entry>
+  <entry key="menu.990601">OAuth Client List</entry>
+  <entry key="menu.990602">Register OAuth Client</entry>
+  <entry key="menu.990603">Modify OAuth Client</entry>
+  <entry key="menu.990700">Account Management</entry>
+  <entry key="menu.990701">Confirm Password</entry>
+  <entry key="menu.990800">Interlocking Interface</entry>
+  <entry key="menu.990801">Interlocking Interface List</entry>
+  <entry key="menu.990802">Register Interlocking Interface</entry>
+  <entry key="menu.990803">Modify Interlocking Interface</entry>
+
+  <entry key="btn.login">Log in</entry>
+  <entry key="btn.logout">Log out</entry>
+  <entry key="btn.list">List</entry>
+  <entry key="btn.search">Search</entry>
+  <entry key="btn.register">Register</entry>
+  <entry key="btn.modify">Modify</entry>
+  <entry key="btn.delete">Delete</entry>
+  <entry key="btn.deploy">Deploy</entry>
+  <entry key="btn.batch">Batch</entry>
+  <entry key="btn.update">Update</entry>
+  <entry key="btn.batch.update">Batch Update</entry>
+  <entry key="btn.run">Run</entry>
+  <entry key="btn.view">View</entry>
+  <entry key="btn.download">Download</entry>
+  <entry key="btn.log.view">Log View</entry>
+  <entry key="btn.log.download">Log Download</entry>
+  <entry key="btn.check">Check</entry>
+  <entry key="btn.confirm">Confirm</entry>
+  <entry key="btn.add">Add</entry>
+  <entry key="btn.close">Close</entry>
+  <entry key="btn.send">Send</entry>
+  <entry key="btn.authentication">Authentication</entry>
+  <entry key="btn.home">Home</entry>
+  <entry key="btn.init">Initialize</entry>
+  <entry key="btn.mapping">mapping</entry>
+  <entry key="btn.synchronization">Synchronization</entry>
+  <entry key="btn.beacon.list">Beacon List</entry>
+  <entry key="btn.restricted.zone.list">RestrictedZone List</entry>
+
+  <entry key="message.search.notmatch">No Search Result Found</entry>
+
+  <entry key="auth.userid">Userid</entry>
+  <entry key="auth.password">Password</entry>
+  <entry key="auth.login">Log in</entry>
+  <entry key="auth.logout">Log out</entry>
+  <entry key="auth.rememeber">Remember ID</entry>
+  <entry key="auth.welcome">Hello, {0}. Welcome to IndoorPlus+ WMS.</entry>
+  <entry key="auth.otp">OTP</entry>
+  <entry key="auth.otp.authcode">AuthCode</entry>
+  <entry key="auth.passwd">Forgot your password?</entry>
+
+  <entry key="dashboard.total.beacons">TOTAL BEACONS</entry>
+  <entry key="dashboard.total.geofencings">TOTAL GEOFENCINGS</entry>
+  <entry key="dashboard.total.scanners">TOTAL SCANNERS</entry>
+  <entry key="dashboard.total.floors">TOTAL FLOORS</entry>
+  <entry key="dashboard.last.modified">Last Modified</entry>
+  <entry key="dashboard.loss.beacon">Beacons with high possibilty of loss</entry>
+  <entry key="dashboard.loss.beacon.status">Beacons Control Status with high possibilty of loss
+  </entry>
+  <entry key="dashboard.scanner.monitor">Scanner monitor</entry>
+
+  <entry key="word.language">language</entry>
+  <entry key="word.account">Account</entry>
+  <entry key="word.settings">Settings</entry>
+
+  <entry key="word.passwd">Password</entry>
+  <entry key="word.passwd.text001">* If you do not change the password, do not enter.</entry>
+  <entry key="word.email">Email</entry>
+  <entry key="word.phonenumber">Phone Number</entry>
+
+  <entry key="word.data">Data</entry>
+  <entry key="word.cpu">CPU</entry>
+  <entry key="word.memory">Memory</entry>
+  <entry key="word.ping">Ping</entry>
+  <entry key="word.up">Up</entry>
+  <entry key="word.down">Down</entry>
+
+  <entry key="word.description">Description</entry>
+  <entry key="word.search.option">Search Option</entry>
+  <entry key="word.search.keyword">Search Keyword</entry>
+  <entry key="word.enter.search.term">Please enter your search term.</entry>
+  <entry key="word.no">No.</entry>
+  <entry key="word.regdate">Registered Date</entry>
+  <entry key="word.moddate">Modified Date</entry>
+  <entry key="word.install.image">Installation Pictures</entry>
+  <entry key="word.none">None</entry>
+
+  <entry key="word.beacon">Beacon</entry>
+  <entry key="word.beacon.name">Beacon Name</entry>
+  <entry key="word.beacon.group">Beacon Group</entry>
+  <entry key="word.beacon.group.name">Beacon Group Name</entry>
+  <entry key="word.beacon.count">Beacon Count</entry>
+  <entry key="word.beacon.field">Field</entry>
+  <entry key="word.major.version">Major Version</entry>
+  <entry key="word.minor.version">Minor Version</entry>
+  <entry key="word.battery.level">Battery Level</entry>
+  <entry key="word.txpower">TxPower</entry>
+  <entry key="word.floor">Floor</entry>
+  <entry key="word.total">Total</entry>
+  <entry key="word.total.count">Total Count</entry>
+  <entry key="word.uuid">UUID</entry>
+  <entry key="word.lat">Latitude</entry>
+  <entry key="word.lng">Longitude</entry>
+  <entry key="word.lat.lng">Latitude/Longitude</entry>
+  <entry key="word.show.map">Show Map</entry>
+  <entry key="word.state">State</entry>
+  <entry key="word.normal">Normal</entry>
+  <entry key="word.loss">Loss</entry>
+  <entry key="word.unconfirmed">Unconfirmed</entry>
+  <entry key="word.sort.field">Sort Field</entry>
+  <entry key="word.sort.order">Sort Order</entry>
+  <entry key="word.sort.ascending">Ascending</entry>
+  <entry key="word.sort.descending">Descending</entry>
+  <entry key="word.battery">Battery</entry>
+  <entry key="word.last.date">Last Updated</entry>
+  <entry key="word.barcode">barcode</entry>
+  <entry key="word.external.id">Production order number</entry>
+  <entry key="word.external.attribute">External Attribute</entry>
+  <entry key="word.key">Key</entry>
+  <entry key="word.value">Value</entry>
+  <entry key="word.display.name">Display Name</entry>
+  <entry key="word.restricted.zone">Restricted Zone</entry>
+  <entry key="word.zone.type">Zone Type</entry>
+  <entry key="word.zone.id">Zone Id</entry>
+  <entry key="word.zone.name">Zone Name</entry>
+  <entry key="word.additional.attribute">Additional Attribute</entry>
+  <entry key="word.restricted.zone.type">Restricted Zone Type</entry>
+  <entry key="word.permitted">Permitted</entry>
+  <entry key="word.restricted">Restricted</entry>
+  <entry key="word.set.to">Zone Setting</entry>
+  <entry key="word.beacon.type">Beacon Type</entry>
+  <entry key="word.beacon.type.wearable">wearable</entry>
+  <entry key="word.beacon.type.movable">movable</entry>
+  <entry key="word.beacon.type.fixed">fixed</entry>
+
+  <entry key="word.geofencing">Geofencing</entry>
+  <entry key="word.geofencing.name">Geofencing Name</entry>
+  <entry key="word.geofencing.group">Geofencing Group</entry>
+  <entry key="word.geofencing.group.name">Geofencing Group Name</entry>
+  <entry key="word.geofencing.count">Geofencing Count</entry>
+  <entry key="word.geofencing.type">Fence Type</entry>
+  <entry key="word.geofencing.isNodeEnable">Enable Node</entry>
+  <entry key="word.geofencing.isNodeEnable.enable">Enabled</entry>
+  <entry key="word.geofencing.isNodeEnable.disable">Disabled</entry>
+  <entry key="word.geofencing.zone">Geofencing Zone</entry>
+  <entry key="word.geofencing.zone.select">Select Geofencing Zone</entry>
+  <entry key="word.geofencing.field">Field</entry>
+  <entry key="word.fence.type">Fence Type</entry>
+  <entry key="word.fence.type.circle">Circle</entry>
+  <entry key="word.fence.type.polygon">Polygon</entry>
+  <entry key="word.register">Register</entry>
+  <entry key="word.general">General</entry>
+  <entry key="word.system">System</entry>
+  <entry key="word.map">Map</entry>
+  <entry key="word.synchronization">Synchronization</entry>
+
+  <entry key="word.scanner">Scanner</entry>
+  <entry key="word.scanner.name">Scanner Name</entry>
+  <entry key="word.mac.address">MAC Address</entry>
+  <entry key="word.identifier">Identifier</entry>
+  <entry key="word.scanner.information">Scanner Information</entry>
+  <entry key="word.deploy.name">Deployment Name</entry>
+  <entry key="word.deploy.info">Deployment Infomation</entry>
+  <entry key="word.path">Path</entry>
+  <entry key="word.filename">Filename</entry>
+  <entry key="word.deploy">Deploy</entry>
+  <entry key="word.scanner.configuration.deploy.text001">* The file name is changed, if deployed.
+  </entry>
+  <entry key="word.scanner.configuration.deploy.text002">ex) scannerPos.js => scannerPos_xxxxxx.js
+  </entry>
+  <entry key="word.scanner.configuration.deploy.text003">* Recent Deployment Information</entry>
+  <entry key="word.scanner.configuration.deploy">Scanner Configuration Deploy</entry>
+  <entry key="word.scanner.deploy.type">Deploy Type</entry>
+  <entry key="word.scanner.deploy.text001">Deploy your chosen information will be distributed to the
+    scanner server.
+  </entry>
+  <entry key="word.scanner.deploy.text002">If the deployment scanner program will automatically
+    restart.
+  </entry>
+
+  <entry key="word.attendance">Attendance Check</entry>
+  <entry key="word.attendance.date">Attend Date</entry>
+  <entry key="word.attendance.regdate">Register Attend Date</entry>
+  <entry key="word.attendance.subject">Subject</entry>
+  <entry key="word.attendance.student.id">Student ID</entry>
+  <entry key="word.attendance.student.name">Student Name</entry>
+  <entry key="word.service">Service</entry>
+  <entry key="word.phonenumber">Phone Number</entry>
+  <entry key="word.name">Name</entry>
+  <entry key="word.reset">Initialize</entry>
+
+  <entry key="word.seminar">Seminar</entry>
+  <entry key="word.seminar.enter.leave">Seminar In/Out</entry>
+  <entry key="word.seminar.manager">Seminar Management</entry>
+  <entry key="word.seminar.register">Register Seminar</entry>
+  <entry key="word.seminar.name">Seminar Name</entry>
+  <entry key="word.seminar.list">Seminar List</entry>
+  <entry key="word.close">Close</entry>
+  <entry key="word.enter.leave">In/Out</entry>
+  <entry key="word.enter">In</entry>
+  <entry key="word.leave">Out</entry>
+  <entry key="word.export">Export</entry>
+  <entry key="word.device.infomation">Device Information</entry>
+  <entry key="word.date">Date</entry>
+  <entry key="word.time">Time</entry>
+
+  <entry key="word.contents">Contents</entry>
+  <entry key="word.contents.name">Contents Name</entry>
+  <entry key="word.contents.type">Contents Type</entry>
+  <entry key="word.contents.type.name">Contents Type Name</entry>
+  <entry key="word.contents.type.component">Contents Type Component</entry>
+  <entry key="word.visible.option">Exposure Option</entry>
+  <entry key="word.advertising.provider">Ad Provider</entry>
+  <entry key="word.validity.date">Valid Date</entry>
+  <entry key="word.choose">Select</entry>
+  <entry key="word.change">Change</entry>
+  <entry key="word.image.choose">Select Image</entry>
+  <entry key="word.sound.choose">Select Sound</entry>
+  <entry key="word.start.date">Start Date</entry>
+  <entry key="word.end.date">End Date</entry>
+
+  <entry key="word.event">Event</entry>
+  <entry key="word.event.register">Register Event</entry>
+  <entry key="word.event.modify">Modify Event</entry>
+  <entry key="word.event.delete">Delete Event</entry>
+  <entry key="word.event.name">Event Name</entry>
+  <entry key="word.beacon.push">Beacon PUSH</entry>
+  <entry key="word.search.choose">Select Search</entry>
+  <entry key="word.event.list">Event List</entry>
+  <entry key="word.event.id">Event ID</entry>
+  <entry key="word.memo">Memo</entry>
+  <entry key="word.transfer">Transfer</entry>
+  <entry key="word.age">Age</entry>
+  <entry key="word.all">ALL</entry>
+  <entry key="word.cancel">Cancel</entry>
+  <entry key="word.age.range">Age Range</entry>
+  <entry key="word.range">Range</entry>
+  <entry key="word.event.no">No Events</entry>
+
+  <entry key="word.beacon.push.manager.infomation">Beacon PUSH Information</entry>
+  <entry key="word.gender">Sex</entry>
+  <entry key="word.male">Male</entry>
+  <entry key="word.female">Female</entry>
+  <entry key="word.birthday">Birth Date</entry>
+  <entry key="word.month">Month</entry>
+  <entry key="word.day">Day</entry>
+  <entry key="word.anniversary">Anniversary</entry>
+  <entry key="word.setup">Setting</entry>
+  <entry key="word.visiting.count">Visit Count</entry>
+  <entry key="word.seat.number">Seat Number</entry>
+  <entry key="word.number">No.</entry>
+  <entry key="word.prize">Prize</entry>
+  <entry key="word.prize.seat">Prize Seat</entry>
+  <entry key="word.use">Use</entry>
+  <entry key="word.not.use">Not Use</entry>
+  <entry key="word.number.prize.fcfs">Number of Prize by order of arrival</entry>
+  <entry key="word.prize.fail.message">Unselected Message</entry>
+  <entry key="word.person">Number of People</entry>
+  <entry key="word.block">Block</entry>
+  <entry key="word.row">Row</entry>
+
+  <entry key="word.mapping.type">Mapping Type</entry>
+  <entry key="word.sub.mapping.type">Sub Mapping Type</entry>
+  <entry key="word.reference">Reference</entry>
+  <entry key="word.reference.information">Reference Information</entry>
+  <entry key="word.event.description">Event Description</entry>
+  <entry key="word.event.type">Event Type</entry>
+  <entry key="word.event.condition">Event Condition</entry>
+  <entry key="word.event.type.code">Event Type Code</entry>
+  <entry key="word.event.type.register">Register Event Type</entry>
+  <entry key="word.event.type.name">Event Type Name</entry>
+  <entry key="word.condition.property">Condition Property</entry>
+  <entry key="word.column.type">Coulmn Type</entry>
+  <entry key="word.column.id">Coulmn ID</entry>
+  <entry key="word.column.name">Coulmn Name</entry>
+  <entry key="word.column.register">Register Coulmn</entry>
+  <entry key="word.event.type.list">Event Type List</entry>
+  <entry key="word.selectable.item">Selectable Item</entry>
+  <entry key="word.mapping.delete">Delete mapping</entry>
+
+  <entry key="word.advertising.company">Ad Provider</entry>
+  <entry key="word.advertising.company.register">Register Ad Provider</entry>
+  <entry key="word.advertising.company.list">Ad Provider List</entry>
+  <entry key="word.advertising.company.name">Ad Provider Name</entry>
+  <entry key="word.basic.information">Basic Information</entry>
+  <entry key="word.company.name">Company Name</entry>
+
+  <entry key="word.code">Code</entry>
+  <entry key="word.code.register">Register Code</entry>
+  <entry key="word.code.modify">Modify Code</entry>
+  <entry key="word.code.type">Code Type</entry>
+  <entry key="word.code.name">Code Name</entry>
+  <entry key="word.code.list">Code List</entry>
+
+  <entry key="word.company.information">Company Name</entry>
+  <entry key="word.business.number">Business ID</entry>
+  <entry key="word.location.information.usage.lookup">Location Information Usage</entry>
+  <entry key="word.location.information.reading.record">Location Information Usage Access Record
+  </entry>
+  <entry key="word.os">OS</entry>
+  <entry key="word.admin.user.name">User Name</entry>
+  <entry key="word.serial.number">Serial Number</entry>
+  <entry key="word.requester">Requester</entry>
+  <entry key="word.purpose">Purpose</entry>
+  <entry key="word.handler">In Charge</entry>
+  <entry key="word.location.information.handler">Location Information In Charge</entry>
+  <entry key="word.realname">Real Name</entry>
+
+  <entry key="word.beacon.control.information">Beacon Management Information</entry>
+  <entry key="word.beacon.install.image">Beacon Installation Pictures</entry>
+  <entry key="word.status">State</entry>
+  <entry key="word.reason">Reason</entry>
+  <entry key="word.confirm">Confirm</entry>
+  <entry key="word.beacon.information">Beacon Information</entry>
+  <entry key="word.assign.event">Event Assignment</entry>
+  <entry key="word.assign.content">Contents Assignment</entry>
+  <entry key="word.task">Task</entry>
+  <entry key="word.delete.multiple.item">Cancel Select</entry>
+  <entry key="word.type">Type</entry>
+  <entry key="word.kind">Kind</entry>
+  <entry key="word.node">Node</entry>
+  <entry key="word.node.information">Node Information</entry>
+  <entry key="word.node.name">Node Name</entry>
+  <entry key="word.node.id">Node ID</entry>
+  <entry key="word.node.field">Node Field</entry>
+  <entry key="word.category">Category</entry>
+  <entry key="word.intersection.name">Intersection Name</entry>
+
+  <entry key="word.beacon.map">Beacon Map</entry>
+  <entry key="word.show.beacon">Show Beacon</entry>
+  <entry key="word.show.node">Show Node</entry>
+  <entry key="word.show.pair">Show Connection</entry>
+  <entry key="word.show.poi">Show POI</entry>
+  <entry key="word.show.intersection">Show Intersection</entry>
+  <entry key="word.show.chaosarea">Show Chasos Area</entry>
+
+  <entry key="word.hide">Hide</entry>
+  <entry key="word.readonly">Read Only</entry>
+  <entry key="word.beacon.node">Beacon Node</entry>
+  <entry key="word.move.beacon.node">Move Beacon Node</entry>
+  <entry key="word.create.node">Create Node</entry>
+  <entry key="word.create.chaosarea">Create Chasos Area</entry>
+  <entry key="word.connect.node">Connect Nodes</entry>
+  <entry key="word.disconnect.node">Disconnect Nodes</entry>
+  <entry key="word.undo">Undo</entry>
+
+  <entry key="word.floor.map">Floor Management</entry>
+
+  <entry key="word.heatmap">Heatmap</entry>
+  <entry key="word.marker">Marker</entry>
+  <entry key="word.movement">Movement</entry>
+  <entry key="word.target.name">Target Name</entry>
+  <entry key="word.inout">In/Out</entry>
+  <entry key="word.gate.order">Gate Order</entry>
+  <entry key="word.phone.number">PhoneNumber</entry>
+  <entry key="word.device.info">Device Info</entry>
+
+  <entry key="word.init">Init</entry>
+  <entry key="word.zoom.level">Zoom Level</entry>
+  <entry key="word.check.interval">Check Interval</entry>
+  <entry key="word.remove.interval">Remove Interval</entry>
+  <entry key="word.move.interval">Move Interval</entry>
+  <entry key="word.move.unit">Move Unit</entry>
+
+  <entry key="word.unit">Unit</entry>
+
+  <entry key="word.tracking.setmap.text001">Check interval time when delete the beacon from the
+    map
+  </entry>
+  <entry key="word.tracking.setmap.text002">Delete the beacon after interval time when there is no
+    signal.
+  </entry>
+  <entry key="word.tracking.setmap.text003">Move from the map after Beacon Move Interval even if
+    there is continuous signal
+  </entry>
+
+  <entry key="word.stat.beacon.monitor.text001">total number of beacons</entry>
+  <entry key="word.stat.beacon.monitor.text002">Number beacons used for position calculation</entry>
+  <entry key="word.stat.beacon.monitor.text003">Number of beacons with high possibilty of loss
+  </entry>
+  <entry key="word.stat.beacon.monitor.text004">Selection standard</entry>
+  <entry key="word.stat.beacon.monitor.text005">List of beacons which beacons has not been detected
+    {0} days ago.
+  </entry>
+
+  <entry key="word.beacon.unit">Unit</entry>
+  <entry key="word.recent.responsedate">Response Date</entry>
+  <entry key="word.location.check">Check Location</entry>
+
+  <entry key="word.floor.name">Floor Name</entry>
+  <entry key="word.image">Image</entry>
+
+  <entry key="word.show.geofencing">Show Fence</entry>
+  <entry key="word.show.geofencing.system">Show System Fence</entry>
+  <entry key="word.geofencing.edit">Edit Fence</entry>
+
+  <entry key="word.info">Infomation</entry>
+
+  <entry key="word.correction">Corrected Value</entry>
+  <entry key="word.maximum">Max Count</entry>
+  <entry key="word.unlimited">Unlimited</entry>
+
+  <entry key="word.move.scanner.node">Move Scanner/Node</entry>
+  <entry key="word.scanner.choose">Choose Scanner</entry>
+  <entry key="word.show.scanner">Show Scanner</entry>
+
+  <entry key="word.oauth.client.id">Client ID</entry>
+  <entry key="word.oauth.secret.key">Secret Key</entry>
+  <entry key="word.oauth.grant.type">Grant Type</entry>
+  <entry key="word.oauth.token">Token</entry>
+  <entry key="word.oauth.token.access">Access Token</entry>
+  <entry key="word.oauth.token.expiration.time">Expiration Time</entry>
+
+  <entry key="word.binding.type">Interface Binding Type</entry>
+  <entry key="word.command.type">Interface Command Type</entry>
+  <entry key="word.interlocking.method">Interlocking Method</entry>
+  <entry key="word.target.info">Target Information</entry>
+  <entry key="word.message.header">Message Header</entry>
+  <entry key="word.protocol">Protocol</entry>
+  <entry key="word.host">Host</entry>
+  <entry key="word.port">Port</entry>
+  <entry key="word.uri">URI</entry>
+  <entry key="word.method">Method</entry>
+
+  <entry key="word.location.common">Location Common</entry>
+  <entry key="word.floor.common">Floor Common</entry>
+  <entry key="word.specific.floor">Specific Floor</entry>
+  <entry key="word.geofence.common">Geofence Common</entry>
+  <entry key="word.location.change">Location Change</entry>
+  <entry key="word.floor.in">Floor In</entry>
+  <entry key="word.floor.stay">Floor Stay</entry>
+  <entry key="word.floor.out">Floor Out</entry>
+  <entry key="word.geofence.in">Geofence In</entry>
+  <entry key="word.geofence.stay">Geofence Stay</entry>
+  <entry key="word.geofence.out">Geofence Out</entry>
+  <entry key="word.restriction.in">Restriction In</entry>
+  <entry key="word.restriction.stay">Restriction Stay</entry>
+  <entry key="word.restriction.out">Restriction Out</entry>
+
+  <entry key="word.floor.code.upper.node">Upper Node</entry>
+  <entry key="word.floor.code.sort.no">Sort No.</entry>
+
+  <entry key="db.code.contents.attendance">Attendance Beacon</entry>
+  <entry key="db.code.contents.goodbye">Goodbye</entry>
+  <entry key="db.code.contents.children">Children</entry>
+  <entry key="db.code.contents.coupon">Coupon</entry>
+  <entry key="db.code.contents.complex">Complex</entry>
+  <entry key="db.code.contents.image">Image</entry>
+  <entry key="db.code.contents.intro">Intro</entry>
+  <entry key="db.code.contents.materials">Materials</entry>
+  <entry key="db.code.contents.member">Member</entry>
+  <entry key="db.code.contents.notification">Notification</entry>
+  <entry key="db.code.contents.presence">Presence</entry>
+  <entry key="db.code.contents.sound">Sound</entry>
+  <entry key="db.code.contents.text">Text</entry>
+  <entry key="db.code.contents.uri">URI</entry>
+  <entry key="db.code.contents.video">Video</entry>
+  <entry key="db.code.contents.welcome">Welcome</entry>
+
+  <entry key="db.code.reference.beacon">Beacon</entry>
+  <entry key="db.code.reference.geofencing">Geofence</entry>
+  <entry key="db.code.reference.node">Node</entry>
+  <entry key="db.code.reference.beacon.group">Beacon Group</entry>
+  <entry key="db.code.refrence.geofencing.group">Geofence Group</entry>
+  <entry key="db.code.reference.sub.detect">DETECT</entry>
+  <entry key="db.code.reference.sub.enter">ENTER</entry>
+  <entry key="db.code.reference.sub.event">EVENT</entry>
+  <entry key="db.code.reference.sub.stay">NODE</entry>
+  <entry key="db.code.reference.sub.leave">LEAVE</entry>
+  <entry key="db.code.reference.sub.push">PUSH</entry>
+
+  <entry key="db.code.scanner.deptype.contents">Contents</entry>
+  <entry key="db.code.scanner.deptype.gate">Gate</entry>
+  <entry key="db.code.scanner.deptype.geofence">Geofence</entry>
+  <entry key="db.code.scanner.deptype.materials">Materials</entry>
+  <entry key="db.code.scanner.deptype.node">Scanner Node</entry>
+  <entry key="db.code.scanner.deptype.position">Scanner Position</entry>
+  <entry key="db.code.scanner.deptype.floor">Floor</entry>
+  <entry key="db.code.scanner.deptype.bnode">Beacon Node</entry>
+  <entry key="db.code.scanner.deptype.bposition">Beacon Position</entry>
+
+  <entry key="db.code.fence.shape.circle">Circle</entry>
+  <entry key="db.code.fence.shape.polygon">Polygon</entry>
+  <entry key="db.code.fence.shape.square">Square</entry>
+
+  <entry key="db.code.fence.type.general">General</entry>
+  <entry key="db.code.fence.type.system">System Definition</entry>
+  <entry key="db.code.fence.type.warning">Warning Area</entry>
+
+  <entry key="db.code.expose.flag.yes">Exposure</entry>
+  <entry key="db.code.expose.flag.no">Hide</entry>
+
+  <entry key="db.code.beacon.type.fixed">Fixed</entry>
+  <entry key="db.code.beacon.type.movable">Movable</entry>
+  <entry key="db.code.beacon.type.wearable">Wearable</entry>
+
+</properties>

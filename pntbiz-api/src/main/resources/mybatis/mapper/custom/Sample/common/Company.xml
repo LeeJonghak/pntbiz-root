@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="custom.Sample.common.dao.SampleCompanyDao">
+
+	<resultMap id="companyResult" type="core.api.common.domain.Company">
+		<result property="comNum" column="comNum" />
+		<result property="UUID" column="UUID" />
+		<result property="comName" column="comName" />
+		<result property="comBizNum" column="comBizNum" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<select id="getCompanyInfoByUUIDSample" parameterType="core.api.common.domain.Company" resultMap="companyResult">
+		SELECT comNum, UUID, comName, concat(comBizNum, 'Custom Dao') as comBizNum, lat, lng, regDate, oauthEnabled
+		FROM TB_COMPANY 
+		WHERE UUID = #{UUID} 
+	</select>
+	
+</mapper>

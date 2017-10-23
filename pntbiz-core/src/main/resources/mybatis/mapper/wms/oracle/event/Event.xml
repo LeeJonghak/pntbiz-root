@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.event.dao.EventDao">
+
+    <resultMap id="eventResult" type="core.wms.event.domain.Event">
+        <result property="evtNum"      column="EVT_NUM"/>
+        <result property="evtTypeCode" column="EVT_TYPE_CODE"/>
+        <result property="comNum"      column="COM_NUM"/>
+        <result property="evtName"     column="EVT_NAME"/>
+        <result property="evtDesc"     column="EVT_DESC"/>
+        <result property="regDate"     column="REG_DATE"/>
+    </resultMap>
+
+    <resultMap id="eventValuesResult" type="core.wms.event.domain.EventValues">
+        <result property="evtValueNum" column="EVT_VALUE_NUM"/>
+        <result property="evtNum"      column="EVT_NUM"/>
+        <result property="evtColNum"   column="EVT_COL_NUM"/>
+        <result property="beginValue"  column="BEGIN_VALUE"/>
+        <result property="endValue"    column="END_VALUE"/>
+    </resultMap>
+
+    <resultMap id="eventTypeResult" type="core.wms.event.domain.EventType">
+        <result property="comNum"      column="COM_NUM"/>
+        <result property="evtTypeCode" column="EVT_TYPE_CODE"/>
+        <result property="evtTypeName" column="EVT_TYPE_NAME"/>
+    </resultMap>
+
+    <resultMap id="eventTypeColumnsResult" type="core.wms.event.domain.EventTypeColumns">
+        <result property="evtColNum"   column="EVT_COL_NUM"/>
+        <result property="evtTypeCode" column="EVT_TYPE_CODE"/>
+        <result property="evtColID"    column="EVT_COL_ID"/>
+        <result property="evtColType"  column="EVT_COL_TYPE"/>
+        <result property="evtColName"  column="EVT_COL_NAME"/>
+        <result property="evtColItems" column="EVT_COL_ITEMS"/>
+    </resultMap>
+
+    <!--
+    ==========================TB_EVENT=================================
+    -->
+    <insert id="insertEvent" parameterType="core.wms.event.domain.Event">
+        INSERT INTO TB_EVENT
+        ( EVT_NUM
+        , EVT_TYPE_CODE
+        , COM_NUM
+        , EVT_NAME
+        , EVT_DESC
+        , REG_DATE
+        )VALUES
+        ( SEQ_EVENT_EVT_NUM.NEXTVAL
+        , #{evtTypeCode}
+        , #{comNum}
+        , #{evtName}
+        , #{evtDesc}
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateEvent" parameterType="core.wms.event.domain.Event">
+        UPDATE TB_EVENT
+           SET EVT_NAME      = #{evtName}
+             , EVT_DESC      = #{evtDesc}
+             , EVT_TYPE_CODE = #{evttypecode}
+         WHERE EVT_NUM = #{evtNum}
+    </update>
+
+    <delete id="deleteEvent" parameterType="core.wms.event.domain.Event">
+        DELETE
+          FROM TB_EVENT
+         WHERE EVT_NUM = #{evtNum}
+    </delete>
+
+    <select id="getEventInfo" parameterType="core.wms.event.domain.Event" resultMap="eventResult">
+        SELECT *
+          FROM TB_EVENT
+         WHERE EVT_NUM = #{evtNum}
+    </select>
+
+    <sql id="selectEventSearch">
+        <where>
+            <if test="comNum!=null">
+	            AND COM_NUM = #{comNum}
+	        </if>
+	        <if test="evtTypeCode!=null">
+	            AND EVT_TYPE_CODE= #{evtTypeCode}
+	        </if>
+	        <if test="keyword != '' and keyword  != null">
+                AND EVT_NAME LIKE CONCAT(#{keyword}, '%')
+            </if>
+        </where>
+    </sql>
+    <select id="getEventList" parameterType="core.wms.event.domain.EventSearchParam" resultMap="eventResult">
+        SELECT *
+          FROM ( SELECT A.*
+                      , ROWNUM RNUM
+	               FROM TB_EVENT A
+	         <include refid="selectEventSearch"/>
+	        ORDER BY EVT_NUM DESC
+          ) TB
+         <if test="firstItemNo!=null and pageSize!=null and pageSize!=0">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+    </select>
+
+    <select id="getEventCount" parameterType="core.wms.event.domain.EventSearchParam" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+        FROM TB_EVENT
+         <include refid="selectEventSearch"/>
+    </select>
+
+    <!--
+    ==========================TB_EVENT_VALUES=================================
+    -->
+    <select id="getEventValues" parameterType="core.wms.event.domain.EventValues" resultMap="eventValuesResult">
+        SELECT *
+          FROM TB_EVENT_VALUES
+         WHERE EVT_NUM = #{evtNum}
+    </select>
+
+    <select id="getEventValueInfo" parameterType="core.wms.event.domain.EventValues" resultMap="eventValuesResult">
+        SELECT *
+          FROM TB_EVENT_VALUES
+         WHERE EVT_NUM = #{evtNum}
+         <if test="evtValueNum!=null and evtValueNum>0">
+             AND EVT_VALUE_NUM = #{evtValueNum}
+         </if>
+         <if test="evtColNum!=null and evtColNum>0">
+             AND EVT_COL_NUM = #{evtColNum}
+         </if>
+    </select>
+
+    <insert id="insertEventValues" parameterType="core.wms.event.domain.EventValues">
+        INSERT INTO TB_EVENT_VALUES
+        ( EVT_VALUE_NUM
+        , EVT_NUM
+        , EVT_COL_NUM
+        , BEGIN_VALUE
+        , END_VALUE
+        )VALUES
+        ( SEQ_EV_EVT_VALUE_NUM.nextval
+        , #{evtNum}
+        , #{evtColNum}
+        , #{beginValue}
+        , #{endValue})
+    </insert>
+
+    <update id="modifyEventValues" parameterType="core.wms.event.domain.EventValues">
+        UPDATE TB_EVENT_VALUES
+           SET BEGIN_VALUE = #{beginValue}
+             , END_VALUE = #{endValue}
+         WHERE EVT_NUM = #{evtNum}
+           AND EVT_COL_NUM = #{evtColNum}
+    </update>
+
+    <delete id="deleteEventValues" parameterType="core.wms.event.domain.EventValues">
+        DELETE
+          FROM TB_EVENT_VALUES
+         WHERE EVT_NUM = #{evtNum}
+        <if test="evtValueNum!=null and evtValueNum>0">
+            AND EVT_VALUE_NUM = #{evtValueNum}
+        </if>
+        <if test="evtColNum!=null and evtColNum>0">
+            AND EVT_COL_NUM = #{evtColNum}
+        </if>
+    </delete>
+
+    <!--
+    ==========================TB_EVENT_TYPE=================================
+    -->
+    <insert id="insertEventType" parameterType="core.wms.event.domain.EventType">
+        INSERT INTO TB_EVENT_TYPE
+        ( COM_NUM
+        , EVT_TYPE_CODE
+        , EVT_TYPE_NAME
+        )VALUES
+        ( #{comNum}
+        , #{evtTypeCode}
+        , #{evtTypeName})
+    </insert>
+
+    <update id="modifyEventType" parameterType="core.wms.event.domain.EventType">
+        UPDATE TB_EVENT_TYPE
+           SET EVT_TYPE_NAME = #{evtTypeName}
+         WHERE EVT_TYPE_CODE = #{evtTypeCode}
+    </update>
+
+    <delete id="deleteEventType" parameterType="core.wms.event.domain.EventType">
+        DELETE
+          FROM TB_EVENT_TYPE
+         WHERE COM_NUM = #{comNum}
+           AND EVT_TYPE_CODE= #{evtTypeCode}
+    </delete>
+
+    <select id="getEventTypeInfo" parameterType="core.wms.event.domain.EventType" resultMap="eventTypeResult">
+        SELECT *
+          FROM TB_EVENT_TYPE
+         WHERE EVT_TYPE_CODE= #{evtTypeCode}
+    </select>
+
+    <select id="getEventTypeList" parameterType="java.util.HashMap" resultMap="eventTypeResult">
+        SELECT *
+          FROM (
+            SELECT A.*
+                 , ROWNUM RNUM
+              FROM TB_EVENT_TYPE A
+             WHERE COM_NUM = #{comNum}
+          ) TB
+         <if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+    </select>
+    <select id="getEventTypeCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+          FROM TB_EVENT_TYPE
+         WHERE COM_NUM = #{comNum}
+    </select>
+
+    <!--
+    ==========================TB_EVENT_TYPE_COLUMNS=================================
+    -->
+    <select id="getEventTypeColumnInfo" parameterType="core.wms.event.domain.EventTypeColumns" resultMap="eventTypeColumnsResult">
+        SELECT *
+          FROM TB_EVENT_TYPE_COLUMNS
+         WHERE EVT_TYPE_CODE = #{evtTypeCode}
+           AND EVT_COL_NUM = #{evtColNum}
+    </select>
+
+    <select id="getEventTypeColumnList" parameterType="core.wms.event.domain.EventTypeColumns" resultMap="eventTypeColumnsResult">
+        SELECT *
+          FROM TB_EVENT_TYPE_COLUMNS
+         WHERE EVT_TYPE_CODE = #{evtTypeCode}
+    </select>
+
+    <insert id="insertEventTypeColumns" parameterType="core.wms.event.domain.EventTypeColumns">
+        INSERT INTO TB_EVENT_TYPE_COLUMNS
+        ( EVT_COL_NUM
+        , EVT_TYPE_CODE
+        , EVT_COL_ID
+        , EVT_COL_TYPE
+        , EVT_COL_NAME
+        , EVT_COL_ITEMS
+        )VALUES
+        ( SEQ_ETC_EVT_COL_NUM.nextval
+        , #{evtTypeCode}
+        , #{evtColID}
+        , #{evtColType}
+        , #{evtColName}
+        , #{evtColItems})
+    </insert>
+
+    <update id="modifyEventTypeColumns" parameterType="core.wms.event.domain.EventTypeColumns">
+        UPDATE TB_EVENT_TYPE_COLUMNS
+           SET EVT_COL_ID    = #{evtColID}
+             , EVT_COL_NAME  = #{evtColName}
+             , EVT_COL_TYPE  = #{evtColType}
+             , EVT_COL_ITEMS = #{evtColItems}
+         WHERE EVT_COL_NUM = #{evtColNum}
+    </update>
+
+    <delete id="deleteEventTypeColumns" parameterType="core.wms.event.domain.EventTypeColumns">
+        DELETE
+          FROM TB_EVENT_TYPE_COLUMNS
+         WHERE EVT_TYPE_CODE = #{evtTypeCode}
+    </delete>
+</mapper>

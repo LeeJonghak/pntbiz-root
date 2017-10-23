@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.api.common.dao.SmsSendLogDao">
+
+    <select id="getSmsSendLogInfo" parameterType="java.util.Map" resultType="core.api.common.domain.SmsSendLog">
+        SELECT *
+        FROM TB_SMS_SEND_LOG
+        WHERE transid=#{transid}
+    </select>
+
+    <insert id="insertSmsSendLog" parameterType="core.api.common.domain.SmsSendLog">
+        INSERT INTO TB_SMS_SEND_LOG(stype, transid, title, message, senderNumber, receiverNumber, sendDate, status, responseMessage, regDate)
+        VALUES(#{stype}, #{transid}, #{title}, #{message}, #{senderNumber}, #{receiverNumber}, #{sendDate}, status, #{responseMessage}, UNIX_TIMESTAMP())
+    </insert>
+
+    <update id="updateSmsSendLog" parameterType="core.api.common.domain.SmsSendLog">
+        UPDATE TB_SMS_SEND_LOG
+        SET
+          stype=#{stype},
+          title=#{title},
+          message=#{message},
+          senderNumber=#{senderNumber},
+          receiverNumber=#{receiverNumber},
+          sendDate=#{sendDate},
+          status=#{status},
+          responseMessage=#{responseMessage},
+          modDate=UNIX_TIMESTAMP()
+        where logNum=#{logNum}
+    </update>
+</mapper>

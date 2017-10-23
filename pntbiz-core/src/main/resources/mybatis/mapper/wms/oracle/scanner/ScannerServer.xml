@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.scanner.dao.ScannerServerDao">
+
+	<resultMap id="scannerServerResult" type="core.wms.scanner.domain.ScannerServer">
+		<result property="servNum" column="SERV_NUM" />
+		<result property="comNum"  column="COM_NUM" />
+		<result property="ftpHost" column="FTP_HOST" />
+		<result property="ftpPort" column="FTP_PORT" />
+		<result property="ftpID"   column="FTP_ID" />
+		<result property="ftpPW"   column="FTP_PW" />
+		<result property="modDate" column="MOD_DATE" />
+		<result property="regDate" column="REG_DATE" />
+	</resultMap>
+
+	<select id="getScannerServerInfo" parameterType="core.wms.scanner.domain.ScannerServer" resultMap="scannerServerResult">
+		SELECT SERV_NUM, COM_NUM, FTP_HOST, FTP_PORT, FTP_ID, FTP_PW, MOD_DATE, REG_DATE
+		  FROM TB_SCANNER_SERVER
+		 WHERE SERV_NUM = #{servNum}
+		   AND COM_NUM = #{comNum}
+	</select>
+
+	<select id="getScannerServerInfoByNum" parameterType="core.wms.scanner.domain.ScannerServer" resultMap="scannerServerResult">
+		SELECT SERV_NUM, COM_NUM, FTP_HOST, FTP_PORT, FTP_ID, FTP_PW, MOD_DATE, REG_DATE
+		  FROM TB_SCANNER_SERVER
+		 WHERE SERV_NUM = #{servNum}
+		<if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+	</select>
+
+	<select id="getScannerServerList" parameterType="core.wms.scanner.domain.ScannerServer" resultMap="scannerServerResult">
+		SELECT SERV_NUM, COM_NUM, FTP_HOST, FTP_PORT, FTP_ID, FTP_PW, MOD_DATE, REG_DATE
+		  FROM TB_SCANNER_SERVER
+		<if test="comNum != '' and comNum != null">WHERE  COM_NUM = #{comNum}</if>
+
+		 ORDER BY SERV_NUM DESC
+	</select>
+
+	<insert id="insertScannerServer" parameterType="core.wms.scanner.domain.ScannerServer">
+		INSERT INTO TB_SCANNER_SERVER
+		( SERV_NUM
+		, COM_NUM
+		, FTP_HOST
+		, FTP_PORT
+		, FTP_ID
+		, FTP_PW
+		, MOD_DATE
+		, REG_DATE
+		)VALUES
+		( SEQ_SS_SERV_NUM.NEXTVAL
+		, #{comNum}
+		, #{ftpHost}
+		, #{ftpPort}
+		, #{ftpID}
+		, #{ftpPW}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+    </insert>
+
+    <update id="updateScannerServer" parameterType="core.wms.scanner.domain.ScannerServer">
+        UPDATE TB_SCANNER_SERVER
+           SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+		   <if test="ftpHost != null">, FTP_HOST = #{ftpHost}</if>
+           <if test="ftpPort != null">, FTP_PORT = #{ftpPort}</if>
+           <if test="ftpID != null">, FTP_ID = #{ftpID}</if>
+           <if test="ftpPW != null">, FTP_PW = #{ftpPW}</if>
+
+        WHERE SERV_NUM = #{servNum}
+        <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+    </update>
+
+    <delete id="deleteScannerServer" parameterType="core.wms.scanner.domain.ScannerServer">
+    	DELETE
+    	  FROM TB_SCANNER_SERVER
+		 WHERE SERV_NUM = #{servNum}
+		 <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+    </delete>
+</mapper>

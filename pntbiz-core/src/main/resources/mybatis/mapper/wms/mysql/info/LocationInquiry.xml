@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.info.dao.LocationInquiryDao">
+
+	<resultMap id="locationInquiryResult" type="core.wms.info.domain.LocationInquiry">
+		<result property="logNum" column="logNum" />
+		<result property="comNum" column="comNum" />
+		<result property="userID" column="userID" />
+		<result property="userName" column="userName" />
+		<result property="mobile" column="mobile" />
+		<result property="os" column="os" />
+		<result property="service" column="service" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<resultMap id="locationRecordResult" type="core.wms.info.domain.LocationRecord">
+		<result property="logNum" column="logNum" />
+		<result property="comNum" column="comNum" />
+		<result property="recType" column="recType" />
+		<result property="recID" column="recID" />
+		<result property="reqName" column="reqName" />
+		<result property="opt" column="opt" />
+		<result property="useDesc" column="useDesc" />
+		<result property="remoteIP" column="remoteIP" />
+		<result property="regDate" column="regDate" />
+	</resultMap>
+
+	<sql id="selectLocationInquerySearch">
+		<where>
+			<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+			<if test="os != '' and os != null">AND os = #{os}</if>
+			<if test="service != '' and service != null">AND service = #{service}</if>
+			<if test="sDate != '' and sDate != null and eDate != '' and eDate != null">
+				AND regDate <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{sDate}, ' ', '00:00:00'))
+				AND regDate <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{eDate}, ' ', '23:59:59'))
+			</if>
+			<if test="keyword != '' and keyword  != null">
+	           <choose>
+	               <when test="opt eq 'userName'"> AND userName LIKE CONCAT(#{keyword}, '%')</when>
+	               <when test="opt eq 'mobile'"> AND mobile LIKE CONCAT(#{keyword}, '%')</when>
+	               <otherwise></otherwise>
+	           </choose>
+	        </if>
+	    </where>
+	</sql>
+	<select id="getLocationInquiryCount" parameterType="core.wms.info.domain.LocationInquirySearchParam" resultType="Integer">
+		SELECT COUNT(logNum) CNT
+		FROM TB_LOG_LOCATION
+		<include refid="selectLocationInquerySearch"/>
+	</select>
+
+	<select id="getLocationInquiryList" parameterType="core.wms.info.domain.LocationInquirySearchParam" resultMap="locationInquiryResult">
+		SELECT logNum, comNum, userID, userName, mobile, os, service, regDate
+		FROM TB_LOG_LOCATION
+		<include refid="selectLocationInquerySearch"/>
+
+		ORDER BY logNum DESC
+		LIMIT #{firstItemNo}, #{pageSize}
+	</select>
+
+	<insert id="insertLocationInquiry" parameterType="core.wms.info.domain.LocationInquiry">
+        INSERT INTO TB_LOG_LOCATION
+        (comNum, userID, userName, mobile, os, service, regDate)
+        VALUES
+        (#{comNum}, #{userID}, #{userName}, #{mobile}, #{os}, #{service}, UNIX_TIMESTAMP())
+    </insert>
+
+
+    <sql id="selectLocationRecordSearch">
+        <where>
+			<if test="comNum != '' and comNum != null">AND comNum = #{comNum}</if>
+			<if test="sDate != '' and sDate != null and eDate != '' and eDate != null">
+				AND regDate <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{sDate}, ' ', '00:00:00'))
+				AND regDate <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{eDate}, ' ', '23:59:59'))
+			</if>
+	        <if test="keyword != '' and keyword  != null">
+               <choose>
+                   <when test="opt eq 'reqName'"> AND reqName LIKE CONCAT(#{keyword}, '%')</when>
+                   <when test="opt eq 'useDesc'"> AND useDesc LIKE CONCAT(#{keyword}, '%')</when>
+                   <otherwise></otherwise>
+               </choose>
+            </if>
+        </where>
+    </sql>
+    <select id="getLocationRecordCount" parameterType="core.wms.info.domain.LocationRecordSearchParam" resultType="Integer">
+		SELECT COUNT(logNum) CNT
+		FROM TB_LOG_LOCATION_RECORD
+		<include refid="selectLocationRecordSearch"/>
+	</select>
+
+	<select id="getLocationRecordList" parameterType="core.wms.info.domain.LocationRecordSearchParam" resultMap="locationRecordResult">
+		SELECT logNum, comNum, recType, recID, reqName, opt, useDesc, remoteIP, regDate
+		FROM TB_LOG_LOCATION_RECORD
+		<include refid="selectLocationRecordSearch"/>
+
+		ORDER BY logNum DESC
+		LIMIT #{firstItemNo}, #{pageSize}
+	</select>
+
+	<insert id="insertLocationRecord" parameterType="core.wms.info.domain.LocationRecord">
+        INSERT INTO TB_LOG_LOCATION_RECORD
+        (comNum, recType, recID, reqName, opt, useDesc, remoteIP, regDate)
+        VALUES
+        (#{comNum}, #{recType}, #{recID}, #{reqName}, #{opt}, #{useDesc}, #{remoteIP}, UNIX_TIMESTAMP())
+    </insert>
+
+</mapper>

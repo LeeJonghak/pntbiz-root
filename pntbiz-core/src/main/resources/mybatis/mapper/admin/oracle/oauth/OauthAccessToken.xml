@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.admin.oauth.dao.OauthAccessTokenDao">
+
+    <resultMap id="oauthAccessTokenResult" type="core.admin.oauth.domain.OauthAccessToken">
+        <result property="tokenID"      column="TOKEN_ID" />
+        <result property="token"        column="TOKEN" />
+        <result property="userID"       column="USER_ID" />
+        <result property="clientID"     column="CLIENT_ID" />
+        <result property="authentication" column="CLIENT_ID" />
+        <result property="authenticationID" column="AUTHENTICATION_ID" />
+        <result property="refreshToken" column="REFRESH_TOKEN" />
+        <result property="regDate"      column="REG_DATE" />
+    </resultMap>
+
+    <select id="getOauthAccessTokenInfo" parameterType="java.util.Map" resultMap="oauthAccessTokenResult">
+        SELECT *
+          FROM TB_OAUTH_ACCESS_TOKEN
+         WHERE TOKEN_ID=#{tokenID}
+    </select>
+
+    <select id="getOauthAccessTokenList" parameterType="java.util.Map" resultMap="oauthAccessTokenResult">
+	    SELECT *
+          FROM (
+            SELECT A.*
+                 , ROWNUM AS RNUM
+	          FROM TB_OAUTH_ACCESS_TOKEN A
+	        <if test="clientID!=null">
+	            WHERE CLIENT_ID=#{clientID}
+	        </if>
+	        ORDER BY REG_DATE DESC
+          ) TB
+         <if test="firstItemNo!=null and pageSize!=null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+    </select>
+
+    <select id="getOauthAccessTokenCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) as cnt
+          FROM TB_OAUTH_ACCESS_TOKEN
+        <if test="clientID!=null">
+            WHERE CLIENT_ID=#{clientID}
+        </if>
+    </select>
+</mapper>

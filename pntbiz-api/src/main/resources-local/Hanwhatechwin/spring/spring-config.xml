@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:jms="http://www.springframework.org/schema/jms"
+	   xmlns:amq="http://activemq.apache.org/schema/core"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-4.3.xsd
+		http://www.springframework.org/schema/tx
+ 		http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+ 		http://www.springframework.org/schema/jms
+ 		http://www.springframework.org/schema/jms/spring-jms-4.3.xsd
+ 		http://activemq.apache.org/schema/core
+ 		http://activemq.apache.org/schema/core/activemq-core-5.7.0.xsd
+">
+
+	<!-- config properties -->
+	<context:property-placeholder properties-ref="config" />
+	<util:properties id="config" location="classpath:config-properties.xml" scope="singleton" />
+    <!--<util:properties id="config" location="classpath:config-properties-oracle.xml" scope="singleton" />-->
+
+	<!-- mysql 접속 설정 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="#{config['db.driver']}"/>
+		<property name="url" value="#{config['db.url']}"/>
+		<property name="username" value="#{config['db.id']}"/>
+		<property name="password" value="#{config['db.passwd']}"/>
+		<property name="maxActive" value="#{config['db.maxactive']}"/>
+		<property name="maxIdle" value="#{config['db.maxidle']}"/>
+		<property name="maxWait" value="#{config['db.maxwait']}"/>
+		<property name="defaultAutoCommit" value="#{config['db.autocommit']}"/>
+	</bean>
+
+	<!--  set for mybatis Database Layer -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" 	ref="dataSource" />
+		<property name="mapperLocations">
+			<array>
+				<value>classpath*:mybatis/mapper/common/mysql/**/*.xml</value>
+				<value>classpath*:mybatis/mapper/api/mysql/**/*.xml</value>
+				<value>classpath*:mybatis/mapper/custom/#{config['site.shortName']?:'cloud'}/**/*.xml</value>
+			</array>
+		</property>
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+	</bean>
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean>
+	<tx:annotation-driven proxy-target-class="false" transaction-manager="transactionManager" />
+
+	<!--  Transaction -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!-- redis cluster 설정 -->
+	<!--
+
+	<bean id="redisClusterNode1" class="org.springframework.data.redis.connection.RedisNode">
+		<constructor-arg value="#{config['redis.cluster.node.host1']}" />
+		<constructor-arg value="#{config['redis.cluster.node.port1']}" type="int" />
+	</bean>
+	<bean id="redisClusterConfiguration" class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+		<property name="clusterNodes">
+			<set>
+                <bean class="org.springframework.data.redis.connection.RedisNode">
+                    <constructor-arg value="#{config['redis.cluster.node.host1']}" />
+                    <constructor-arg value="#{config['redis.cluster.node.port1']}" type="int" />
+	            </bean>
+                <bean class="org.springframework.data.redis.connection.RedisNode">
+                    <constructor-arg value="#{config['redis.cluster.node.host2']}" />
+                    <constructor-arg value="#{config['redis.cluster.node.port2']}" type="int" />
+	            </bean>
+			</set>
+		</property>
+		<property name="maxRedirects" value="#{config['redis.cluster.conf.maxredirects']}" />
+	</bean>
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="#{config['redis.cluster.pool.maxtotal']}" />
+		<property name="maxIdle" value="#{config['redis.cluster.pool.idle']}" />
+		<property name="maxWaitMillis" value="#{config['redis.cluster.pool.maxwaitmillis']}" />
+	</bean>
+	<bean id="jedisConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg ref="redisClusterConfiguration" />
+		<constructor-arg ref="jedisPoolConfig" />
+		<property name="password" value="${redis.single.node.password}" />
+	</bean>
+	-->
+
+	<!-- redis single 접속 설정 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="#{config['redis.single.pool.maxtotal']}" />
+		<property name="maxIdle" value="#{config['redis.single.pool.idle']}" />
+		<property name="maxWaitMillis" value="#{config['redis.single.pool.maxwaitmillis']}" />
+	</bean>
+	<bean id="jedisConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg ref="jedisPoolConfig" />
+		<property name="hostName" value="${redis.single.node.host}" />
+		<property name="port" value="${redis.single.node.port}" />
+		<property name="password" value="${redis.single.node.password}" />
+	</bean>
+
+	<!--
+	<bean id="jedisConnFactory1" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg ref="jedisPoolConfig" />
+		<property name="hostName" value="${redis.cluster.node.host1}" />
+		<property name="port" value="${redis.cluster.node.port1}" />
+		<property name="password" value="${redis.single.node.password}" />
+	</bean>
+	<bean id="jedisConnFactory2" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg ref="jedisPoolConfig" />
+		<property name="hostName" value="${redis.cluster.node.host2}" />
+		<property name="port" value="${redis.cluster.node.port2}" />
+		<property name="password" value="${redis.single.node.password}" />
+	</bean>
+	<bean id="jedisConnFactory3" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg ref="jedisPoolConfig" />
+		<property name="hostName" value="${redis.cluster.node.host3}" />
+		<property name="port" value="${redis.cluster.node.port3}" />
+		<property name="password" value="${redis.single.node.password}" />
+	</bean>
+	-->
+
+	<!-- redis template 설정 -->
+	<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+	<bean id="jsonRedisSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="jedisConnFactory" />
+		<property name="keySerializer" ref="stringRedisSerializer" />
+		<property name="valueSerializer" ref="jsonRedisSerializer" />
+		<property name="hashKeySerializer" ref="stringRedisSerializer" />
+		<property name="hashValueSerializer" ref="jsonRedisSerializer" />
+		<property name="enableTransactionSupport" value="true" />
+	</bean>
+
+	<!-- redis Cache 설정 -->
+	<bean id="redisCachePrefix" class="org.springframework.data.redis.cache.DefaultRedisCachePrefix" >
+		<constructor-arg name="delimiter" value="_" />
+	</bean>
+
+	<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager" >
+		<constructor-arg ref="redisTemplate" />
+		<property name="defaultExpiration" value="1000" />
+		<property name="usePrefix" value="true"/>
+		<property name="cachePrefix" ref="redisCachePrefix" />
+	</bean>
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	</bean>
+
+</beans>

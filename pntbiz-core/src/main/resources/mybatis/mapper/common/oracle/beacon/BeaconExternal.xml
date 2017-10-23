@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.common.beacon.dao.BeaconExternalDao">
+
+	<resultMap id="BeaconExternalWidthRestrictedZone" type="core.common.beacon.domain.BeaconExternalWidthRestrictedZone">
+		<id column="BEACON_NUM" property="beaconNum" />
+		<result column="COM_NUM" property="comNum" />
+		<result column="UUID" property="UUID" />
+		<result column="MAJOR_VER" property="majorVer" />
+		<result column="MINOR_VER" property="minorVer" />
+		<result column="FLOOR" property="floor" />
+		<result column="EXTERNAL_ID" property="externalId" />
+		<result column="EXTERNAL_ATTRIBUTE" property="externalAttributeRaw" />
+		<result column="RESTRICTED_ZONE_PERMITTED" property="restrictedZonePermitted" typeHandler="framework.database.ValueEnumTypeHandler" />
+		<collection property="restrictedZone" ofType="core.common.beacon.domain.BeaconRestrictedZone" notNullColumn="ZONE_TYPE">
+			<result column="BEACON_NUM" property="beaconNum" />
+			<result column="ZONE_TYPE" property="zoneType" typeHandler="framework.database.ValueEnumTypeHandler" />
+			<result column="ZONE_ID" property="zoneId" />
+			<result column="PERMITTED" property="permitted" typeHandler="framework.database.ValueEnumTypeHandler" />
+			<result column="ADDITIONAL_ATTRIBUTE" property="additionalAttributeRaw" />
+			<result column="START_DATE" property="startDate" />
+			<result column="END_DATE" property="endDate" />
+			<result column="MOD_DATE" property="modDate" />
+			<result column="REG_DATE" property="regDate" />
+		</collection>
+	</resultMap>
+
+
+	<select id="getBeaconExternalInfo"
+			parameterType="core.common.beacon.domain.BeaconExternal"
+			resultType="core.common.beacon.domain.BeaconExternal">
+
+		SELECT BEACON_NUM, COM_NUM, UUID, MAJOR_VER, MINOR_VER, FLOOR, EXTERNAL_ID, EXTERNAL_ATTRIBUTE
+			, RESTRICTED_ZONE_PERMITTED
+		FROM TB_BEACON
+		<where>
+			<if test="beaconNum!=null">BEACON_NUM=#{beaconNum}</if>
+			<if test="beaconNum==null">UUID=#{UUID} AND MAJOR_VER=#{majorVer} AND MINOR_VER=#{minorVer}</if>
+		</where>
+
+	</select>
+
+	<update id="updateBeaconExternalInfo" parameterType="core.common.beacon.domain.BeaconExternal">
+
+		UPDATE TB_BEACON
+		<set>
+			EXTERNAL_ID = #{externalId}, EXTERNAL_ATTRIBUTE = #{externalAttributeRaw}
+			, RESTRICTED_ZONE_PERMITTED = #{restrictedZonePermitted, framework.database.ValueEnumTypeHandler}
+		</set>
+		<where>
+			<if test="beaconNum!=null">BEACON_NUM=#{beaconNum}</if>
+			<if test="beaconNum==null">UUID=#{UUID} AND MAJOR_VER=#{majorVer} AND MINOR_VER=#{minorVer}</if>
+		</where>
+
+	</update>
+
+
+	<select id="getBeaconExternalList"
+			parameterType="core.common.beacon.domain.BeaconExternal"
+			resultType="core.common.beacon.domain.BeaconExternal">
+
+		SELECT BEACON_NUM, COM_NUM, UUID, MAJOR_VER, MINOR_VER, FLOOR, EXTERNAL_ID, EXTERNAL_ATTRIBUTE
+			, RESTRICTED_ZONE_PERMITTED
+		FROM TB_BEACON
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="UUID!=null">AND UUID=#{UUID}</if>
+			<if test="floor!=null">AND FLOOR=#{floor}</if>
+		</trim>
+
+	</select>
+
+	<select id="getBeaconExternalWidthRestrictedZoneList"
+			parameterType="core.common.beacon.domain.BeaconExternal"
+			resultMap="BeaconExternalWidthRestrictedZone">
+
+		SELECT BEACON.BEACON_NUM, BEACON.UUID, BEACON.MAJOR_VER, BEACON.MINOR_VER, BEACON.FLOOR, BEACON.EXTERNAL_ID
+			, BEACON.EXTERNAL_ATTRIBUTE
+			, ZONE.ZONE_TYPE, ZONE.ZONE_ID, ZONE.ADDITIONAL_ATTRIBUTE
+			, ZONE.FLOOR, ZONE.START_DATE, ZONE.END_DATE, ZONE.MOD_DATE, ZONE.REG_DATE
+
+		FROM TB_BEACON BEACON LEFT JOIN TB_BEACON_RESTRICTED_ZONE ZONE ON(BEACON.beaconNum=ZONE.beaconNum)
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="beaconNum!=null">AND BEACON.BEACON_NUM=#{beaconNum}</if>
+			<if test="UUID!=null">AND BEACON.UUID=#{UUID}</if>
+			<if test="majorVer!=null">AND BEACON.MAJOR_VER=#{majorVer}</if>
+			<if test="minorVer!=null">AND BEACON.MINOR_VER=#{minorVer}</if>
+			<if test="floor!=null">AND BEACON.FLOOR=#{floor}</if>
+		</trim>
+
+	</select>
+
+</mapper>

@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="core.wms.contents.dao.ContentsDao">
+
+    <resultMap id="contentsResult" type="core.wms.contents.domain.Contents">
+        <result property="comNum"  column="COM_NUM" />
+        <result property="conNum"  column="CON_NUM" />
+        <result property="conType" column="CON_TYPE" />
+        <result property="conName" column="CON_NAME" />
+        <result property="userID"  column="USER_ID" />
+        <result property="acNum"   column="AC_NUM" />
+        <result property="expFlag" column="EXP_FLAG" />
+        <result property="rssi"    column="RSSI" />
+        <result property="conDesc" column="CON_DESC" />
+        <result property="sDate"   column="S_DATE" />
+        <result property="eDate"   column="E_DATE" />
+        <result property="modDate" column="MOD_DATE" />
+        <result property="regDate" column="REG_DATE" />
+
+        <result property="imgSrc1" column="IMG_SRC1" />
+        <result property="imgSrc2" column="IMG_SRC2" />
+        <result property="imgSrc3" column="IMG_SRC3" />
+        <result property="imgSrc4" column="IMG_SRC4" />
+        <result property="imgSrc5" column="IMG_SRC5" />
+        <result property="text1" column="TEXT1" />
+        <result property="text2" column="TEXT2" />
+        <result property="text3" column="TEXT3" />
+        <result property="text4" column="TEXT4" />
+        <result property="text5" column="TEXT5" />
+        <result property="soundSrc1" column="SOUND_SRC1" />
+        <result property="soundSrc2" column="SOUND_SRC2" />
+        <result property="soundSrc3" column="SOUND_SRC3" />
+        <result property="url1" column="URL1" />
+        <result property="url2" column="URL2" />
+        <result property="url3" column="URL3" />
+
+        <result property="acName" column="AC_NAME" />
+    </resultMap>
+
+    <resultMap id="contentsMappingResult" type="core.wms.contents.domain.ContentsMapping">
+        <result property="conNum"     column="CON_NUM" />
+        <result property="refType"    column="REF_TYPE" />
+        <result property="refSubType" column="REF_SUB_TYPE" />
+        <result property="refNum"     column="REF_NUM" />
+        <result property="evtNum"     column="EVT_NUM" />
+        <result property="evtName"    column="EVT_NAME" />
+
+        <result property="comNum"  column="COM_NUM" />
+        <result property="conType" column="CON_TYPE" />
+        <result property="conName" column="CON_NAME" />
+        <result property="userID"  column="USER_ID" />
+        <result property="acNum"   column="AC_NUM" />
+        <result property="expFlag" column="EXP_FLAG" />
+        <result property="rssi"    column="RSSI" />
+        <result property="conDesc" column="CON_DESC" />
+        <result property="sDate"   column="S_DATE" />
+        <result property="eDate"   column="E_DATE" />
+        <result property="modDate" column="MOD_DATE" />
+        <result property="regDate" column="REG_DATE" />
+
+        <result property="refName" column="REF_NAME" />
+    </resultMap>
+
+    <resultMap id="contentsTypeResult" type="core.wms.contents.domain.ContentsType">
+        <result property="comNum"   column="COM_NUM" />
+        <result property="typeNum"  column="TYPE_NUM" />
+        <result property="typeName" column="TYPE_NAME" />
+        <result property="typeDesc" column="TYPE_DESC" />
+        <result property="expFlag"  column="EXP_FLAG" />
+        <result property="modDate"  column="MOD_DATE" />
+        <result property="regDate"  column="REG_DATE" />
+    </resultMap>
+
+    <resultMap id="contentsTypeComponentResult" type="core.wms.contents.domain.ContentsTypeComponent">
+        <result property="typeNum"   column="TYPE_NUM" />
+        <result property="compNum =" column="COMP_NUM"/>
+        <result property="compType"  column="COMP_TYPE" />
+        <result property="compField" column="COMP_FIELD" />
+        <result property="compName"  column="COMP_NAME" />
+        <result property="orderNum"  column="ORDER_NUM" />
+    </resultMap>
+
+    <select id="checkContentsDuplication" parameterType="core.wms.contents.domain.Contents" resultType="Integer">
+        SELECT COUNT(1) CNT
+          FROM TB_CONTENTS
+         WHERE COM_NUM = #{comNum}
+           AND FLOOR = #{floor}
+    </select>
+
+    <select id="getContentsCount" parameterType="core.wms.contents.domain.ContentsSearchParam" resultType="Integer">
+        SELECT COUNT(1) CNT
+          FROM TB_CONTENTS  A
+         INNER JOIN TB_CONTENTS_DETAIL B
+            ON A.CON_NUM = B.CON_NUM
+        <where>
+            <if test="comNum != '' and comNum != null">AND A.COM_NUM = #{comNum}</if>
+            <if test="conType != '' and conType != null">AND A.CON_TYPE = #{conType}</if>
+            <if test="conType2 != '' and conType2 != null">AND A.CON_TYPE != #{conType2}</if>
+            <if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+            	AND A.CON_NAME LIKE CONCAT(#{keyword}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getContentsList" parameterType="core.wms.contents.domain.ContentsSearchParam" resultMap="contentsResult">
+        SELECT *
+          FROM (
+            SELECT A.COM_NUM, A.CON_NUM, A.CON_TYPE, A.CON_NAME, A.USER_ID, A.AC_NUM
+                 , A.EXP_FLAG, A.RSSI, A.CON_DESC, A.S_DATE, A.E_DATE, A.MOD_DATE, A.REG_DATE
+                 , B.IMG_SRC1, B.IMG_SRC2, B.IMG_SRC3, B.IMG_SRC4, B.IMG_SRC5, B.TEXT1, B.TEXT2, B.TEXT3, B.TEXT4, B.TEXT5
+                 , B.SOUND_SRC1, B.SOUND_SRC2, B.SOUND_SRC3, B.URL1, B.URL2, B.URL3
+                 , C.AC_NAME
+                 , ROWNUM RNUM
+              FROM TB_CONTENTS A
+             INNER JOIN  TB_CONTENTS_DETAIL B
+                ON A.CON_NUM = B.CON_NUM
+              LEFT OUTER JOIN TB_ADVERT_COMPANY C
+                ON A.AC_NUM = C.AC_NUM
+	            <where>
+	                <if test="comNum != '' and comNum != null">AND A.COM_NUM = #{comNum}</if>
+	                <if test="conType != '' and conType != null">AND A.CON_TYPE = #{conType}</if>
+	                <if test="conType2 != '' and conType2 != null">AND A.CON_TYPE != #{conType2}</if>
+	                <if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+	                	AND A.CON_NAME LIKE CONCAT(#{keyword}, '%')
+	                </if>
+	            </where>
+	          ORDER BY A.CON_NUM DESC
+          ) TB
+         WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+    </select>
+
+    <select id="getContentsInfo" parameterType="core.wms.contents.domain.Contents" resultMap="contentsResult">
+
+            SELECT A.COM_NUM, A.CON_NUM, A.CON_TYPE, A.CON_NAME, A.USER_ID, A.AC_NUM
+                 , A.EXP_FLAG, A.RSSI, A.CON_DESC, A.S_DATE, A.E_DATE, A.MOD_DATE, A.REG_DATE
+                 , B.IMG_SRC1, B.IMG_SRC2, B.IMG_SRC3, B.IMG_SRC4, B.IMG_SRC5, B.TEXT1, B.TEXT2, B.TEXT3, B.TEXT4, B.TEXT5
+                 , B.SOUND_SRC1, B.SOUND_SRC2, B.SOUND_SRC3, B.URL1, B.URL2, B.URL3
+                 , C.AC_NAME
+              FROM TB_CONTENTS A
+             INNER JOIN  TB_CONTENTS_DETAIL B
+                ON A.CON_NUM = B.CON_NUM
+              LEFT OUTER JOIN TB_ADVERT_COMPANY C
+                ON A.AC_NUM = C.AC_NUM
+
+             WHERE A.CON_NUM = #{conNum}
+             <if test="comNum != '' and comNum != null">AND A.COM_NUM = #{comNum}</if>
+
+    </select>
+
+    <insert id="insertContents" parameterType="core.wms.contents.domain.Contents">
+        INSERT INTO TB_CONTENTS
+        ( CON_NUM
+        , COM_NUM
+        , CON_TYPE
+        , CON_NAME
+        , USER_ID
+        , AC_NUM
+        , EXP_FLAG
+        , RSSI
+        , CON_DESC
+        , S_DATE
+        , E_DATE
+        , MOD_DATE
+        , REG_DATE
+        )VALUES
+        ( SEQ_CONTENTS_COM_NUM.NEXTVAL
+        , #{comNum}
+        , #{conType}
+        , #{conName}
+        , #{userID}
+        , #{acNum}
+        , #{expFlag}
+        , #{rssi}
+        , #{conDesc}
+        , #{sDate}
+        , #{eDate}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+
+        <selectKey keyProperty="conNum" resultType="Integer">
+            SELECT SEQ_CONTENTS_COM_NUM.currval FROM DUAL
+        </selectKey>
+    </insert>
+
+    <insert id="insertContentsDetail" parameterType="core.wms.contents.domain.Contents">
+        INSERT INTO TB_CONTENTS_DETAIL
+        ( CON_NUM
+        , IMG_SRC1
+        , IMG_SRC2
+        , IMG_SRC3
+        , IMG_SRC4
+        , IMG_SRC5
+        , TEXT1
+        , TEXT2
+        , TEXT3
+        , TEXT4
+        , TEXT5
+        , SOUND_SRC1
+        , SOUND_SRC2
+        , SOUND_SRC3
+        , URL1
+        , URL2
+        , URL3
+        )VALUES
+        ( #{conNum}
+        , #{imgSrc1}
+        , #{imgSrc2}
+        , #{imgSrc3}
+        , #{imgSrc4}
+        , #{imgSrc5}
+        , #{text1}
+        , #{text2}
+        , #{text3}
+        , #{text4}
+        , #{text5}
+        , #{soundSrc1}
+        , #{soundSrc2}
+        , #{soundSrc3}
+        , #{url1}
+        , #{url2}
+        , #{url3})
+    </insert>
+
+
+    <update id="updateContents" parameterType="core.wms.contents.domain.Contents">
+        UPDATE TB_CONTENTS
+           SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+           <if test="conName != '' and conName != null">, CON_NAME = #{conName}</if>
+           <if test="conDesc != null">, CON_DESC = #{conDesc}</if>
+           <if test="acNum != null">, AC_NUM = #{acNum}</if>
+           <if test="expFlag != '' and expFlag != null">, EXP_FLAG = #{expFlag}</if>
+           <if test="sDate != null">, S_DATE = #{sDate}</if>
+           <if test="eDate != null">, E_DATE = #{eDate}</if>
+           <if test="rssi != null">, RSSI = #{rssi}</if>
+         WHERE COM_NUM = #{comNum}
+           AND CON_NUM = #{conNum}
+    </update>
+
+    <update id="updateContentsDetail" parameterType="core.wms.contents.domain.Contents">
+        UPDATE TB_CONTENTS_DETAIL
+        <set>
+            <if test="imgSrc1 != '' and imgSrc1 != null">IMG_SRC1 = #{imgSrc1},</if>
+            <if test="imgSrc2 != '' and imgSrc2 != null">IMG_SRC2 = #{imgSrc2},</if>
+            <if test="imgSrc3 != '' and imgSrc3 != null">IMG_SRC3 = #{imgSrc3},</if>
+            <if test="imgSrc4 != '' and imgSrc4 != null">IMG_SRC4 = #{imgSrc4},</if>
+            <if test="imgSrc5 != '' and imgSrc5 != null">IMG_SRC5 = #{imgSrc5},</if>
+            <if test="text1 != null">TEXT1 = #{text1},</if>
+            <if test="text2 != null">TEXT2 = #{text2},</if>
+            <if test="text3 != null">TEXT3 = #{text3},</if>
+            <if test="text4 != null">TEXT4 = #{text4},</if>
+            <if test="text5 != null">TEXT5 = #{text5},</if>
+            <if test="soundSrc1 != '' and soundSrc1 != null">SOUND_SRC1  = #{soundSrc1},</if>
+            <if test="soundSrc2 != '' and soundSrc2 != null">SOUND_SRC2  = #{soundSrc2},</if>
+            <if test="soundSrc3 != '' and soundSrc3 != null">SOUND_SRC3  = #{soundSrc3},</if>
+            <if test="url1 != null">URL1 = #{url1},</if>
+            <if test="url2 != null">URL2 = #{url2},</if>
+            <if test="url3 != null">URL3 = #{url3},</if>
+        </set>
+        WHERE CON_NUM = #{conNum}
+    </update>
+
+    <update id="updateContentsBlankFile" parameterType="core.wms.contents.domain.Contents">
+        UPDATE TB_CONTENTS_DETAIL
+        <set>
+            <if test="imgSrc1 == ''">IMG_SRC1 = '',</if>
+            <if test="imgSrc2 == ''">IMG_SRC2 = '',</if>
+            <if test="imgSrc3 == ''">IMG_SRC3 = '',</if>
+            <if test="imgSrc4 == ''">IMG_SRC4 = '',</if>
+            <if test="imgSrc5 == ''">IMG_SRC5 = '',</if>
+            <if test="soundSrc1 == ''">SOUND_SRC1 = '',</if>
+            <if test="soundSrc2 == ''">SOUND_SRC2 = '',</if>
+            <if test="soundSrc3 == ''">SOUND_SRC3 = '',</if>
+        </set>
+        WHERE CON_NUM = #{conNum}
+    </update>
+
+    <delete id="deleteContents" parameterType="core.wms.contents.domain.Contents">
+        DELETE
+          FROM TB_CONTENTS
+         WHERE CON_NUM = #{conNum}
+        <if test="comNum != '' and comNum != null">AND A.COM_NUM = #{comNum}</if>
+    </delete>
+
+    <sql id="selectContentsMappingSearch">
+        <where>
+            <if test="comNum != '' and comNum != null">AND A.COM_NUM = #{comNum}</if>
+            <if test="conType != '' and conType != null">AND A.CON_TYPE = #{conType}</if>
+            <if test="refType != '' and refType != null">AND B.REF_TYPE = #{refType}</if>
+            <if test="refSubType != '' and refSubType != null">AND B.REF_SUB_TYPE = #{refSubType}</if>
+            <if test="keyword != '' and keyword  != null">
+                <choose>
+                    <when test="opt eq 'evtName'">AND E.EVT_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                    <when test="opt eq 'conName'">AND A.CON_NAME LIKE CONCAT(#{keyword}, '%')</when>
+                    <otherwise></otherwise>
+                </choose>
+            </if>
+         </where>
+    </sql>
+    <select id="getContentsMappingCount" parameterType="core.wms.contents.domain.ContentsMappingSearchParam" resultType="Integer">
+        SELECT COUNT(1) CNT
+          FROM TB_CONTENTS A
+         INNER JOIN TB_CONTENTS_MAPPING B ON A.CON_NUM = B.CON_NUM
+          LEFT JOIN TB_EVENT E ON E.EVT_NUM = B.EVT_NUM
+         <include refid="selectContentsMappingSearch"/>
+    </select>
+
+    <select id="getContentsMappingList" parameterType="core.wms.contents.domain.ContentsMappingSearchParam" resultMap="contentsMappingResult">
+        SELECT *
+          FROM (
+            SELECT A.COM_NUM, A.CON_NUM, A.CON_TYPE, A.CON_NAME, A.USER_ID, A.AC_NUM
+                 , A.EXP_FLAG, A.RSSI, A.CON_DESC, A.S_DATE, A.E_DATE, A.MOD_DATE, A.REG_DATE
+                 , B.REF_TYPE, B.REF_SUB_TYPE, B.REF_NUM, B.EVT_NUM, E.EVT_NAME
+            <if test="refType == 'BC'">, C.UUID||'_'||C.MAJOR_VER||'_'||C.MINOR_VER AS REF_NAME</if>
+            <if test="refType == 'GF'">, C.FC_NAME AS REF_NAME</if>
+            <if test="refType == 'ND'">, C.NODE_ID AS REF_NAME</if>
+            <if test="refType == 'BCG'">, C.BEACON_GROUP_NAME AS REF_NAME</if>
+            <if test="refType == 'GFG'">, C.FC_GROUP_NAME AS REF_NAME</if>
+                 , ROWNUM RNUM
+              FROM TB_CONTENTS A
+             INNER JOIN TB_CONTENTS_MAPPING B ON A.CON_NUM = B.CON_NUM
+              LEFT JOIN TB_EVENT E ON E.EVT_NUM = B.EVT_NUM
+            <if test="refType == 'BC'">INNER JOIN TB_BEACON C     ON B.REF_NUM = C.BEACON_NUM</if>
+            <if test="refType == 'GF'">INNER JOIN TB_GEOFENCING C ON B.REF_NUM = C.FC_NUM</if>
+            <if test="refType == 'ND'">INNER JOIN TB_NODE C       ON B.REF_NUM = C.NODE_NUM</if>
+            <if test="refType == 'BCG'">INNER JOIN TB_BEACON_GROUP C ON B.REF_NUM = C.BEACON_GROUP_NUM </if>
+            <if test="refType == 'GFG'">INNER JOIN TB_GEOFENCING_GROUP C ON B.REF_NUM = C.FC_GROUP_NUM</if>
+
+           <include refid="selectContentsMappingSearch"/>
+            ORDER BY A.CON_NUM DESC
+          ) TB
+         WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+    </select>
+
+    <insert id="insertContentsMapping" parameterType="core.wms.contents.domain.ContentsMapping">
+        INSERT INTO TB_CONTENTS_MAPPING
+        ( CON_NUM
+        , REF_TYPE
+        , REF_SUB_TYPE
+        , REF_NUM
+        , EVT_NUM
+        )VALUES
+        ( #{conNum}
+        , #{refType}
+        , #{refSubType}
+        , #{refNum}
+        , #{evtNum})
+        <!-- ON DUPLICATE KEY UPDATE evtNum= #{evtNum} -->
+    </insert>
+
+    <update id="modifyContentsMapping" parameterType="core.wms.contents.domain.ContentsMapping">
+        UPDATE TB_CONTENTS_MAPPING
+          SET EVT_NUM    =#{evtNum}
+        WHERE CON_NUM    =#{conNum}
+          AND REF_TYPE   =#{refType}
+          AND REF_SUB_TYPE=#{refSubType}
+          AND REF_NUM    =#{refNum}
+    </update>
+
+    <delete id="deleteContentsMapping" parameterType="core.wms.contents.domain.ContentsMapping">
+        DELETE FROM TB_CONTENTS_MAPPING
+        WHERE CON_NUM    =#{conNum}
+          AND REF_TYPE   =#{refType}
+          AND REF_SUB_TYPE=#{refSubType}
+          AND REF_NUM    =#{refNum}
+    </delete>
+
+    <select id="getContentsTypeInfo" parameterType="core.wms.contents.domain.ContentsType" resultMap="contentsTypeResult">
+        SELECT COM_NUM, TYPE_NUM, TYPE_NAME, TYPE_DESC, MOD_DATE, REG_DATE
+          FROM TB_CONTENTS_TYPE
+         WHERE TYPE_NUM = #{typeNum}
+        <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+    </select>
+
+    <sql id="selectContentsTypeSearch">
+        <where>
+            <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+            <if test="opt != '' and opt  != null and keyword != '' and keyword  != null">
+                AND TYPE_NAME LIKE CONCAT(#{keyword}, '%')
+            </if>
+        </where>
+    </sql>
+    <select id="getContentsTypeCount" parameterType="core.wms.contents.domain.ContentsTypeSearchParam" resultType="Integer">
+        SELECT COUNT(1) CNT
+          FROM TB_CONTENTS_TYPE
+         <include refid="selectContentsTypeSearch"/>
+    </select>
+
+    <select id="getContentsTypeList" parameterType="core.wms.contents.domain.ContentsTypeSearchParam" resultMap="contentsTypeResult">
+        SELECT *
+          FROM (
+            SELECT COM_NUM, TYPE_NUM, TYPE_NAME, TYPE_DESC, MOD_DATE, REG_DATE
+                 , ROWNUM RNUM
+              FROM TB_CONTENTS_TYPE
+             <include refid="selectContentsTypeSearch"/>
+            ORDER BY typeNum DESC
+          ) TB
+         <if test="firstItemNo != '' and firstItemNo  != null and pageSize != '' and pageSize  != null">
+            WHERE TB.RNUM BETWEEN #{firstItemNo} AND (#{page}*#{pageSize})
+         </if>
+    </select>
+
+    <insert id="insertContentsType" parameterType="core.wms.contents.domain.ContentsType">
+        INSERT INTO TB_CONTENTS_TYPE
+        ( TYPE_NUM
+        , COM_NUM
+        , TYPE_NAME
+        , TYPE_DESC
+        , MOD_DATE
+        , REG_DATE
+        ) VALUES
+        ( SEQ_CT_TYPE_NUM.nextval
+        , #{comNum}
+        , #{typeName}
+        , #{typeDesc}
+        , FN_UNIX_TIMESTEMP(SYSDATE)
+        , FN_UNIX_TIMESTEMP(SYSDATE))
+
+        <selectKey keyProperty="typeNum" resultType="Integer">
+            SELECT SEQ_CT_TYPE_NUM.currval FROM DAUL
+        </selectKey>
+    </insert>
+
+    <update id="updateContentsType" parameterType="core.wms.contents.domain.ContentsType">
+        UPDATE TB_CONTENTS_TYPE
+           SET MOD_DATE = FN_UNIX_TIMESTEMP(SYSDATE)
+           <if test="typeName != '' and typeName != null">, TYPE_NAME = #{typeName}</if>
+           <if test="typeDesc != null">, TYPE_DESC = #{typeDesc}</if>
+        WHERE TYPE_NUM = #{typeNum}
+        <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+    </update>
+
+    <delete id="deleteContentsType" parameterType="core.wms.contents.domain.ContentsType">
+        DELETE
+          FROM TB_CONTENTS_TYPE
+         WHERE TYPE_NUM = #{typeNum}
+        <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+    </delete>
+
+    <select id="getContentsTypeComponentList" parameterType="core.wms.contents.domain.ContentsTypeComponent" resultMap="contentsTypeComponentResult">
+        SELECT TYPE_NUM, COMP_NUM, COMP_TYPE, COMP_FIELD, COMP_NAME, ORDER_NUM
+          FROM TB_CONTENTS_TYPE_COMPONENT
+        <if test="typeNum != '' and typeNum != null">WHERE TYPE_NUM = #{typeNum}</if>
+        ORDER BY ORDER_NUM ASC
+    </select>
+
+    <insert id="insertContentsTypeComponent" parameterType="core.wms.contents.domain.ContentsTypeComponent">
+        INSERT INTO TB_CONTENTS_TYPE_COMPONENT
+        (typeNum, compType, compField, compName, orderNum)
+        VALUES
+        (#{typeNum}, #{compType}, #{compField}, #{compName}, #{orderNum})
+    </insert>
+
+    <update id="updateContentsTypeComponent" parameterType="core.wms.contents.domain.ContentsTypeComponent">
+        UPDATE TB_CONTENTS_TYPE_COMPONENT
+        <set>
+            <if test="compField != '' and compField != null">COMP_FIELD = #{compField},</if>
+            <if test="compName != '' and compName != null">COMP_NAME = #{compName},</if>
+            <if test="orderNum != '' and orderNum != null">ORDER_NUM = #{orderNum},</if>
+        </set>
+        WHERE COMP_NUM = #{compNum}
+    </update>
+
+    <delete id="deleteContentsTypeComponent" parameterType="core.wms.contents.domain.ContentsTypeComponent">
+        DELETE
+          FROM TB_CONTENTS_TYPE_COMPONENT
+         WHERE COMP_NUM = #{compNum}
+        <if test="comNum != '' and comNum != null">AND COM_NUM = #{comNum}</if>
+    </delete>
+
+    <delete id="deleteContentsTypeComponentAll" parameterType="core.wms.contents.domain.ContentsTypeComponent">
+        DELETE
+          FROM TB_CONTENTS_TYPE_COMPONENT
+         WHERE TYPE_NUM = #{typeNum}
+    </delete>
+</mapper>
